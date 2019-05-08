@@ -18,7 +18,7 @@ export interface Subscribable<This, Args extends any[]> {
 
 	/**
 	 * Subscribe to the event, will invoke the given function when the event
-	 * is emittred.
+	 * is emitted.
 	 */
 	subscribe(listener: Listener<Args, This>): SubscriptionHandle;
 
@@ -90,7 +90,7 @@ export class Event<Parent, Args extends any[] = []> {
 
 	/**
 	 * Subscribe to this event using the given listener. The listener will
-	 * be invoked any time the event is emittred. The returned handle can be
+	 * be invoked any time the event is emitted. The returned handle can be
 	 * used to unsubscribe.
 	 *
 	 * @param listener

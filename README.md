@@ -74,8 +74,8 @@ const noArgEvent = new Event<object>(parent);
 // Subscribing will be checked so it takes in zero arguments
 noArgEvent.subscribe(() => /* do stuff here */);
 
-// Firing the event can only be done without any parameters
-noArgEvent.fire();
+// Emitting the event can only be done without any parameters
+noArgEvent.emit();
 ```
 
 Events can have arguments that will be checked in the listeners and when
@@ -88,6 +88,7 @@ const argEvent = new Event<object, [ number ]>(parent);
 // Subscribe will now check that the arguments are compatible
 argEvent.subscribe((count) => /* do stuff here */);
 
-// Firing the event now requires arguments to be passed
-argEvent.fire(10);
+// Emitting the event now requires arguments to be passed
+argEvent.emit(10);
+```
 ```
