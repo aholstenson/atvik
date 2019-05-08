@@ -229,4 +229,13 @@ describe('Synchronous event', function() {
 		expect(triggered1).toEqual(true);
 		expect(triggered2).toEqual(true);
 	});
+
+	it('Can await event with no arguments', async function() {
+		const parent = {};
+		const handler = new Event<object>(parent);
+
+		setTimeout(() => handler.emit(), 50);
+
+		await handler.once();
+	});
 });

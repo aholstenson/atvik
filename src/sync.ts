@@ -28,6 +28,13 @@ export interface Subscribable<This, Args extends any[]> {
 	 * @param listener
 	 */
 	unsubscribe(listener: Listener<Args, This>): boolean;
+
+	/**
+	 * Subscribe to an event but only trigger the listener once.
+	 *
+	 * @param listener
+	 */
+	once(): Promise<Args>;
 }
 
 /**
@@ -61,6 +68,7 @@ export class Event<Parent, Args extends any[] = []> {
 		const subscribable = (listener: Listener<Args, Parent>) => this.subscribe(listener);
 		subscribable.subscribe = subscribable;
 		subscribable.unsubscribe = (listener: Listener<Args, Parent>) => this.unsubscribe(listener);
+		subscribable.once = () => this.once();
 
 		this.subscribable = subscribable;
 	}
@@ -152,5 +160,21 @@ export class Event<Parent, Args extends any[] = []> {
 
 		// Listener is not active
 		return false;
+	}
+
+	/**
+	 * Get a promise that will resolve the first time this event is fired
+	 * after this call.
+	 */
+	public once(): Promise<Args> {
+		return new Promise((resolve, reject) => {
+			const listener = (...args: Args) => {
+				this.unsubscribe(listener);
+
+				resolve(args);
+			};
+
+			this.subscribe(listener);
+		});
 	}
 }
