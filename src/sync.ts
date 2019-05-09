@@ -4,7 +4,7 @@ import { SubscriptionHandle } from './handle';
  * Listener type. Defines the function signature that a listener is expected
  * to have.
  */
-export type Listener<Args extends any[], This> = (this: This, ...args: Args) => void;
+export type Listener<This, Args extends any[]> = (this: This, ...args: Args) => void;
 
 /**
  * Functions used to subscribe and unsubscribe to an event.
@@ -14,20 +14,20 @@ export interface Subscribable<This, Args extends any[]> {
 	 * Subscribe to the event, will invoke the given function when the event
 	 * is emitted.
 	 */
-	(listener: Listener<Args, This>): SubscriptionHandle;
+	(listener: Listener<This, Args>): SubscriptionHandle;
 
 	/**
 	 * Subscribe to the event, will invoke the given function when the event
 	 * is emitted.
 	 */
-	subscribe(listener: Listener<Args, This>): SubscriptionHandle;
+	subscribe(listener: Listener<This, Args>): SubscriptionHandle;
 
 	/**
 	 * Unsubscribe a previously subscribed listener.
 	 *
 	 * @param listener
 	 */
-	unsubscribe(listener: Listener<Args, This>): boolean;
+	unsubscribe(listener: Listener<This, Args>): boolean;
 
 	/**
 	 * Subscribe to an event but only trigger the listener once.
@@ -54,7 +54,7 @@ export class Event<Parent, Args extends any[] = []> {
 	/**
 	 * Listener(s) that have been attached to this event handler.
 	 */
-	private listeners?: Listener<Args, Parent> | Listener<Args, Parent>[];
+	private listeners?: Listener<Parent, Args> | Listener<Parent, Args>[];
 
 	/**
 	 * Create a new event.
@@ -65,9 +65,9 @@ export class Event<Parent, Args extends any[] = []> {
 	constructor(parent: Parent) {
 		this.parent = parent;
 
-		const subscribable = (listener: Listener<Args, Parent>) => this.subscribe(listener);
+		const subscribable = (listener: Listener<Parent, Args>) => this.subscribe(listener);
 		subscribable.subscribe = subscribable;
-		subscribable.unsubscribe = (listener: Listener<Args, Parent>) => this.unsubscribe(listener);
+		subscribable.unsubscribe = (listener: Listener<Parent, Args>) => this.unsubscribe(listener);
 		subscribable.once = () => this.once();
 
 		this.subscribable = subscribable;
@@ -103,7 +103,7 @@ export class Event<Parent, Args extends any[] = []> {
 	 *
 	 * @param listener
 	 */
-	public subscribe(listener: Listener<Args, Parent>): SubscriptionHandle {
+	public subscribe(listener: Listener<Parent, Args>): SubscriptionHandle {
 		if(Array.isArray(this.listeners)) {
 			// Listeners is already an array, push onto the array
 			this.listeners.push(listener);
@@ -127,7 +127,7 @@ export class Event<Parent, Args extends any[] = []> {
 	 *
 	 * @param listener
 	 */
-	public unsubscribe(listener: Listener<Args, Parent>): boolean {
+	public unsubscribe(listener: Listener<Parent, Args>): boolean {
 		if(Array.isArray(this.listeners)) {
 			/*
 			 * Array has been allocated, find the index of the listener and
