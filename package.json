@@ -19,7 +19,16 @@
   "engines": {
     "node": ">=8.0.0"
   },
-  "keywords": [],
+  "keywords": [
+    "event",
+    "events",
+    "signals",
+    "observer",
+    "listener",
+    "emitter",
+    "typed",
+    "event-emitter"
+  ],
   "devDependencies": {
     "@types/jest": "^24.0.12",
     "@types/node": "^8.0.0",
