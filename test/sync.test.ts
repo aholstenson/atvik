@@ -63,6 +63,23 @@ describe('Synchronous event', function() {
 		expect(triggered).toEqual(true);
 	});
 
+	it('Can attach single listener and detach during emit', function() {
+		const parent = {};
+		const handler = new Event(parent);
+
+		let triggered = false;
+
+		const handle = handler.subscribe(() => {
+			triggered = true;
+
+			handle.unsubscribe();
+		});
+
+		handler.emit();
+
+		expect(triggered).toEqual(true);
+	});
+
 	it('Can attach and trigger single listener with single argument', function() {
 		const parent = {};
 		const handler = new Event<object, [ string ]>(parent);
@@ -159,6 +176,35 @@ describe('Synchronous event', function() {
 		expect(triggered3).toEqual(false);
 	});
 
+	it('Can attach multiple listeners and detach during emit', function() {
+		const parent = {};
+		const handler = new Event(parent);
+
+		let triggered1 = false;
+		let triggered2 = false;
+		let triggered3 = false;
+
+		const handle1 = handler.subscribe(() => {
+			triggered1 = true;
+		});
+
+		const handle2 = handler.subscribe(() => {
+			triggered2 = true;
+
+			handle2.unsubscribe();
+		});
+
+		const handle3 = handler.subscribe(() => {
+			triggered3 = true;
+		});
+
+		handler.emit();
+
+		expect(triggered1).toEqual(true);
+		expect(triggered2).toEqual(true);
+		expect(triggered3).toEqual(true);
+	});
+
 	it('Can detach unknown listener with multiple listeners', function() {
 		const parent = {};
 		const handler = new Event(parent);
@@ -243,5 +289,26 @@ describe('Synchronous event', function() {
 		setTimeout(() => handler.emit(), 50);
 
 		await handler.once();
+	});
+
+	it('Can attach listener during emit without it triggering', function() {
+		const parent = {};
+		const handler = new Event(parent);
+
+		let triggered1 = false;
+		let triggered2 = true;
+
+		handler.subscribe(() => {
+			triggered1 = true;
+
+			handler.subscribable(() => {
+				triggered2 = false;
+			});
+		});
+
+		handler.emit();
+
+		expect(triggered1).toEqual(true);
+		expect(triggered2).toEqual(true);
 	});
 });

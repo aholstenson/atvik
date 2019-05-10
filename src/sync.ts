@@ -105,8 +105,8 @@ export class Event<Parent, Args extends any[] = []> {
 	 */
 	public subscribe(listener: Listener<Parent, Args>): SubscriptionHandle {
 		if(Array.isArray(this.listeners)) {
-			// Listeners is already an array, push onto the array
-			this.listeners.push(listener);
+			// Listeners is already an array, create a copy with the new listener appended
+			this.listeners = [ ...this.listeners, listener ];
 		} else if(this.listeners) {
 			this.listeners = [ this.listeners, listener ];
 		} else {
@@ -136,7 +136,10 @@ export class Event<Parent, Args extends any[] = []> {
 			const idx = this.listeners.indexOf(listener);
 			if(idx < 0) return false;
 
-			this.listeners.splice(idx);
+			// Copy-on-write for deletions
+			const listeners = [ ...this.listeners ];
+			listeners.splice(idx);
+			this.listeners = listener;
 
 			/*
 			 * If the array is empty, remove it. Otherwise at this point the
