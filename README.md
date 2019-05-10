@@ -18,15 +18,15 @@ const event = new Event(thisValueForListeners);
 // Subscribe to the event
 const handle = event.subscribe((arg1) => /* do stuff here */);
 
-// Fire the event, triggering all listeners
-event.fire('first argument');
+// Emit the event, triggering all listeners
+event.emit('first argument');
 
 // Unsubscribe from the event
 handle.unsubscribe();
 ```
 
 Events come with a public API for use with classes so that users of a class can
-only subscribe to events and not fire them.
+only subscribe to events and not emit them.
 
 ```javascript
 class Counter {
