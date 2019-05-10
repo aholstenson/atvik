@@ -25,6 +25,8 @@ event.emit('first argument');
 handle.unsubscribe();
 ```
 
+## Use with classes
+
 Events come with a public API for use with classes so that users of a class can
 only subscribe to events and not emit them.
 
@@ -91,4 +93,12 @@ argEvent.subscribe((count) => /* do stuff here */);
 // Emitting the event now requires arguments to be passed
 argEvent.emit(10);
 ```
+
+## Listening to something once
+
+Listening for a single event can be done via promises:
+
+```javascript
+// Wait for the event to be emitted
+const args = await event.once();
 ```
