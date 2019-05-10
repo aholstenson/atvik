@@ -6,6 +6,12 @@ describe('Synchronous event', function() {
 		const handler = new Event(parent);
 	});
 
+	it('Can emit event without listeners', function() {
+		const parent = {};
+		const handler = new Event(parent);
+		handler.emit();
+	});
+
 	it('Can attach and trigger single listener', function() {
 		const parent = {};
 		const handler = new Event(parent);
