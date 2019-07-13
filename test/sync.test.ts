@@ -371,4 +371,28 @@ describe('Synchronous event', function() {
 
 		expect(triggerCount).toEqual(1);
 	});
+
+	it('listeners returns single listener', function() {
+		const parent = {};
+		const handler = new Event(parent);
+
+		let listener = () => {};
+		handler.subscribe(listener);
+
+		const listeners = handler.listeners;
+		expect(listeners).toEqual([ listener ]);
+	});
+
+	it('listeners returns multiple listeners', function() {
+		const parent = {};
+		const handler = new Event(parent);
+
+		let l1 = () => {};
+		let l2 = () => {};
+		handler.subscribe(l1);
+		handler.subscribe(l2);
+
+		const listeners = handler.listeners;
+		expect(listeners).toEqual([ l1, l2 ]);
+	});
 });

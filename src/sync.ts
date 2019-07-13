@@ -19,7 +19,7 @@ export class Event<Parent, Args extends any[] = []> {
 	/**
 	 * Listener(s) that have been attached to this event handler.
 	 */
-	private listeners?: Listener<Parent, Args> | Listener<Parent, Args>[];
+	private registeredListeners?: Listener<Parent, Args> | Listener<Parent, Args>[];
 
 	/**
 	 * Monitor that will be notified on any listener change.
@@ -50,19 +50,19 @@ export class Event<Parent, Args extends any[] = []> {
 	 * @param args
 	 */
 	public emit(...args: Args): void {
-		if(Array.isArray(this.listeners)) {
+		if(Array.isArray(this.registeredListeners)) {
 			/*
 			 * Array is present, iterate over array and invoke all of the
 			 * listeners.
 			 */
-			for(const listener of this.listeners) {
+			for(const listener of this.registeredListeners) {
 				listener.apply(this.parent, args);
 			}
-		} else if(this.listeners) {
+		} else if(this.registeredListeners) {
 			/*
 			 * Single listener is present, simply invoke the listener.
 			 */
-			this.listeners.apply(this.parent, args);
+			this.registeredListeners.apply(this.parent, args);
 		}
 	}
 
@@ -74,13 +74,13 @@ export class Event<Parent, Args extends any[] = []> {
 	 * @param listener
 	 */
 	public subscribe(listener: Listener<Parent, Args>): SubscriptionHandle {
-		if(Array.isArray(this.listeners)) {
+		if(Array.isArray(this.registeredListeners)) {
 			// Listeners is already an array, create a copy with the new listener appended
-			this.listeners = [ ...this.listeners, listener ];
-		} else if(this.listeners) {
-			this.listeners = [ this.listeners, listener ];
+			this.registeredListeners = [ ...this.registeredListeners, listener ];
+		} else if(this.registeredListeners) {
+			this.registeredListeners = [ this.registeredListeners, listener ];
 		} else {
-			this.listeners = listener;
+			this.registeredListeners = listener;
 		}
 
 		if(this.monitor) {
@@ -103,26 +103,26 @@ export class Event<Parent, Args extends any[] = []> {
 	 * @param listener
 	 */
 	public unsubscribe(listener: Listener<Parent, Args>): boolean {
-		if(Array.isArray(this.listeners)) {
+		if(Array.isArray(this.registeredListeners)) {
 			/*
 			 * Array has been allocated, find the index of the listener and
 			 * then remove it from the array.
 			 */
-			const idx = this.listeners.indexOf(listener);
+			const idx = this.registeredListeners.indexOf(listener);
 			if(idx < 0) return false;
 
 			// Copy-on-write for deletions
-			const listeners = [ ...this.listeners ];
+			const listeners = [ ...this.registeredListeners ];
 			listeners.splice(idx);
-			this.listeners = listener;
+			this.registeredListeners = listener;
 
 			/*
 			 * If the array is empty, remove it. Otherwise at this point the
 			 * array has already been allocated so keep the array in case a
 			 * subscription happens again.
 			 */
-			if(this.listeners.length === 0) {
-				this.listeners = undefined;
+			if(this.registeredListeners.length === 0) {
+				this.registeredListeners = undefined;
 			}
 
 			if(this.monitor) {
@@ -131,12 +131,12 @@ export class Event<Parent, Args extends any[] = []> {
 			}
 
 			return true;
-		} else if(this.listeners === listener) {
+		} else if(this.registeredListeners === listener) {
 			/*
 			 * Single listener is present and its the current match. Reset
 			 * listeners property.
 			 */
-			this.listeners = undefined;
+			this.registeredListeners = undefined;
 
 			if(this.monitor) {
 				// Trigger the monitor if available
@@ -170,7 +170,18 @@ export class Event<Parent, Args extends any[] = []> {
 	 * Get if there are any listeners available.
 	 */
 	get hasListeners() {
-		return this.listeners !== undefined;
+		return this.registeredListeners !== undefined;
+	}
+
+	/**
+	 * Get a copy of the listeners as an array.
+	 */
+	get listeners() {
+		if(Array.isArray(this.registeredListeners)) {
+			return this.registeredListeners.slice(0);
+		} else {
+			return [ this.registeredListeners ];
+		}
 	}
 
 	/**
