@@ -311,4 +311,64 @@ describe('Synchronous event', function() {
 		expect(triggered1).toEqual(true);
 		expect(triggered2).toEqual(true);
 	});
+
+	it('Monitor is notified about single listener', function() {
+		const parent = {};
+		const handler = new Event(parent);
+		let triggerCount = 0;
+		handler.monitorListeners(() => {
+			triggerCount++;
+		});
+
+		handler.subscribe(() => {});
+
+		expect(triggerCount).toEqual(1);
+	});
+
+	it('Monitor is notified about multiple listeners', function() {
+		const parent = {};
+		const handler = new Event(parent);
+		let triggerCount = 0;
+		handler.monitorListeners(() => {
+			triggerCount++;
+		});
+
+		handler.subscribe(() => {});
+		handler.subscribe(() => {});
+
+		expect(triggerCount).toEqual(2);
+	});
+
+	it('Monitor is notified about single listener removal', function() {
+		const parent = {};
+		const handler = new Event(parent);
+
+		const handle = handler.subscribe(() => {});
+
+		let triggerCount = 0;
+		handler.monitorListeners(() => {
+			triggerCount++;
+		});
+
+		handle.unsubscribe();
+
+		expect(triggerCount).toEqual(1);
+	});
+
+	it('Monitor is notified about multiple listener removal', function() {
+		const parent = {};
+		const handler = new Event(parent);
+
+		const handle = handler.subscribe(() => {});
+		handler.subscribe(() => {});
+
+		let triggerCount = 0;
+		handler.monitorListeners(() => {
+			triggerCount++;
+		});
+
+		handle.unsubscribe();
+
+		expect(triggerCount).toEqual(1);
+	});
 });

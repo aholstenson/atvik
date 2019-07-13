@@ -22,6 +22,11 @@ export class Event<Parent, Args extends any[] = []> {
 	private listeners?: Listener<Parent, Args> | Listener<Parent, Args>[];
 
 	/**
+	 * Monitor that will be notified on any listener change.
+	 */
+	private monitor?: (event: this) => void;
+
+	/**
 	 * Create a new event.
 	 *
 	 * @param parent
@@ -78,6 +83,11 @@ export class Event<Parent, Args extends any[] = []> {
 			this.listeners = listener;
 		}
 
+		if(this.monitor) {
+			// Trigger the monitor if available
+			this.monitor(this);
+		}
+
 		const self = this;
 		return {
 			unsubscribe() {
@@ -115,6 +125,11 @@ export class Event<Parent, Args extends any[] = []> {
 				this.listeners = undefined;
 			}
 
+			if(this.monitor) {
+				// Trigger the monitor if available
+				this.monitor(this);
+			}
+
 			return true;
 		} else if(this.listeners === listener) {
 			/*
@@ -122,6 +137,11 @@ export class Event<Parent, Args extends any[] = []> {
 			 * listeners property.
 			 */
 			this.listeners = undefined;
+
+			if(this.monitor) {
+				// Trigger the monitor if available
+				this.monitor(this);
+			}
 
 			return true;
 		}
@@ -144,5 +164,35 @@ export class Event<Parent, Args extends any[] = []> {
 
 			this.subscribe(listener);
 		});
+	}
+
+	/**
+	 * Get if there are any listeners available.
+	 */
+	get hasListeners() {
+		return this.listeners !== undefined;
+	}
+
+	/**
+	 * Monitor for changes to listeners. Only a single monitor is supported at
+	 * a single time. This is intended to be used to react to if listeners are
+	 * currently registered. This can be used for things such as only listening
+	 * to events from other objects when this event is active.
+	 *
+	 * @param monitor
+	 */
+	public monitorListeners(monitor: (event: this) => void): void {
+		if(this.monitor) {
+			throw new Error('A monitor is already registered, call removeMonitor before registering a new monitor');
+		}
+
+		this.monitor = monitor;
+	}
+
+	/**
+	 * Stop monitoring for listener changes.
+	 */
+	public removeMonitor() {
+		this.monitor = undefined;
 	}
 }

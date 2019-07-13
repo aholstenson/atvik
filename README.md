@@ -102,3 +102,31 @@ Listening for a single event can be done via promises:
 // Wait for the event to be emitted
 const args = await event.once();
 ```
+
+## Monitoring for listener changes
+
+For some use cases it is necessary to monitor if an event has any listeners,
+for this library provides the `monitorListeners` function. If a monitor is
+registered it will be invoked for any change in listeners, so subscribing or
+unsubscribing will always trigger the monitor.
+
+Example with a fictional service being started and stopped:
+
+```javascript
+event.monitorListeners(theEvent => {
+  if(theEvent.hasListeners) {
+    // The event has at least one active listener
+    if(! service.started) {
+      service.start();
+    }
+  } else {
+    // No active listeners
+    if(service.started) {
+      service.stop();
+    }
+  }
+});
+```
+
+Only a single monitor may be active at a time and the active monitor can be
+removed via `removeMonitor()`.
