@@ -198,6 +198,18 @@ export class Event<Parent, Args extends any[] = []> {
 	}
 
 	/**
+	 * Clear all listeners for this event.
+	 */
+	public clear() {
+		this.registeredListeners = undefined;
+
+		if(this.monitor) {
+			// Trigger the monitor if available
+			this.monitor(this);
+		}
+	}
+
+	/**
 	 * Monitor for changes to listeners. Only a single monitor is supported at
 	 * a single time. This is intended to be used to react to if listeners are
 	 * currently registered. This can be used for things such as only listening

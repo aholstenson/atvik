@@ -351,6 +351,21 @@ describe('Synchronous event', function() {
 		expect(triggered).toEqual(2);
 	});
 
+	it('clear removes all listeners', function() {
+		const parent = {};
+		const handler = new Event(parent);
+
+		let triggered = 0;
+		handler.subscribable(() => {
+			triggered++;
+		});
+
+		handler.clear();
+		handler.emit();
+
+		expect(triggered).toEqual(0);
+	});
+
 	it('Monitor is notified about single listener', function() {
 		const parent = {};
 		const handler = new Event(parent);
@@ -407,6 +422,22 @@ describe('Synchronous event', function() {
 		});
 
 		handle.unsubscribe();
+
+		expect(triggerCount).toEqual(1);
+	});
+
+	it('Monitor is notified about clear', function() {
+		const parent = {};
+		const handler = new Event(parent);
+
+		handler.subscribe(() => {});
+
+		let triggerCount = 0;
+		handler.monitorListeners(() => {
+			triggerCount++;
+		});
+
+		handler.clear();
 
 		expect(triggerCount).toEqual(1);
 	});
