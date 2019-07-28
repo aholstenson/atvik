@@ -74,10 +74,27 @@ export class Event<Parent, Args extends any[] = []> {
 	 * @param listener
 	 */
 	public subscribe(listener: Listener<Parent, Args>): SubscriptionHandle {
+		const subscriptionHandle = {
+			unsubscribe() {
+				return self.unsubscribe(listener);
+			}
+		};
+
 		if(Array.isArray(this.registeredListeners)) {
 			// Listeners is already an array, create a copy with the new listener appended
+			const idx = this.registeredListeners.indexOf(listener);
+			if(idx >= 0) {
+				// If the listener is already in the array, skip registering
+				return subscriptionHandle;
+			}
+
 			this.registeredListeners = [ ...this.registeredListeners, listener ];
 		} else if(this.registeredListeners) {
+			if(this.registeredListeners === listener) {
+				// This is the active listener, skip registering
+				return subscriptionHandle;
+			}
+
 			this.registeredListeners = [ this.registeredListeners, listener ];
 		} else {
 			this.registeredListeners = listener;
@@ -89,11 +106,7 @@ export class Event<Parent, Args extends any[] = []> {
 		}
 
 		const self = this;
-		return {
-			unsubscribe() {
-				return self.unsubscribe(listener);
-			}
-		};
+		return subscriptionHandle;
 	}
 
 	/**

@@ -312,6 +312,45 @@ describe('Synchronous event', function() {
 		expect(triggered2).toEqual(true);
 	});
 
+	it('Duplicate listener when single listener is skipped ', function() {
+		const parent = {};
+		const handler = new Event(parent);
+
+		let triggered = 0;
+
+		const listener = () => {
+			triggered++;
+		};
+
+		handler.subscribe(listener);
+		handler.subscribe(listener);
+
+		handler.emit();
+
+		expect(triggered).toEqual(1);
+	});
+
+	it('Duplicate listener when multiple listeners is skipped', function() {
+		const parent = {};
+		const handler = new Event(parent);
+
+		let triggered = 0;
+
+		const listener = () => {
+			triggered++;
+		};
+
+		handler.subscribe(listener);
+		handler.subscribable(() => {
+			triggered++;
+		});
+		handler.subscribe(listener);
+
+		handler.emit();
+
+		expect(triggered).toEqual(2);
+	});
+
 	it('Monitor is notified about single listener', function() {
 		const parent = {};
 		const handler = new Event(parent);
