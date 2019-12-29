@@ -322,6 +322,43 @@ describe('Synchronous event', function() {
 		expect(triggered).toEqual(1);
 	});
 
+	it('Can change this via withThis', async function() {
+		const parent = {};
+		const otherParent = {};
+		const handler = new Event<object>(parent);
+
+		const withNewThis = handler.subscribable.withThis(otherParent);
+		let triggered = 0;
+		withNewThis(function() {
+			if(this === otherParent) triggered++;
+		});
+
+		handler.emit();
+
+		expect(triggered).toEqual(1);
+	});
+
+	it('Can remove handler added via withThis', async function() {
+		const parent = {};
+		const otherParent = {};
+		const handler = new Event<object>(parent);
+
+		const withNewThis = handler.subscribable.withThis(otherParent);
+		let triggered = 0;
+
+		const handle = withNewThis(function() {
+			if(this === otherParent) triggered++;
+		});
+
+		handler.emit();
+
+		handle.unsubscribe();
+
+		handler.emit();
+
+		expect(triggered).toEqual(1);
+	});
+
 	it('Can attach listener during emit without it triggering', function() {
 		const parent = {};
 		const handler = new Event(parent);

@@ -46,6 +46,8 @@ export function createSubscribable<This, Args extends any[]>(
 		filter
 	);
 
+	subscribable.withThis = <NewThis>(newThis: NewThis) => createNewThisSubscribable(subscribe, unsubscribe, newThis);
+
 	return subscribable;
 }
 
@@ -70,6 +72,42 @@ function createFilteredSubscribable<This, Args extends any[]>(
 				if(filterToApply.apply(this, args)) {
 					listener.call(this, ...args);
 				}
+			};
+
+			listenerMapping.set(listener, actualListener);
+			subscribe(actualListener);
+		},
+		listener => {
+			const actual = listenerMapping.get(listener);
+			if(actual) {
+				listenerMapping.delete(listener);
+				return unsubscribe(actual);
+			} else {
+				return false;
+			}
+		}
+	);
+}
+
+/**
+ * Create a Subscribable that changes what this is used for listeners.
+ *
+ * @param subscribe
+ * @param unsubscribe
+ * @param filterToApply
+ */
+function createNewThisSubscribable<CurrentThis, NewThis, Args extends any[]>(
+	subscribe: SubscribeFunction<CurrentThis, Args>,
+	unsubscribe: UnsubscribeFunction<CurrentThis, Args>,
+	newThis: NewThis
+): Subscribable<NewThis, Args> {
+	// Map used to keep track of the modified listeners
+	const listenerMapping = new Map<Listener<NewThis, Args>, Listener<CurrentThis, Args>>();
+
+	return createSubscribable(
+		listener => {
+			const actualListener = function(this: CurrentThis, ...args: Args) {
+				listener.call(newThis, ...args);
 			};
 
 			listenerMapping.set(listener, actualListener);

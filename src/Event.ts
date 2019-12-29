@@ -199,6 +199,15 @@ export class Event<Parent, Args extends any[] = []>
 	}
 
 	/**
+	 * Create a Subscribable that changes the this argument used for listeners.
+	 *
+	 * @param newThis
+	 */
+	public withThis<NewThis>(newThis: NewThis): Subscribable<NewThis, Args> {
+		return this.subscribable.withThis(newThis);
+	}
+
+	/**
 	 * Get if there are any listeners available.
 	 */
 	get hasListeners() {

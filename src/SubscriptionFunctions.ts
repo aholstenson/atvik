@@ -32,4 +32,11 @@ export interface SubscriptionFunctions<This, Args extends any[] = []> {
 	 * @param filter
 	 */
 	filter(filter: (this: This, ...args: Args) => boolean | Promise<boolean>): Subscribable<This, Args>;
+
+	/**
+	 * Create a Subscribable that changes the this argument used for listeners.
+	 *
+	 * @param newThis
+	 */
+	withThis<NewThis>(newThis: NewThis): Subscribable<NewThis, Args>;
 }
