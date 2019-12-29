@@ -1,6 +1,8 @@
 import { SubscriptionHandle } from './SubscriptionHandle';
 import { Listener } from './Listener';
+
 import { Subscribable } from './Subscribable';
+import { createSubscribable } from './createSubscribable';
 
 /**
  * An event that fires its listeners in a synchronous fashion.
@@ -35,12 +37,11 @@ export class Event<Parent, Args extends any[] = []> {
 	constructor(parent: Parent) {
 		this.parent = parent;
 
-		const subscribable = (listener: Listener<Parent, Args>) => this.subscribe(listener);
-		subscribable.subscribe = subscribable;
-		subscribable.unsubscribe = (listener: Listener<Parent, Args>) => this.unsubscribe(listener);
-		subscribable.once = () => this.once();
-
-		this.subscribable = subscribable;
+		this.subscribable = createSubscribable(
+			this.subscribe.bind(this),
+			this.unsubscribe.bind(this),
+			this.once.bind(this)
+		);
 	}
 
 	/**
