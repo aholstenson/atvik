@@ -39,8 +39,7 @@ export class Event<Parent, Args extends any[] = []> {
 
 		this.subscribable = createSubscribable(
 			this.subscribe.bind(this),
-			this.unsubscribe.bind(this),
-			this.once.bind(this)
+			this.unsubscribe.bind(this)
 		);
 	}
 

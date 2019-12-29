@@ -291,6 +291,37 @@ describe('Synchronous event', function() {
 		await handler.once();
 	});
 
+	it('Can filter event', async function() {
+		const parent = {};
+		const handler = new Event<object, [ number ]>(parent);
+
+		const filtered = handler.subscribable.filter(i => i < 10);
+		let triggered = 0;
+		filtered(i => triggered++);
+
+		handler.emit(2);
+		handler.emit(12);
+
+		expect(triggered).toEqual(1);
+	});
+
+	it('Can remove filtered event', async function() {
+		const parent = {};
+		const handler = new Event<object, [ number ]>(parent);
+
+		const filtered = handler.subscribable.filter(i => i < 10);
+		let triggered = 0;
+		const handle = filtered(i => triggered++);
+
+		handler.emit(2);
+
+		handle.unsubscribe();
+
+		handler.emit(2);
+
+		expect(triggered).toEqual(1);
+	});
+
 	it('Can attach listener during emit without it triggering', function() {
 		const parent = {};
 		const handler = new Event(parent);

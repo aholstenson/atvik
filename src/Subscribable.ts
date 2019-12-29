@@ -30,4 +30,11 @@ export interface Subscribable<This, Args extends any[] = []> {
 	 * @param listener
 	 */
 	once(): Promise<Args>;
+
+	/**
+	 * Filter this subscribable.
+	 *
+	 * @param filter
+	 */
+	filter(filter: (...args: Args) => boolean | Promise<boolean>): Subscribable<This, Args>;
 }
