@@ -23,12 +23,16 @@ event.emit('first argument');
 
 // Unsubscribe from the event
 handle.unsubscribe();
+
+// Public API without emit is available
+const subscribable = event.subscribable;
+subscribable((arg1) => /* do stuff here */);
 ```
 
 ## Use with classes
 
-Events come with a public API for use with classes so that users of a class can
-only subscribe to events and not emit them.
+Events come with a public API called `Subscribable` for use with classes so
+that users of a class can only subscribe to events and not emit them.
 
 ```javascript
 class Counter {
@@ -59,6 +63,20 @@ counter.onCountUpdated(currentCount => console.log(currentCount));
 // Increment and trigger the countUpdated event
 counter.increment();
 ```
+
+`Subscribable` is a function that can be used to directly subscribe a listener,
+but can also be used for more advanced use cases. The following functions are
+supported:
+
+* `subscribe(listener: Listener): SubscriptionHandle` - Subscribe a listener, 
+  the same as invoking the function directly
+* `unsubscribe(listener: Listener): boolean` - Unsubscribe a listener, returning
+  `true` if it was actually removed
+* `once(): Promise` - Create a promise that will resolve once the event is
+  emitted
+* `filter(filter: (...args) => boolean)` - Filter the subscribable, returning
+  an up
+* `withThis(newThis)` - Change the this used for listeners
 
 ## Types with TypeScript
 
@@ -101,6 +119,27 @@ Listening for a single event can be done via promises:
 ```javascript
 // Wait for the event to be emitted
 const args = await event.once();
+
+// Or using the subscribable
+const args = await event.subscribable.once();
+```
+
+## Filtering events
+
+In some cases it might be useful to filter events without managing a separate
+`Event`. Atvik supports creating a filtered `Subscribable` for this purpose:
+
+```javascript
+const event = new Event(thisValueForListener);
+
+const onlyEvenNumbers = event.filter((arg1) => arg1 % 2 === 0);
+onlyEvenNumbers(number => console.log('Got number:', number));
+
+// Will not invoke listener added via onlyEvenNumbers
+event.emit(1);
+
+// This will invoke the listener
+event.emit(2);
 ```
 
 ## Monitoring for listener changes
