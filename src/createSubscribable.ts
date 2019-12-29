@@ -3,6 +3,9 @@ import { Listener } from './Listener';
 import { Subscribable } from './Subscribable';
 import { SubscriptionHandle } from './SubscriptionHandle';
 
+export type SubscribeFunction<This, Args extends any[]> = (listener: Listener<This, Args>) => void;
+export type UnsubscribeFunction<This, Args extends any[]> = (listener: Listener<This, Args>) => boolean;
+
 /**
  * Create a Subscribable given a subscribe, unsubscribe and a once function.
  *
@@ -10,8 +13,8 @@ import { SubscriptionHandle } from './SubscriptionHandle';
  * @param unsubscribe
  */
 export function createSubscribable<This, Args extends any[]>(
-	subscribe: (listener: Listener<This, Args>) => void,
-	unsubscribe: (listener: Listener<This, Args>) => boolean,
+	subscribe: SubscribeFunction<This, Args>,
+	unsubscribe: UnsubscribeFunction<This, Args>,
 ): Subscribable<This, Args> {
 	const subscribable = (listener: Listener<This, Args>): SubscriptionHandle => {
 		subscribe(listener);
@@ -54,8 +57,8 @@ export function createSubscribable<This, Args extends any[]>(
  * @param filterToApply
  */
 function createFilteredSubscribable<This, Args extends any[]>(
-	subscribe: (listener: Listener<This, Args>) => void,
-	unsubscribe: (listener: Listener<This, Args>) => boolean,
+	subscribe: SubscribeFunction<This, Args>,
+	unsubscribe: UnsubscribeFunction<This, Args>,
 	filterToApply: (this: This, ...args: Args) => boolean
 ): Subscribable<This, Args> {
 	// Map used to keep track of the filtered listener of an added listener
