@@ -31,5 +31,5 @@ export interface SubscriptionFunctions<This, Args extends any[] = []> {
 	 *
 	 * @param filter
 	 */
-	filter(filter: (...args: Args) => boolean | Promise<boolean>): Subscribable<This, Args>;
+	filter(filter: (this: This, ...args: Args) => boolean | Promise<boolean>): Subscribable<This, Args>;
 }

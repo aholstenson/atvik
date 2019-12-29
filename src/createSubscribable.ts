@@ -37,7 +37,7 @@ export function createSubscribable<This, Args extends any[]>(
 		subscribe(listener);
 	});
 
-	subscribable.filter = (filter: (...args: Args) => boolean) => createFilteredSubscribable(
+	subscribable.filter = (filter: (this: This, ...args: Args) => boolean) => createFilteredSubscribable(
 		subscribe,
 		unsubscribe,
 		filter
@@ -56,7 +56,7 @@ export function createSubscribable<This, Args extends any[]>(
 function createFilteredSubscribable<This, Args extends any[]>(
 	subscribe: (listener: Listener<This, Args>) => void,
 	unsubscribe: (listener: Listener<This, Args>) => boolean,
-	filterToApply: (...args: Args) => boolean
+	filterToApply: (this: This, ...args: Args) => boolean
 ): Subscribable<This, Args> {
 	// Map used to keep track of the filtered listener of an added listener
 	const listenerMapping = new Map<Listener<This, Args>, Listener<This, Args>>();
@@ -64,7 +64,7 @@ function createFilteredSubscribable<This, Args extends any[]>(
 	return createSubscribable(
 		listener => {
 			const actualListener = function(this: This, ...args: Args) {
-				if(filterToApply(...args)) {
+				if(filterToApply.apply(this, args)) {
 					listener.call(this, ...args);
 				}
 			};
