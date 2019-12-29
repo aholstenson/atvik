@@ -3,11 +3,14 @@ import { Listener } from './Listener';
 
 import { Subscribable } from './Subscribable';
 import { createSubscribable } from './createSubscribable';
+import { SubscriptionFunctions } from './SubscriptionFunctions';
 
 /**
  * An event that fires its listeners in a synchronous fashion.
  */
-export class Event<Parent, Args extends any[] = []> {
+export class Event<Parent, Args extends any[] = []>
+	implements SubscriptionFunctions<Parent, Args>
+{
 	/**
 	 * Public Subscribable that can safely be shared with consumers that should
 	 * be able to listen for events.
@@ -38,8 +41,8 @@ export class Event<Parent, Args extends any[] = []> {
 		this.parent = parent;
 
 		this.subscribable = createSubscribable(
-			this.subscribe.bind(this),
-			this.unsubscribe.bind(this)
+			this.subscribe0.bind(this),
+			this.unsubscribe0.bind(this)
 		);
 	}
 
@@ -73,26 +76,20 @@ export class Event<Parent, Args extends any[] = []> {
 	 *
 	 * @param listener
 	 */
-	public subscribe(listener: Listener<Parent, Args>): SubscriptionHandle {
-		const subscriptionHandle = {
-			unsubscribe() {
-				return self.unsubscribe(listener);
-			}
-		};
-
+	protected subscribe0(listener: Listener<Parent, Args>) {
 		if(Array.isArray(this.registeredListeners)) {
 			// Listeners is already an array, create a copy with the new listener appended
 			const idx = this.registeredListeners.indexOf(listener);
 			if(idx >= 0) {
 				// If the listener is already in the array, skip registering
-				return subscriptionHandle;
+				return;
 			}
 
 			this.registeredListeners = [ ...this.registeredListeners, listener ];
 		} else if(this.registeredListeners) {
 			if(this.registeredListeners === listener) {
 				// This is the active listener, skip registering
-				return subscriptionHandle;
+				return;
 			}
 
 			this.registeredListeners = [ this.registeredListeners, listener ];
@@ -105,8 +102,7 @@ export class Event<Parent, Args extends any[] = []> {
 			this.monitor(this);
 		}
 
-		const self = this;
-		return subscriptionHandle;
+		return;
 	}
 
 	/**
@@ -115,7 +111,7 @@ export class Event<Parent, Args extends any[] = []> {
 	 *
 	 * @param listener
 	 */
-	public unsubscribe(listener: Listener<Parent, Args>): boolean {
+	protected unsubscribe0(listener: Listener<Parent, Args>): boolean {
 		if(Array.isArray(this.registeredListeners)) {
 			/*
 			 * Array has been allocated, find the index of the listener and
@@ -164,19 +160,42 @@ export class Event<Parent, Args extends any[] = []> {
 	}
 
 	/**
+	 * Subscribe to this event using the given listener. The listener will
+	 * be invoked any time the event is emitted. The returned handle can be
+	 * used to unsubscribe.
+	 *
+	 * @param listener
+	 */
+	public subscribe(listener: Listener<Parent, Args>): SubscriptionHandle {
+		return this.subscribable.subscribe(listener);
+	}
+
+	/**
+	 * Unsubscribe a listener from this handler. The specified listener will
+	 * no longer be invoked when the event is emitted.
+	 *
+	 * @param listener
+	 */
+	public unsubscribe(listener: Listener<Parent, Args>): boolean {
+		return this.subscribable.unsubscribe(listener);
+	}
+
+	/**
 	 * Get a promise that will resolve the first time this event is fired
 	 * after this call.
 	 */
 	public once(): Promise<Args> {
-		return new Promise((resolve, reject) => {
-			const listener = (...args: Args) => {
-				this.unsubscribe(listener);
+		return this.subscribable.once();
+	}
 
-				resolve(args);
-			};
-
-			this.subscribe(listener);
-		});
+	/**
+	 * Create a subscribable that will apply the specified filter to any
+	 * listeners added.
+	 *
+	 * @param filter
+	 */
+	public filter(filter: (...args: Args) => boolean | Promise<boolean>): Subscribable<Parent, Args> {
+		return this.subscribable.filter(filter);
 	}
 
 	/**
