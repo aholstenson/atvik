@@ -1,4 +1,4 @@
-import { Event } from '../src/sync';
+import { Event } from '../src/Event';
 
 describe('Synchronous event', function() {
 	it('Can create', function() {

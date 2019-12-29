@@ -1,6 +1,6 @@
-import { SubscriptionHandle } from './handle';
-import { Listener } from './listener';
-import { Subscribable } from './subscribable';
+import { SubscriptionHandle } from './SubscriptionHandle';
+import { Listener } from './Listener';
+import { Subscribable } from './Subscribable';
 
 /**
  * An event that fires its listeners in a synchronous fashion.

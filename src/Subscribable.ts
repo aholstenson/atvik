@@ -1,5 +1,5 @@
-import { Listener } from './listener';
-import { SubscriptionHandle } from './handle';
+import { Listener } from './Listener';
+import { SubscriptionHandle } from './SubscriptionHandle';
 
 /**
  * Functions used to subscribe and unsubscribe to an event.
