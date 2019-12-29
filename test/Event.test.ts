@@ -442,6 +442,14 @@ describe('Synchronous event', function() {
 		expect(triggerCount).toEqual(1);
 	});
 
+	it('listeners returns empty when no listener', function() {
+		const parent = {};
+		const handler = new Event(parent);
+
+		const listeners = handler.listeners;
+		expect(listeners).toEqual([]);
+	});
+
 	it('listeners returns single listener', function() {
 		const parent = {};
 		const handler = new Event(parent);

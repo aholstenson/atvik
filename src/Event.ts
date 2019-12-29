@@ -192,8 +192,10 @@ export class Event<Parent, Args extends any[] = []> {
 	get listeners() {
 		if(Array.isArray(this.registeredListeners)) {
 			return this.registeredListeners.slice(0);
-		} else {
+		} else if(this.registeredListeners) {
 			return [ this.registeredListeners ];
+		} else {
+			return [];
 		}
 	}
 
