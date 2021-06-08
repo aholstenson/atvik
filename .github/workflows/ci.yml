@@ -13,7 +13,7 @@ jobs:
 
     strategy:
       matrix:
-        node: [ 8.x, 10.x, 12.x, 14.x, 16.x ]
+        node: [ 12.x, 14.x, 16.x ]
 
     steps:
       - uses: actions/checkout@v2
@@ -22,6 +22,24 @@ jobs:
         with:
           node-version: ${{ matrix.node }}
       - run: npm install
-      - run: npm run lint
       - run: npm run build
-      - run: npm run test
+      - run: npm run lint
+      - run: npm run coverage
+      - name: Upload coverage
+        uses: coverallsapp/github-action@master
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          flag-name: node-${{ matrix.node }}
+          parallel: true
+
+  coveralls:
+
+    needs: build
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Coveralls report
+        uses: coverallsapp/github-action@master
+        with:
+          github-token: ${{ github.token }}
+          parallel-finished: true
