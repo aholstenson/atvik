@@ -1,7 +1,7 @@
 # Atvik
 
 [![npm version](https://badge.fury.io/js/atvik.svg)](https://badge.fury.io/js/atvik)
-[![Build Status](https://travis-ci.org/aholstenson/atvik.svg?branch=master)](https://travis-ci.org/aholstenson/atvik)
+[![Build Status](https://github.com/aholstenson/atvik/actions/workflows/ci.yml/badge.svg)](https://github.com/aholstenson/atvik/actions/workflows/ci.yml)
 [![Coverage Status](https://coveralls.io/repos/aholstenson/atvik/badge.svg)](https://coveralls.io/github/aholstenson/atvik)
 [![Dependencies](https://david-dm.org/aholstenson/atvik.svg)](https://david-dm.org/aholstenson/atvik)
 
