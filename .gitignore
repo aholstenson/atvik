@@ -2,6 +2,7 @@ dist
 node_modules
 coverage
 npm-debug.log
-/yarn.lock
 .vscode/
 .history/
+/package-lock.json
+/yarn.lock
