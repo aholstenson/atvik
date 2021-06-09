@@ -1,6 +1,6 @@
 import { Listener } from './Listener';
-import { SubscriptionHandle } from './SubscriptionHandle';
 import { Subscribable } from './Subscribable';
+import { SubscriptionHandle } from './SubscriptionHandle';
 
 /**
  * Functions used to subscribe and unsubscribe to an event.

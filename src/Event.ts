@@ -1,9 +1,8 @@
-import { SubscriptionHandle } from './SubscriptionHandle';
-import { Listener } from './Listener';
-
-import { Subscribable } from './Subscribable';
 import { createSubscribable } from './createSubscribable';
+import { Listener } from './Listener';
+import { Subscribable } from './Subscribable';
 import { SubscriptionFunctions } from './SubscriptionFunctions';
+import { SubscriptionHandle } from './SubscriptionHandle';
 
 /**
  * An event that handles subscription and fires its listeners in a synchronous
@@ -81,9 +80,7 @@ import { SubscriptionFunctions } from './SubscriptionFunctions';
  * counter.increment();
  * ```
  */
-export class Event<Parent, Args extends any[] = []>
-	implements SubscriptionFunctions<Parent, Args>
-{
+export class Event<Parent, Args extends any[] = []> implements SubscriptionFunctions<Parent, Args> {
 	/**
 	 * Public Subscribable that can safely be shared with consumers that should
 	 * be able to listen for events.
@@ -110,7 +107,7 @@ export class Event<Parent, Args extends any[] = []>
 	 * @param parent
 	 *   the parent that will be passed to listener as their `this`
 	 */
-	constructor(parent: Parent) {
+	public constructor(parent: Parent) {
 		this.parent = parent;
 
 		this.subscribable = createSubscribable(
@@ -283,14 +280,14 @@ export class Event<Parent, Args extends any[] = []>
 	/**
 	 * Get if there are any listeners available.
 	 */
-	get hasListeners() {
+	public get hasListeners() {
 		return this.registeredListeners !== undefined;
 	}
 
 	/**
 	 * Get a copy of the listeners as an array.
 	 */
-	get listeners() {
+	public get listeners() {
 		if(Array.isArray(this.registeredListeners)) {
 			return this.registeredListeners.slice(0);
 		} else if(this.registeredListeners) {

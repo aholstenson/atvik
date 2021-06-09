@@ -1,5 +1,4 @@
 import { Listener } from './Listener';
-
 import { Subscribable } from './Subscribable';
 import { SubscriptionHandle } from './SubscriptionHandle';
 
