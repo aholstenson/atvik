@@ -16,8 +16,12 @@ export type UnsubscribeFunction<This, Args extends any[]> = (listener: Listener<
 /**
  * Create a Subscribable given a subscribe, unsubscribe and a once function.
  *
- * @param subscribe
- * @param unsubscribe
+ * @param subscribe -
+ *   function used to subscribe listeners
+ * @param unsubscribe -
+ *   function used to unsubscribe listeners
+ * @returns
+ *   instance of `Subscribable`
  */
 export function createSubscribable<This, Args extends any[]>(
 	subscribe: SubscribeFunction<This, Args>,
@@ -37,7 +41,7 @@ export function createSubscribable<This, Args extends any[]>(
 	subscribable.subscribe = subscribable;
 	subscribable.unsubscribe = unsubscribe;
 
-	subscribable.once = () => new Promise<Args>((resolve, reject) => {
+	subscribable.once = () => new Promise<Args>(resolve => {
 		const listener = (...args: Args) => {
 			unsubscribe(listener);
 
@@ -61,9 +65,14 @@ export function createSubscribable<This, Args extends any[]>(
 /**
  * Create a Subscribable that is filtered via the specified function.
  *
- * @param subscribe
- * @param unsubscribe
- * @param filterToApply
+ * @param subscribe -
+ *   function used to subscribe listeners
+ * @param unsubscribe -
+ *   function used to unsubscribe listeners
+ * @param filterToApply -
+ *   function used to fitler events
+ * @returns
+ *   `Subscribable`
  */
 function createFilteredSubscribable<This, Args extends any[]>(
 	subscribe: SubscribeFunction<This, Args>,
@@ -99,9 +108,14 @@ function createFilteredSubscribable<This, Args extends any[]>(
 /**
  * Create a Subscribable that changes what this is used for listeners.
  *
- * @param subscribe
- * @param unsubscribe
- * @param filterToApply
+ * @param subscribe -
+ *   function used to subscribe listeners
+ * @param unsubscribe -
+ *   function used to unsubscribe listeners
+ * @param newThis -
+ *   object to use as the new this
+ * @returns
+ *   `Subscribable`
  */
 function createNewThisSubscribable<CurrentThis, NewThis, Args extends any[]>(
 	subscribe: SubscribeFunction<CurrentThis, Args>,

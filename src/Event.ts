@@ -104,7 +104,7 @@ export class Event<Parent, Args extends any[] = []> implements SubscriptionFunct
 	/**
 	 * Create a new event.
 	 *
-	 * @param parent
+	 * @param parent -
 	 *   the parent that will be passed to listener as their `this`
 	 */
 	public constructor(parent: Parent) {
@@ -120,7 +120,8 @@ export class Event<Parent, Args extends any[] = []> implements SubscriptionFunct
 	 * Emit this event. This will invoke all of the listeners with the passed
 	 * arguments.
 	 *
-	 * @param args
+	 * @param args -
+	 *   arguments that the listeners will receive
 	 */
 	public emit(...args: Args): void {
 		if(Array.isArray(this.registeredListeners)) {
@@ -141,10 +142,10 @@ export class Event<Parent, Args extends any[] = []> implements SubscriptionFunct
 
 	/**
 	 * Subscribe to this event using the given listener. The listener will
-	 * be invoked any time the event is emitted. The returned handle can be
-	 * used to unsubscribe.
+	 * be invoked any time the event is emitted.
 	 *
-	 * @param listener
+	 * @param listener -
+	 *   listener to subscribe
 	 */
 	protected subscribe0(listener: Listener<Parent, Args>) {
 		if(Array.isArray(this.registeredListeners)) {
@@ -179,7 +180,10 @@ export class Event<Parent, Args extends any[] = []> implements SubscriptionFunct
 	 * Unsubscribe a listener from this handler. The specified listener will
 	 * no longer be invoked when the event is emitted.
 	 *
-	 * @param listener
+	 * @param listener -
+	 *   listener to unsubscribe
+	 * @returns
+	 *   `true` if the listener was subscribed
 	 */
 	protected unsubscribe0(listener: Listener<Parent, Args>): boolean {
 		if(Array.isArray(this.registeredListeners)) {
@@ -234,7 +238,10 @@ export class Event<Parent, Args extends any[] = []> implements SubscriptionFunct
 	 * be invoked any time the event is emitted. The returned handle can be
 	 * used to unsubscribe.
 	 *
-	 * @param listener
+	 * @param listener -
+	 *   listener to subscribe
+	 * @returns
+	 *   handle to the subscription, can be used to unsubscribe
 	 */
 	public subscribe(listener: Listener<Parent, Args>): SubscriptionHandle {
 		return this.subscribable.subscribe(listener);
@@ -244,7 +251,10 @@ export class Event<Parent, Args extends any[] = []> implements SubscriptionFunct
 	 * Unsubscribe a listener from this handler. The specified listener will
 	 * no longer be invoked when the event is emitted.
 	 *
-	 * @param listener
+	 * @param listener -
+	 *   listener to unsubscribe
+	 * @returns
+	 *   `true` if the listener was subscribed
 	 */
 	public unsubscribe(listener: Listener<Parent, Args>): boolean {
 		return this.subscribable.unsubscribe(listener);
@@ -253,6 +263,9 @@ export class Event<Parent, Args extends any[] = []> implements SubscriptionFunct
 	/**
 	 * Get a promise that will resolve the first time this event is fired
 	 * after this call.
+	 *
+	 * @returns
+	 *   promise that resolves the next time the event is fired
 	 */
 	public once(): Promise<Args> {
 		return this.subscribable.once();
@@ -262,16 +275,22 @@ export class Event<Parent, Args extends any[] = []> implements SubscriptionFunct
 	 * Create a subscribable that will apply the specified filter to any
 	 * listeners added.
 	 *
-	 * @param filter
+	 * @param filter -
+	 *   function used to filter events
+	 * @returns
+	 *   filtered `Subscription`
 	 */
 	public filter(filter: (...args: Args) => boolean | Promise<boolean>): Subscribable<Parent, Args> {
 		return this.subscribable.filter(filter);
 	}
 
 	/**
-	 * Create a Subscribable that changes the this argument used for listeners.
+	 * Create a subscribable that changes the this argument used for listeners.
 	 *
-	 * @param newThis
+	 * @param newThis -
+	 *   what should be treated as this for event listeners
+	 * @returns
+	 *   modified `Subscribable`
 	 */
 	public withThis<NewThis>(newThis: NewThis): Subscribable<NewThis, Args> {
 		return this.subscribable.withThis(newThis);
@@ -279,6 +298,9 @@ export class Event<Parent, Args extends any[] = []> implements SubscriptionFunct
 
 	/**
 	 * Get if there are any listeners available.
+	 *
+	 * @returns
+	 *   `true` if listeners are present
 	 */
 	public get hasListeners() {
 		return this.registeredListeners !== undefined;
@@ -286,6 +308,9 @@ export class Event<Parent, Args extends any[] = []> implements SubscriptionFunct
 
 	/**
 	 * Get a copy of the listeners as an array.
+	 *
+	 * @returns
+	 *   listeners as array
 	 */
 	public get listeners() {
 		if(Array.isArray(this.registeredListeners)) {
@@ -315,7 +340,8 @@ export class Event<Parent, Args extends any[] = []> implements SubscriptionFunct
 	 * currently registered. This can be used for things such as only listening
 	 * to events from other objects when this event is active.
 	 *
-	 * @param monitor
+	 * @param monitor -
+	 *   function used to monitor for changes to listeners
 	 */
 	public monitorListeners(monitor: (event: this) => void): void {
 		if(this.monitor) {

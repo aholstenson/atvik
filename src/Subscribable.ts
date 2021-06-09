@@ -7,8 +7,14 @@ import { SubscriptionHandle } from './SubscriptionHandle';
  */
 export interface Subscribable<This, Args extends any[] = []> extends SubscriptionFunctions<This, Args> {
 	/**
-	 * Subscribe to the event, will invoke the given function when the event
-	 * is emitted.
+	 * Subscribe to this event using the given listener. The listener will
+	 * be invoked any time the event is emitted. The returned handle can be
+	 * used to unsubscribe.
+	 *
+	 * @param listener -
+	 *   listener to subscribe
+	 * @returns
+	 *   handle to the subscription, can be used to unsubscribe
 	 */
 	(listener: Listener<This, Args>): SubscriptionHandle;
 }

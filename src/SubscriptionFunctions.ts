@@ -7,36 +7,55 @@ import { SubscriptionHandle } from './SubscriptionHandle';
  */
 export interface SubscriptionFunctions<This, Args extends any[] = []> {
 	/**
-	 * Subscribe to the event, will invoke the given function when the event
-	 * is emitted.
+	 * Subscribe to this event using the given listener. The listener will
+	 * be invoked any time the event is emitted. The returned handle can be
+	 * used to unsubscribe.
+	 *
+	 * @param listener -
+	 *   listener to subscribe
+	 * @returns
+	 *   handle to the subscription, can be used to unsubscribe
 	 */
 	subscribe(listener: Listener<This, Args>): SubscriptionHandle;
 
 	/**
-	 * Unsubscribe a previously subscribed listener.
+	 * Unsubscribe a listener from this handler. The specified listener will
+	 * no longer be invoked when the event is emitted.
 	 *
-	 * @param listener
+	 * @param listener -
+	 *   listener to unsubscribe
+	 * @returns
+	 *   `true` if the listener was subscribed
 	 */
 	unsubscribe(listener: Listener<This, Args>): boolean;
 
 	/**
-	 * Subscribe to an event but only trigger the listener once.
+	 * Get a promise that will resolve the first time this event is fired
+	 * after this call.
 	 *
-	 * @param listener
+	 * @returns
+	 *   promise that resolves the next time the event is fired
 	 */
 	once(): Promise<Args>;
 
 	/**
-	 * Filter this subscribable.
+	 * Create a subscribable that will apply the specified filter to any
+	 * listeners added.
 	 *
-	 * @param filter
+	 * @param filter -
+	 *   function used to filter events
+	 * @returns
+	 *   filtered `Subscription`
 	 */
 	filter(filter: (this: This, ...args: Args) => boolean | Promise<boolean>): Subscribable<This, Args>;
 
 	/**
 	 * Create a Subscribable that changes the this argument used for listeners.
 	 *
-	 * @param newThis
+	 * @param newThis -
+	 *   what should be treated as this for event listeners
+	 * @returns
+	 *   modified `Subscribable`
 	 */
 	withThis<NewThis>(newThis: NewThis): Subscribable<NewThis, Args>;
 }
