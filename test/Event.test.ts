@@ -24,6 +24,7 @@ describe('Synchronous event', function() {
 
 		expect(triggered).toEqual(false);
 
+		expect(handler.hasListeners).toEqual(true);
 		handler.emit();
 
 		expect(triggered).toEqual(true);
@@ -39,7 +40,9 @@ describe('Synchronous event', function() {
 			triggered = true;
 		});
 
+		expect(handler.hasListeners).toEqual(true);
 		handle.unsubscribe();
+		expect(handler.hasListeners).toEqual(false);
 
 		handler.emit();
 
@@ -57,6 +60,8 @@ describe('Synchronous event', function() {
 		});
 
 		handler.unsubscribe(() => null);
+
+		expect(handler.hasListeners).toEqual(true);
 
 		handler.emit();
 
@@ -78,6 +83,7 @@ describe('Synchronous event', function() {
 		handler.emit();
 
 		expect(triggered).toEqual(true);
+		expect(handler.hasListeners).toEqual(false);
 	});
 
 	it('Can attach and trigger single listener with single argument', function() {
@@ -295,6 +301,20 @@ describe('Synchronous event', function() {
 		const parent = {};
 		const handler = new Event<object, [ number ]>(parent);
 
+		const filtered = handler.filter(i => i < 10);
+		let triggered = 0;
+		filtered(i => triggered++);
+
+		handler.emit(2);
+		handler.emit(12);
+
+		expect(triggered).toEqual(1);
+	});
+
+	it('Can filter event via subscribable', async function() {
+		const parent = {};
+		const handler = new Event<object, [ number ]>(parent);
+
 		const filtered = handler.subscribable.filter(i => i < 10);
 		let triggered = 0;
 		filtered(i => triggered++);
@@ -327,6 +347,22 @@ describe('Synchronous event', function() {
 		const otherParent = {};
 		const handler = new Event<object>(parent);
 
+		const withNewThis = handler.withThis(otherParent);
+		let triggered = 0;
+		withNewThis(function() {
+			if(this === otherParent) triggered++;
+		});
+
+		handler.emit();
+
+		expect(triggered).toEqual(1);
+	});
+
+	it('Can change this via withThis via subscribable', async function() {
+		const parent = {};
+		const otherParent = {};
+		const handler = new Event<object>(parent);
+
 		const withNewThis = handler.subscribable.withThis(otherParent);
 		let triggered = 0;
 		withNewThis(function() {
@@ -337,6 +373,7 @@ describe('Synchronous event', function() {
 
 		expect(triggered).toEqual(1);
 	});
+
 
 	it('Can remove handler added via withThis', async function() {
 		const parent = {};
@@ -429,6 +466,8 @@ describe('Synchronous event', function() {
 		});
 
 		handler.clear();
+		expect(handler.hasListeners).toEqual(false);
+
 		handler.emit();
 
 		expect(triggered).toEqual(0);
@@ -508,6 +547,32 @@ describe('Synchronous event', function() {
 		handler.clear();
 
 		expect(triggerCount).toEqual(1);
+	});
+
+	it('Monitor can be removed', function() {
+		const parent = {};
+		const handler = new Event(parent);
+		let triggerCount = 0;
+		handler.monitorListeners(() => {
+			triggerCount++;
+		});
+
+		handler.removeMonitor();
+
+		handler.subscribe(() => {});
+
+		expect(triggerCount).toEqual(0);
+	});
+
+	it('Multiple monitors fail', function() {
+		const parent = {};
+		const handler = new Event(parent);
+
+		handler.monitorListeners(() => {});
+
+		expect(() => {
+			handler.monitorListeners(() => {});
+		}).toThrow();
 	});
 
 	it('listeners returns empty when no listener', function() {
