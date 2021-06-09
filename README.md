@@ -169,3 +169,49 @@ event.monitorListeners(theEvent => {
 
 Only a single monitor may be active at a time and the active monitor can be
 removed via `removeMonitor()`.
+
+## Asynchronous subscription and unsubscription
+
+`AsyncSubscribable` is a variant of `Subscribable`where listeners are 
+subscribed in an asynchronous way. It is intended for use when listeners need
+some asynchronous action before they are available, such as a remote RPC
+scenario. The API of `AsyncSubscribable` matches `Subscribable` but returns 
+promises for `subscribe`, `unsubscribe` and `emit`:
+
+```javascript
+// Subscribe to the event
+const handle = await asyncSubscribable.subscribe((arg1) => /* do stuff here */);
+
+// Unsubscribe from the event
+await handle.unsubscribe();
+```
+
+An implementation can be created via `createAsyncSubscribable` to create a 
+bridge to something like a remote service, or via `AsyncEvent` for local use.
+
+Using `createAsyncSubscribable`:
+
+```javascript
+import { createAsyncSubscribable } from 'atvik';
+
+const asyncSubscribable = createAsyncSubscribable({
+  subscribe: async (listener) => {
+    // Subscribe listener here
+  },
+  unsubscribe: async (listener) => {
+    // Unsubscribe listener here
+    return listenerWasSubscribed;
+  }
+});
+```
+
+Using `AsyncEvent`:
+
+```javascript
+import { AsyncEvent } from 'atvik';
+
+const event = new AsyncEvent(thisValueForListeners);
+
+// Emit the event, triggering all listeners
+await event.emit('first argument');
+```
