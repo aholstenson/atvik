@@ -1,9 +1,10 @@
+/* eslint-disable @typescript-eslint/no-empty-function */
 import { Event } from '../src/Event';
 
 describe('Synchronous event', function() {
 	it('Can create', function() {
 		const parent = {};
-		const handler = new Event(parent);
+		new Event(parent);
 	});
 
 	it('Can emit event without listeners', function() {
@@ -92,7 +93,7 @@ describe('Synchronous event', function() {
 
 		let triggered = false;
 
-		handler.subscribe((v1) => {
+		handler.subscribe(v1 => {
 			triggered = v1 === 'test';
 		});
 
@@ -190,7 +191,7 @@ describe('Synchronous event', function() {
 		let triggered2 = false;
 		let triggered3 = false;
 
-		const handle1 = handler.subscribe(() => {
+		handler.subscribe(() => {
 			triggered1 = true;
 		});
 
@@ -200,7 +201,7 @@ describe('Synchronous event', function() {
 			handle2.unsubscribe();
 		});
 
-		const handle3 = handler.subscribe(() => {
+		handler.subscribe(() => {
 			triggered3 = true;
 		});
 
@@ -247,11 +248,11 @@ describe('Synchronous event', function() {
 		let triggered1 = false;
 		let triggered2 = false;
 
-		handler.subscribe((v1) => {
+		handler.subscribe(v1 => {
 			triggered1 = v1 === 'test';
 		});
 
-		handler.subscribe((v1) => {
+		handler.subscribe(v1 => {
 			triggered2 = v1 === 'test';
 		});
 
@@ -303,7 +304,7 @@ describe('Synchronous event', function() {
 
 		const filtered = handler.filter(i => i < 10);
 		let triggered = 0;
-		filtered(i => triggered++);
+		filtered(() => triggered++);
 
 		handler.emit(2);
 		handler.emit(12);
@@ -317,7 +318,7 @@ describe('Synchronous event', function() {
 
 		const filtered = handler.subscribable.filter(i => i < 10);
 		let triggered = 0;
-		filtered(i => triggered++);
+		filtered(() => triggered++);
 
 		handler.emit(2);
 		handler.emit(12);
@@ -331,7 +332,7 @@ describe('Synchronous event', function() {
 
 		const filtered = handler.subscribable.filter(i => i < 10);
 		let triggered = 0;
-		const handle = filtered(i => triggered++);
+		const handle = filtered(() => triggered++);
 
 		handler.emit(2);
 
@@ -587,7 +588,7 @@ describe('Synchronous event', function() {
 		const parent = {};
 		const handler = new Event(parent);
 
-		let listener = () => {};
+		const listener = () => {};
 		handler.subscribe(listener);
 
 		const listeners = handler.listeners;
@@ -598,8 +599,8 @@ describe('Synchronous event', function() {
 		const parent = {};
 		const handler = new Event(parent);
 
-		let l1 = () => {};
-		let l2 = () => {};
+		const l1 = () => {};
+		const l2 = () => {};
 		handler.subscribe(l1);
 		handler.subscribe(l2);
 
