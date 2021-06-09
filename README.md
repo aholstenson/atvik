@@ -1,9 +1,9 @@
 # Atvik
 
-[![npm version](https://badge.fury.io/js/atvik.svg)](https://badge.fury.io/js/atvik)
+[![npm version](https://img.shields.io/npm/v/atvik)](https://www.npmjs.com/package/atvik)
 [![Build Status](https://github.com/aholstenson/atvik/actions/workflows/ci.yml/badge.svg)](https://github.com/aholstenson/atvik/actions/workflows/ci.yml)
-[![Coverage Status](https://coveralls.io/repos/aholstenson/atvik/badge.svg)](https://coveralls.io/github/aholstenson/atvik)
-[![Dependencies](https://david-dm.org/aholstenson/atvik.svg)](https://david-dm.org/aholstenson/atvik)
+[![Coverage Status](https://img.shields.io/coveralls/github/aholstenson/atvik)](https://coveralls.io/github/aholstenson/atvik)
+[![Dependencies](https://img.shields.io/librariesio/release/npm/atvik)](https://libraries.io/npm/atvik)
 
 Atvik is an event emitter for JavaScript and TypeScript. This library
 provides emitters for individual events that work well with types and
