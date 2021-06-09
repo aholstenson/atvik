@@ -14,20 +14,35 @@ export type AsyncSubscribeFunction<This, Args extends any[]> = (listener: Listen
 export type AsyncUnsubscribeFunction<This, Args extends any[]> = (listener: Listener<This, Args>) => Promise<boolean>;
 
 /**
+ * Options for `createAsyncSubscribable`.
+ */
+export interface AsyncSubscribableOptions<This, Args extends any[]> {
+	/**
+	 * Function used to subscribe a listener.
+	 */
+	subscribe: AsyncSubscribeFunction<This, Args>;
+
+	/**
+	 * Function used to unsubscribe a listener.
+	 */
+	unsubscribe: AsyncUnsubscribeFunction<This, Args>;
+}
+
+/**
  * Create a AsyncSubscribable instance that uses the give subscribe and
  * unsubscribe function to manage listeners.
  *
- * @param subscribe -
- *   function used to subscribe listeners
- * @param unsubscribe -
- *   function used to unsubscribe listeners
+ * @param options -
+ *   options used to create this async subscribable
  * @returns
  *   instance of `AsyncSubscribable`
  */
 export function createAsyncSubscribable<This, Args extends any[]>(
-	subscribe: AsyncSubscribeFunction<This, Args>,
-	unsubscribe: AsyncUnsubscribeFunction<This, Args>,
+	options: AsyncSubscribableOptions<This, Args>
 ): AsyncSubscribable<This, Args> {
+	const subscribe = options.subscribe;
+	const unsubscribe = options.unsubscribe;
+
 	const subscribable = async (listener: Listener<This, Args>): Promise<AsyncSubscriptionHandle> => {
 		await subscribe(listener);
 
@@ -85,8 +100,8 @@ function createFilteredAsyncSubscribable<This, Args extends any[]>(
 	// Map used to keep track of the filtered listener of an added listener
 	const listenerMapping = new Map<Listener<This, Args>, Listener<This, Args>>();
 
-	return createAsyncSubscribable(
-		listener => {
+	return createAsyncSubscribable({
+		subscribe: listener => {
 			const actualListener = function(this: This, ...args: Args) {
 				if(filterToApply.apply(this, args)) {
 					listener.call(this, ...args);
@@ -96,7 +111,7 @@ function createFilteredAsyncSubscribable<This, Args extends any[]>(
 			listenerMapping.set(listener, actualListener);
 			return subscribe(actualListener);
 		},
-		listener => {
+		unsubscribe: listener => {
 			const actual = listenerMapping.get(listener);
 			if(actual) {
 				listenerMapping.delete(listener);
@@ -105,7 +120,7 @@ function createFilteredAsyncSubscribable<This, Args extends any[]>(
 				return Promise.resolve(false);
 			}
 		}
-	);
+	});
 }
 
 /**
@@ -128,8 +143,8 @@ function createNewThisAsyncSubscribable<CurrentThis, NewThis, Args extends any[]
 	// Map used to keep track of the modified listeners
 	const listenerMapping = new Map<Listener<NewThis, Args>, Listener<CurrentThis, Args>>();
 
-	return createAsyncSubscribable(
-		listener => {
+	return createAsyncSubscribable({
+		subscribe: listener => {
 			const actualListener = function(this: CurrentThis, ...args: Args) {
 				listener.call(newThis, ...args);
 			};
@@ -137,7 +152,7 @@ function createNewThisAsyncSubscribable<CurrentThis, NewThis, Args extends any[]
 			listenerMapping.set(listener, actualListener);
 			return subscribe(actualListener);
 		},
-		listener => {
+		unsubscribe: listener => {
 			const actual = listenerMapping.get(listener);
 			if(actual) {
 				listenerMapping.delete(listener);
@@ -146,5 +161,5 @@ function createNewThisAsyncSubscribable<CurrentThis, NewThis, Args extends any[]
 				return Promise.resolve(false);
 			}
 		}
-	);
+	});
 }

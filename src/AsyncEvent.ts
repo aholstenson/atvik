@@ -75,10 +75,10 @@ export class AsyncEvent<Parent, Args extends any[] = []> implements AsyncSubscri
 	public constructor(parent: Parent) {
 		this.parent = parent;
 
-		this.subscribable = createAsyncSubscribable(
-			this.subscribe0.bind(this),
-			this.unsubscribe0.bind(this)
-		);
+		this.subscribable = createAsyncSubscribable({
+			subscribe: this.subscribe0.bind(this),
+			unsubscribe: this.unsubscribe0.bind(this)
+		});
 	}
 
 	/**
