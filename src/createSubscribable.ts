@@ -14,19 +14,34 @@ export type SubscribeFunction<This, Args extends any[]> = (listener: Listener<Th
 export type UnsubscribeFunction<This, Args extends any[]> = (listener: Listener<This, Args>) => boolean;
 
 /**
+ * Options for `createSubscribable`.
+ */
+export interface SubscribableOptions<This, Args extends any[]> {
+	/**
+	 * Function used to subscribe a listener.
+	 */
+	subscribe: SubscribeFunction<This, Args>;
+
+	/**
+	 * Function used to unsubscribe a listener.
+	 */
+	unsubscribe: UnsubscribeFunction<This, Args>;
+}
+
+/**
  * Create a Subscribable given a subscribe, unsubscribe and a once function.
  *
- * @param subscribe -
- *   function used to subscribe listeners
- * @param unsubscribe -
- *   function used to unsubscribe listeners
+ * @param options -
+ *   options used to create this subscribable
  * @returns
  *   instance of `Subscribable`
  */
 export function createSubscribable<This, Args extends any[]>(
-	subscribe: SubscribeFunction<This, Args>,
-	unsubscribe: UnsubscribeFunction<This, Args>,
+	options: SubscribableOptions<This, Args>
 ): Subscribable<This, Args> {
+	const subscribe = options.subscribe;
+	const unsubscribe = options.unsubscribe;
+
 	const subscribable = (listener: Listener<This, Args>): SubscriptionHandle => {
 		subscribe(listener);
 
@@ -82,8 +97,8 @@ function createFilteredSubscribable<This, Args extends any[]>(
 	// Map used to keep track of the filtered listener of an added listener
 	const listenerMapping = new Map<Listener<This, Args>, Listener<This, Args>>();
 
-	return createSubscribable(
-		listener => {
+	return createSubscribable({
+		subscribe: listener => {
 			const actualListener = function(this: This, ...args: Args) {
 				if(filterToApply.apply(this, args)) {
 					listener.call(this, ...args);
@@ -93,7 +108,7 @@ function createFilteredSubscribable<This, Args extends any[]>(
 			listenerMapping.set(listener, actualListener);
 			subscribe(actualListener);
 		},
-		listener => {
+		unsubscribe: listener => {
 			const actual = listenerMapping.get(listener);
 			if(actual) {
 				listenerMapping.delete(listener);
@@ -102,7 +117,7 @@ function createFilteredSubscribable<This, Args extends any[]>(
 				return false;
 			}
 		}
-	);
+	});
 }
 
 /**
@@ -125,8 +140,8 @@ function createNewThisSubscribable<CurrentThis, NewThis, Args extends any[]>(
 	// Map used to keep track of the modified listeners
 	const listenerMapping = new Map<Listener<NewThis, Args>, Listener<CurrentThis, Args>>();
 
-	return createSubscribable(
-		listener => {
+	return createSubscribable({
+		subscribe: listener => {
 			const actualListener = function(this: CurrentThis, ...args: Args) {
 				listener.call(newThis, ...args);
 			};
@@ -134,7 +149,7 @@ function createNewThisSubscribable<CurrentThis, NewThis, Args extends any[]>(
 			listenerMapping.set(listener, actualListener);
 			subscribe(actualListener);
 		},
-		listener => {
+		unsubscribe: listener => {
 			const actual = listenerMapping.get(listener);
 			if(actual) {
 				listenerMapping.delete(listener);
@@ -143,5 +158,5 @@ function createNewThisSubscribable<CurrentThis, NewThis, Args extends any[]>(
 				return false;
 			}
 		}
-	);
+	});
 }

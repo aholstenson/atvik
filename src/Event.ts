@@ -110,10 +110,10 @@ export class Event<Parent, Args extends any[] = []> implements SubscriptionFunct
 	public constructor(parent: Parent) {
 		this.parent = parent;
 
-		this.subscribable = createSubscribable(
-			this.subscribe0.bind(this),
-			this.unsubscribe0.bind(this)
-		);
+		this.subscribable = createSubscribable({
+			subscribe: this.subscribe0.bind(this),
+			unsubscribe: this.unsubscribe0.bind(this)
+		});
 	}
 
 	/**
