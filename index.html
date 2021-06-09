@@ -1,0 +1,344 @@
+<!doctype html>
+<html class="default no-js">
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>atvik</title>
+	<meta name="description" content="Documentation for atvik">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="assets/css/main.css">
+	<script async src="assets/js/search.js" id="search-script"></script>
+</head>
+<body>
+<header>
+	<div class="tsd-page-toolbar">
+		<div class="container">
+			<div class="table-wrap">
+				<div class="table-cell" id="tsd-search" data-index="assets/js/search.json" data-base=".">
+					<div class="field">
+						<label for="tsd-search-field" class="tsd-widget search no-caption">Search</label>
+						<input id="tsd-search-field" type="text" />
+					</div>
+					<ul class="results">
+						<li class="state loading">Preparing search index...</li>
+						<li class="state failure">The search index is not available</li>
+					</ul>
+					<a href="index.html" class="title">atvik</a>
+				</div>
+				<div class="table-cell" id="tsd-widgets">
+					<div id="tsd-filter">
+						<a href="#" class="tsd-widget options no-caption" data-toggle="options">Options</a>
+						<div class="tsd-filter-group">
+							<div class="tsd-select" id="tsd-filter-visibility">
+								<span class="tsd-select-label">All</span>
+								<ul class="tsd-select-list">
+									<li data-value="public">Public</li>
+									<li data-value="protected">Public/Protected</li>
+									<li data-value="private" class="selected">All</li>
+								</ul>
+							</div>
+							<input type="checkbox" id="tsd-filter-inherited" checked />
+							<label class="tsd-widget" for="tsd-filter-inherited">Inherited</label>
+							<input type="checkbox" id="tsd-filter-externals" checked />
+							<label class="tsd-widget" for="tsd-filter-externals">Externals</label>
+						</div>
+					</div>
+					<a href="#" class="tsd-widget menu no-caption" data-toggle="menu">Menu</a>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="tsd-page-title">
+		<div class="container">
+			<h1>atvik</h1>
+		</div>
+	</div>
+</header>
+<div class="container container-main">
+	<div class="row">
+		<div class="col-8 col-content">
+			<div class="tsd-panel tsd-typography">
+				<a href="#atvik" id="atvik" style="color: inherit; text-decoration: none;">
+					<h1>Atvik</h1>
+				</a>
+				<p><a href="https://badge.fury.io/js/atvik"><img src="https://badge.fury.io/js/atvik.svg" alt="npm version"></a>
+					<a href="https://github.com/aholstenson/atvik/actions/workflows/ci.yml"><img src="https://github.com/aholstenson/atvik/actions/workflows/ci.yml/badge.svg" alt="Build Status"></a>
+					<a href="https://coveralls.io/github/aholstenson/atvik"><img src="https://coveralls.io/repos/aholstenson/atvik/badge.svg" alt="Coverage Status"></a>
+				<a href="https://david-dm.org/aholstenson/atvik"><img src="https://david-dm.org/aholstenson/atvik.svg" alt="Dependencies"></a></p>
+				<p>Atvik is an event emitter for JavaScript and TypeScript. This library
+					provides emitters for individual events that work well with types and
+				inheritance.</p>
+				<pre><code class="language-javascript"><span style="color: #AF00DB">import</span><span style="color: #000000"> { </span><span style="color: #001080">Event</span><span style="color: #000000"> } </span><span style="color: #AF00DB">from</span><span style="color: #000000"> </span><span style="color: #A31515">&#039;atvik&#039;</span><span style="color: #000000">;</span>
+
+<span style="color: #008000">// Create an event</span>
+<span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #0070C1">event</span><span style="color: #000000"> = </span><span style="color: #0000FF">new</span><span style="color: #000000"> </span><span style="color: #795E26">Event</span><span style="color: #000000">(</span><span style="color: #001080">thisValueForListeners</span><span style="color: #000000">);</span>
+
+<span style="color: #008000">// Subscribe to the event</span>
+<span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #0070C1">handle</span><span style="color: #000000"> = </span><span style="color: #001080">event</span><span style="color: #000000">.</span><span style="color: #795E26">subscribe</span><span style="color: #000000">((</span><span style="color: #001080">arg1</span><span style="color: #000000">) </span><span style="color: #0000FF">=&gt;</span><span style="color: #000000"> </span><span style="color: #008000">/* do stuff here */</span><span style="color: #000000">);</span>
+
+<span style="color: #008000">// Emit the event, triggering all listeners</span>
+<span style="color: #001080">event</span><span style="color: #000000">.</span><span style="color: #795E26">emit</span><span style="color: #000000">(</span><span style="color: #A31515">&#039;first argument&#039;</span><span style="color: #000000">);</span>
+
+<span style="color: #008000">// Unsubscribe from the event</span>
+<span style="color: #001080">handle</span><span style="color: #000000">.</span><span style="color: #795E26">unsubscribe</span><span style="color: #000000">();</span>
+
+<span style="color: #008000">// Public API without emit is available</span>
+<span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #0070C1">subscribable</span><span style="color: #000000"> = </span><span style="color: #001080">event</span><span style="color: #000000">.</span><span style="color: #001080">subscribable</span><span style="color: #000000">;</span>
+<span style="color: #795E26">subscribable</span><span style="color: #000000">((</span><span style="color: #001080">arg1</span><span style="color: #000000">) </span><span style="color: #0000FF">=&gt;</span><span style="color: #000000"> </span><span style="color: #008000">/* do stuff here */</span><span style="color: #000000">);</span>
+</code></pre>
+				<a href="#use-with-classes" id="use-with-classes" style="color: inherit; text-decoration: none;">
+					<h2>Use with classes</h2>
+				</a>
+				<p>Events come with a public API called <code>Subscribable</code> for use with classes so
+				that users of a class can only subscribe to events and not emit them.</p>
+				<pre><code class="language-javascript"><span style="color: #0000FF">class</span><span style="color: #000000"> </span><span style="color: #267F99">Counter</span><span style="color: #000000"> {</span>
+<span style="color: #000000">  </span><span style="color: #0000FF">constructor</span><span style="color: #000000">() {</span>
+<span style="color: #000000">    </span><span style="color: #0000FF">this</span><span style="color: #000000">.</span><span style="color: #001080">countUpdatedEvent</span><span style="color: #000000"> = </span><span style="color: #0000FF">new</span><span style="color: #000000"> </span><span style="color: #795E26">Event</span><span style="color: #000000">(</span><span style="color: #0000FF">this</span><span style="color: #000000">);</span>
+<span style="color: #000000">    </span><span style="color: #0000FF">this</span><span style="color: #000000">.</span><span style="color: #001080">count</span><span style="color: #000000"> = </span><span style="color: #098658">0</span><span style="color: #000000">;</span>
+<span style="color: #000000">  }</span>
+
+<span style="color: #000000">  </span><span style="color: #0000FF">get</span><span style="color: #000000"> </span><span style="color: #795E26">onCountUpdated</span><span style="color: #000000">() {</span>
+<span style="color: #000000">    </span><span style="color: #008000">/*</span>
+<span style="color: #008000">     * Return the subscribable of the event - which is a function that can be</span>
+<span style="color: #008000">     * used to listen to the event.</span>
+<span style="color: #008000">     */</span>
+<span style="color: #000000">    </span><span style="color: #AF00DB">return</span><span style="color: #000000"> </span><span style="color: #0000FF">this</span><span style="color: #000000">.</span><span style="color: #001080">countUpdatedEvent</span><span style="color: #000000">.</span><span style="color: #001080">subscribable</span><span style="color: #000000">;</span>
+<span style="color: #000000">  }</span>
+
+<span style="color: #000000">  </span><span style="color: #795E26">increment</span><span style="color: #000000">() {</span>
+<span style="color: #000000">    </span><span style="color: #0000FF">this</span><span style="color: #000000">.</span><span style="color: #001080">count</span><span style="color: #000000">++;</span>
+<span style="color: #000000">    </span><span style="color: #0000FF">this</span><span style="color: #000000">.</span><span style="color: #001080">countUpdatedEvent</span><span style="color: #000000">.</span><span style="color: #795E26">emit</span><span style="color: #000000">(</span><span style="color: #0000FF">this</span><span style="color: #000000">.</span><span style="color: #001080">count</span><span style="color: #000000">);</span>
+<span style="color: #000000">  }</span>
+<span style="color: #000000">}</span>
+
+<span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #0070C1">counter</span><span style="color: #000000"> = </span><span style="color: #0000FF">new</span><span style="color: #000000"> </span><span style="color: #795E26">Counter</span><span style="color: #000000">();</span>
+
+<span style="color: #008000">// Subscribe to the event with a listener</span>
+<span style="color: #001080">counter</span><span style="color: #000000">.</span><span style="color: #795E26">onCountUpdated</span><span style="color: #000000">(</span><span style="color: #001080">currentCount</span><span style="color: #000000"> </span><span style="color: #0000FF">=&gt;</span><span style="color: #000000"> </span><span style="color: #001080">console</span><span style="color: #000000">.</span><span style="color: #795E26">log</span><span style="color: #000000">(</span><span style="color: #001080">currentCount</span><span style="color: #000000">));</span>
+
+<span style="color: #008000">// Increment and trigger the countUpdated event</span>
+<span style="color: #001080">counter</span><span style="color: #000000">.</span><span style="color: #795E26">increment</span><span style="color: #000000">();</span>
+</code></pre>
+				<p><code>Subscribable</code> is a function that can be used to directly subscribe a listener,
+					but can also be used for more advanced use cases. The following functions are
+				supported:</p>
+				<ul>
+					<li><code>subscribe(listener: Listener): SubscriptionHandle</code> - Subscribe a listener,
+					the same as invoking the function directly</li>
+					<li><code>unsubscribe(listener: Listener): boolean</code> - Unsubscribe a listener, returning
+					<code>true</code> if it was actually removed</li>
+					<li><code>once(): Promise</code> - Create a promise that will resolve once the event is
+					emitted</li>
+					<li><code>filter(filter: (...args) =&gt; boolean)</code> - Filter the subscribable, returning
+					an up</li>
+					<li><code>withThis(newThis)</code> - Change the this used for listeners</li>
+				</ul>
+				<a href="#types-with-typescript" id="types-with-typescript" style="color: inherit; text-decoration: none;">
+					<h2>Types with TypeScript</h2>
+				</a>
+				<p>Atvik is compatible with TypeScript and provides a type-safe interface to
+				listen to and emit events:</p>
+				<pre><code class="language-typescript"><span style="color: #AF00DB">import</span><span style="color: #000000"> { </span><span style="color: #001080">Event</span><span style="color: #000000"> } </span><span style="color: #AF00DB">from</span><span style="color: #000000"> </span><span style="color: #A31515">&#039;atvik&#039;</span><span style="color: #000000">;</span>
+
+<span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #0070C1">parent</span><span style="color: #000000"> = {};</span>
+
+<span style="color: #008000">// Create an event without any expected arguments</span>
+<span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #0070C1">noArgEvent</span><span style="color: #000000"> = </span><span style="color: #0000FF">new</span><span style="color: #000000"> </span><span style="color: #795E26">Event</span><span style="color: #000000">&lt;</span><span style="color: #267F99">object</span><span style="color: #000000">&gt;(</span><span style="color: #001080">parent</span><span style="color: #000000">);</span>
+
+<span style="color: #008000">// Subscribing will be checked so it takes in zero arguments</span>
+<span style="color: #001080">noArgEvent</span><span style="color: #000000">.</span><span style="color: #795E26">subscribe</span><span style="color: #000000">(() </span><span style="color: #0000FF">=&gt;</span><span style="color: #000000"> </span><span style="color: #008000">/* do stuff here */</span><span style="color: #000000">);</span>
+
+<span style="color: #008000">// Emitting the event can only be done without any parameters</span>
+<span style="color: #001080">noArgEvent</span><span style="color: #000000">.</span><span style="color: #795E26">emit</span><span style="color: #000000">();</span>
+</code></pre>
+				<p>Events can have arguments that will be checked in the listeners and when
+				emitting:</p>
+				<pre><code class="language-typescript"><span style="color: #008000">// Pass a second type in array form to specify the expected arguments</span>
+<span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #0070C1">argEvent</span><span style="color: #000000"> = </span><span style="color: #0000FF">new</span><span style="color: #000000"> </span><span style="color: #795E26">Event</span><span style="color: #000000">&lt;</span><span style="color: #267F99">object</span><span style="color: #000000">, [ </span><span style="color: #267F99">number</span><span style="color: #000000"> ]&gt;(</span><span style="color: #001080">parent</span><span style="color: #000000">);</span>
+
+<span style="color: #008000">// Subscribe will now check that the arguments are compatible</span>
+<span style="color: #001080">argEvent</span><span style="color: #000000">.</span><span style="color: #795E26">subscribe</span><span style="color: #000000">((</span><span style="color: #001080">count</span><span style="color: #000000">) </span><span style="color: #0000FF">=&gt;</span><span style="color: #000000"> </span><span style="color: #008000">/* do stuff here */</span><span style="color: #000000">);</span>
+
+<span style="color: #008000">// Emitting the event now requires arguments to be passed</span>
+<span style="color: #001080">argEvent</span><span style="color: #000000">.</span><span style="color: #795E26">emit</span><span style="color: #000000">(</span><span style="color: #098658">10</span><span style="color: #000000">);</span>
+</code></pre>
+				<a href="#listening-to-something-once" id="listening-to-something-once" style="color: inherit; text-decoration: none;">
+					<h2>Listening to something once</h2>
+				</a>
+				<p>Listening for a single event can be done via promises:</p>
+				<pre><code class="language-javascript"><span style="color: #008000">// Wait for the event to be emitted</span>
+<span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #0070C1">args</span><span style="color: #000000"> = </span><span style="color: #AF00DB">await</span><span style="color: #000000"> </span><span style="color: #001080">event</span><span style="color: #000000">.</span><span style="color: #795E26">once</span><span style="color: #000000">();</span>
+
+<span style="color: #008000">// Or using the subscribable</span>
+<span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #0070C1">args</span><span style="color: #000000"> = </span><span style="color: #AF00DB">await</span><span style="color: #000000"> </span><span style="color: #001080">event</span><span style="color: #000000">.</span><span style="color: #001080">subscribable</span><span style="color: #000000">.</span><span style="color: #795E26">once</span><span style="color: #000000">();</span>
+</code></pre>
+				<a href="#filtering-events" id="filtering-events" style="color: inherit; text-decoration: none;">
+					<h2>Filtering events</h2>
+				</a>
+				<p>In some cases it might be useful to filter events without managing a separate
+				<code>Event</code>. Atvik supports creating a filtered <code>Subscribable</code> for this purpose:</p>
+				<pre><code class="language-javascript"><span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #0070C1">event</span><span style="color: #000000"> = </span><span style="color: #0000FF">new</span><span style="color: #000000"> </span><span style="color: #795E26">Event</span><span style="color: #000000">(</span><span style="color: #001080">thisValueForListener</span><span style="color: #000000">);</span>
+
+<span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #0070C1">onlyEvenNumbers</span><span style="color: #000000"> = </span><span style="color: #001080">event</span><span style="color: #000000">.</span><span style="color: #795E26">filter</span><span style="color: #000000">((</span><span style="color: #001080">arg1</span><span style="color: #000000">) </span><span style="color: #0000FF">=&gt;</span><span style="color: #000000"> </span><span style="color: #001080">arg1</span><span style="color: #000000"> % </span><span style="color: #098658">2</span><span style="color: #000000"> === </span><span style="color: #098658">0</span><span style="color: #000000">);</span>
+<span style="color: #795E26">onlyEvenNumbers</span><span style="color: #000000">(</span><span style="color: #001080">number</span><span style="color: #000000"> </span><span style="color: #0000FF">=&gt;</span><span style="color: #000000"> </span><span style="color: #001080">console</span><span style="color: #000000">.</span><span style="color: #795E26">log</span><span style="color: #000000">(</span><span style="color: #A31515">&#039;Got number:&#039;</span><span style="color: #000000">, </span><span style="color: #001080">number</span><span style="color: #000000">));</span>
+
+<span style="color: #008000">// Will not invoke listener added via onlyEvenNumbers</span>
+<span style="color: #001080">event</span><span style="color: #000000">.</span><span style="color: #795E26">emit</span><span style="color: #000000">(</span><span style="color: #098658">1</span><span style="color: #000000">);</span>
+
+<span style="color: #008000">// This will invoke the listener</span>
+<span style="color: #001080">event</span><span style="color: #000000">.</span><span style="color: #795E26">emit</span><span style="color: #000000">(</span><span style="color: #098658">2</span><span style="color: #000000">);</span>
+</code></pre>
+				<a href="#monitoring-for-listener-changes" id="monitoring-for-listener-changes" style="color: inherit; text-decoration: none;">
+					<h2>Monitoring for listener changes</h2>
+				</a>
+				<p>For some use cases it is necessary to monitor if an event has any listeners,
+					for this library provides the <code>monitorListeners</code> function. If a monitor is
+					registered it will be invoked for any change in listeners, so subscribing or
+				unsubscribing will always trigger the monitor.</p>
+				<p>Example with a fictional service being started and stopped:</p>
+				<pre><code class="language-javascript"><span style="color: #001080">event</span><span style="color: #000000">.</span><span style="color: #795E26">monitorListeners</span><span style="color: #000000">(</span><span style="color: #001080">theEvent</span><span style="color: #000000"> </span><span style="color: #0000FF">=&gt;</span><span style="color: #000000"> {</span>
+<span style="color: #000000">  </span><span style="color: #AF00DB">if</span><span style="color: #000000">(</span><span style="color: #001080">theEvent</span><span style="color: #000000">.</span><span style="color: #001080">hasListeners</span><span style="color: #000000">) {</span>
+<span style="color: #000000">    </span><span style="color: #008000">// The event has at least one active listener</span>
+<span style="color: #000000">    </span><span style="color: #AF00DB">if</span><span style="color: #000000">(! </span><span style="color: #001080">service</span><span style="color: #000000">.</span><span style="color: #001080">started</span><span style="color: #000000">) {</span>
+<span style="color: #000000">      </span><span style="color: #001080">service</span><span style="color: #000000">.</span><span style="color: #795E26">start</span><span style="color: #000000">();</span>
+<span style="color: #000000">    }</span>
+<span style="color: #000000">  } </span><span style="color: #AF00DB">else</span><span style="color: #000000"> {</span>
+<span style="color: #000000">    </span><span style="color: #008000">// No active listeners</span>
+<span style="color: #000000">    </span><span style="color: #AF00DB">if</span><span style="color: #000000">(</span><span style="color: #001080">service</span><span style="color: #000000">.</span><span style="color: #001080">started</span><span style="color: #000000">) {</span>
+<span style="color: #000000">      </span><span style="color: #001080">service</span><span style="color: #000000">.</span><span style="color: #795E26">stop</span><span style="color: #000000">();</span>
+<span style="color: #000000">    }</span>
+<span style="color: #000000">  }</span>
+<span style="color: #000000">});</span>
+</code></pre>
+				<p>Only a single monitor may be active at a time and the active monitor can be
+				removed via <code>removeMonitor()</code>.</p>
+				<a href="#asynchronous-subscription-and-unsubscription" id="asynchronous-subscription-and-unsubscription" style="color: inherit; text-decoration: none;">
+					<h2>Asynchronous subscription and unsubscription</h2>
+				</a>
+				<p><code>AsyncSubscribable</code> is a variant of <code>Subscribable</code>where listeners are
+					subscribed in an asynchronous way. It is intended for use when listeners need
+					some asynchronous action before they are available, such as a remote RPC
+					scenario. The API of <code>AsyncSubscribable</code> matches <code>Subscribable</code> but returns
+				promises for <code>subscribe</code>, <code>unsubscribe</code> and <code>emit</code>:</p>
+				<pre><code class="language-javascript"><span style="color: #008000">// Subscribe to the event</span>
+<span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #0070C1">handle</span><span style="color: #000000"> = </span><span style="color: #AF00DB">await</span><span style="color: #000000"> </span><span style="color: #001080">asyncSubscribable</span><span style="color: #000000">.</span><span style="color: #795E26">subscribe</span><span style="color: #000000">((</span><span style="color: #001080">arg1</span><span style="color: #000000">) </span><span style="color: #0000FF">=&gt;</span><span style="color: #000000"> </span><span style="color: #008000">/* do stuff here */</span><span style="color: #000000">);</span>
+
+<span style="color: #008000">// Unsubscribe from the event</span>
+<span style="color: #AF00DB">await</span><span style="color: #000000"> </span><span style="color: #001080">handle</span><span style="color: #000000">.</span><span style="color: #795E26">unsubscribe</span><span style="color: #000000">();</span>
+</code></pre>
+				<p>An implementation can be created via <code>createAsyncSubscribable</code> to create a
+				bridge to something like a remote service, or via <code>AsyncEvent</code> for local use.</p>
+				<p>Using <code>createAsyncSubscribable</code>:</p>
+				<pre><code class="language-javascript"><span style="color: #AF00DB">import</span><span style="color: #000000"> { </span><span style="color: #001080">createAsyncSubscribable</span><span style="color: #000000"> } </span><span style="color: #AF00DB">from</span><span style="color: #000000"> </span><span style="color: #A31515">&#039;atvik&#039;</span><span style="color: #000000">;</span>
+
+<span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #0070C1">asyncSubscribable</span><span style="color: #000000"> = </span><span style="color: #795E26">createAsyncSubscribable</span><span style="color: #000000">({</span>
+<span style="color: #000000">  </span><span style="color: #795E26">subscribe</span><span style="color: #001080">:</span><span style="color: #000000"> </span><span style="color: #0000FF">async</span><span style="color: #000000"> (</span><span style="color: #001080">listener</span><span style="color: #000000">) </span><span style="color: #0000FF">=&gt;</span><span style="color: #000000"> {</span>
+<span style="color: #000000">    </span><span style="color: #008000">// Subscribe listener here</span>
+<span style="color: #000000">  },</span>
+<span style="color: #000000">  </span><span style="color: #795E26">unsubscribe</span><span style="color: #001080">:</span><span style="color: #000000"> </span><span style="color: #0000FF">async</span><span style="color: #000000"> (</span><span style="color: #001080">listener</span><span style="color: #000000">) </span><span style="color: #0000FF">=&gt;</span><span style="color: #000000"> {</span>
+<span style="color: #000000">    </span><span style="color: #008000">// Unsubscribe listener here</span>
+<span style="color: #000000">    </span><span style="color: #AF00DB">return</span><span style="color: #000000"> </span><span style="color: #001080">listenerWasSubscribed</span><span style="color: #000000">;</span>
+<span style="color: #000000">  }</span>
+<span style="color: #000000">});</span>
+</code></pre>
+				<p>Using <code>AsyncEvent</code>:</p>
+				<pre><code class="language-javascript"><span style="color: #AF00DB">import</span><span style="color: #000000"> { </span><span style="color: #001080">AsyncEvent</span><span style="color: #000000"> } </span><span style="color: #AF00DB">from</span><span style="color: #000000"> </span><span style="color: #A31515">&#039;atvik&#039;</span><span style="color: #000000">;</span>
+
+<span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #0070C1">event</span><span style="color: #000000"> = </span><span style="color: #0000FF">new</span><span style="color: #000000"> </span><span style="color: #795E26">AsyncEvent</span><span style="color: #000000">(</span><span style="color: #001080">thisValueForListeners</span><span style="color: #000000">);</span>
+
+<span style="color: #008000">// Emit the event, triggering all listeners</span>
+<span style="color: #AF00DB">await</span><span style="color: #000000"> </span><span style="color: #001080">event</span><span style="color: #000000">.</span><span style="color: #795E26">emit</span><span style="color: #000000">(</span><span style="color: #A31515">&#039;first argument&#039;</span><span style="color: #000000">);</span>
+</code></pre>
+			</div>
+		</div>
+		<div class="col-4 col-menu menu-sticky-wrap menu-highlight">
+			<nav class="tsd-navigation primary">
+				<ul>
+					<li class=" ">
+						<a href="modules.html">Exports</a>
+					</li>
+				</ul>
+			</nav>
+			<nav class="tsd-navigation secondary menu-sticky">
+				<ul class="before-current">
+					<li class=" tsd-kind-class tsd-has-type-parameter">
+						<a href="classes/asyncevent.html" class="tsd-kind-icon">Async<wbr>Event</a>
+					</li>
+					<li class=" tsd-kind-class tsd-has-type-parameter">
+						<a href="classes/event.html" class="tsd-kind-icon">Event</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-has-type-parameter">
+						<a href="interfaces/asyncsubscribable.html" class="tsd-kind-icon">Async<wbr>Subscribable</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-has-type-parameter">
+						<a href="interfaces/asyncsubscribableoptions.html" class="tsd-kind-icon">Async<wbr>Subscribable<wbr>Options</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-has-type-parameter">
+						<a href="interfaces/asyncsubscriptionfunctions.html" class="tsd-kind-icon">Async<wbr>Subscription<wbr>Functions</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/asyncsubscriptionhandle.html" class="tsd-kind-icon">Async<wbr>Subscription<wbr>Handle</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-has-type-parameter">
+						<a href="interfaces/subscribable.html" class="tsd-kind-icon">Subscribable</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-has-type-parameter">
+						<a href="interfaces/subscribableoptions.html" class="tsd-kind-icon">Subscribable<wbr>Options</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-has-type-parameter">
+						<a href="interfaces/subscriptionfunctions.html" class="tsd-kind-icon">Subscription<wbr>Functions</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/subscriptionhandle.html" class="tsd-kind-icon">Subscription<wbr>Handle</a>
+					</li>
+					<li class=" tsd-kind-type-alias tsd-has-type-parameter">
+						<a href="modules.html#asyncsubscribefunction" class="tsd-kind-icon">Async<wbr>Subscribe<wbr>Function</a>
+					</li>
+					<li class=" tsd-kind-type-alias tsd-has-type-parameter">
+						<a href="modules.html#asyncunsubscribefunction" class="tsd-kind-icon">Async<wbr>Unsubscribe<wbr>Function</a>
+					</li>
+					<li class=" tsd-kind-type-alias tsd-has-type-parameter">
+						<a href="modules.html#listener" class="tsd-kind-icon">Listener</a>
+					</li>
+					<li class=" tsd-kind-type-alias tsd-has-type-parameter">
+						<a href="modules.html#subscribefunction" class="tsd-kind-icon">Subscribe<wbr>Function</a>
+					</li>
+					<li class=" tsd-kind-type-alias tsd-has-type-parameter">
+						<a href="modules.html#unsubscribefunction" class="tsd-kind-icon">Unsubscribe<wbr>Function</a>
+					</li>
+					<li class=" tsd-kind-function tsd-has-type-parameter">
+						<a href="modules.html#createasyncsubscribable" class="tsd-kind-icon">create<wbr>Async<wbr>Subscribable</a>
+					</li>
+					<li class=" tsd-kind-function tsd-has-type-parameter">
+						<a href="modules.html#createsubscribable" class="tsd-kind-icon">create<wbr>Subscribable</a>
+					</li>
+				</ul>
+			</nav>
+		</div>
+	</div>
+</div>
+<footer class="with-border-bottom">
+	<div class="container">
+		<h2>Legend</h2>
+		<div class="tsd-legend-group">
+			<ul class="tsd-legend">
+				<li class="tsd-kind-property tsd-parent-kind-interface"><span class="tsd-kind-icon">Property</span></li>
+				<li class="tsd-kind-method tsd-parent-kind-interface"><span class="tsd-kind-icon">Method</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-property tsd-parent-kind-class"><span class="tsd-kind-icon">Property</span></li>
+				<li class="tsd-kind-method tsd-parent-kind-class"><span class="tsd-kind-icon">Method</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-method tsd-parent-kind-class tsd-is-protected"><span class="tsd-kind-icon">Protected method</span></li>
+			</ul>
+		</div>
+	</div>
+</footer>
+<div class="container tsd-generator">
+	<p>Generated using <a href="https://typedoc.org/" target="_blank">TypeDoc</a></p>
+</div>
+<div class="overlay"></div>
+<script src="assets/js/main.js"></script>
+</body>
+</html>
