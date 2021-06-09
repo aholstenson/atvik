@@ -21,5 +21,10 @@
 	},
 	"include": [
 		"src"
-	]
+	],
+	"typedocOptions": {
+		"entryPoints": [ "src/index.ts" ],
+		"out": "apidocs",
+		"excludePrivate": true
+	}
 }
