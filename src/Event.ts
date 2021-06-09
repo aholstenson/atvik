@@ -6,7 +6,80 @@ import { createSubscribable } from './createSubscribable';
 import { SubscriptionFunctions } from './SubscriptionFunctions';
 
 /**
- * An event that fires its listeners in a synchronous fashion.
+ * An event that handles subscription and fires its listeners in a synchronous
+ * fashion.
+ *
+ * Each instance represents a single event:
+ *
+ * ```javascript
+ * const event = new Event(valueForThisInListeners);
+ * ```
+ *
+ * The event can be emitted via the `emit` method:
+ *
+ * ```javascript
+ * event.emit('first-param', 'second-param');
+ * ```
+ *
+ * Listeners can be added directly on the event, but it is recommended to
+ * use `.subscribable` for any API that is public:
+ *
+ * ```javascript
+ * // Adding a listener directly on the event
+ * event.subscribe(() => ...);
+ *
+ * // Subscribable provides a public API
+ * event.subscribable(() => ..)
+ * event.subscribable.subscribe(() => ...);
+ * ```
+ *
+ * Listeners can be unsubscribed either via their handle or via the event:
+ *
+ * ```javascript
+ * // Use handle for easier unsubscription
+ * const handle = event.addListener(() => ...);
+ * handle.unsubscribe();
+ *
+ * // Unsubscribe the actual listener
+ * const listener = () => ...;
+ * eventOrSubscribable.subscribe(listener);
+ * eventOrSubscribable.unsubscribe(listener);
+ * ```
+ *
+ * Types are fully supported and especially useful when events are used in
+ * classes:
+ *
+ * ```typescript
+ * import { Event, Subscribable } from 'atvik';
+ *
+ * class Counter {
+ *   // Declaration of the event including the parameters it supports
+ *   private countUpdatedEvent: Event<this, [ number ]>;
+ *
+ *   public constructor() {
+ *     this.countUpdatedEvent = new Event(this);
+ *     this.count = 0;
+ *   }
+ *
+ *   public get onCountUpdated(): Subscribable<this, [ number ]> {
+ *     // Return `subscribable` of event - which only supports listening and not emitting
+ *     return this.countUpdatedEvent.subscribable;
+ *   }
+ *
+ *   public increment() {
+ *     // Increments the count and emits the value
+ *     this.count++;
+ *     this.countUpdatedEvent.emit(this.count);
+ *   }
+ * }
+ *
+ * // Create the counter and register the event
+ * const counter = new Counter();
+ * counter.onCountUpdated(count => console.log('Count is now', count));
+ *
+ * // Request an increment triggering the listener
+ * counter.increment();
+ * ```
  */
 export class Event<Parent, Args extends any[] = []>
 	implements SubscriptionFunctions<Parent, Args>
