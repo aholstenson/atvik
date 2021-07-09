@@ -102,14 +102,14 @@
 
 <span style="color: #0000FF">class</span><span style="color: #000000"> </span><span style="color: #267F99">Counter</span><span style="color: #000000"> {</span>
 <span style="color: #000000">  </span><span style="color: #008000">// Declaration of the event including the parameters it supports</span>
-<span style="color: #000000">  </span><span style="color: #0000FF">private</span><span style="color: #000000"> </span><span style="color: #001080">countUpdatedEvent</span><span style="color: #000000">: </span><span style="color: #267F99">Event</span><span style="color: #000000">&lt;</span><span style="color: #267F99">this</span><span style="color: #000000">, [ </span><span style="color: #267F99">number</span><span style="color: #000000"> ]&gt;;</span>
+<span style="color: #000000">  </span><span style="color: #0000FF">private</span><span style="color: #000000"> </span><span style="color: #001080">countUpdatedEvent</span><span style="color: #000000">: </span><span style="color: #267F99">Event</span><span style="color: #000000">&lt;</span><span style="color: #267F99">this</span><span style="color: #000000">, [ count: </span><span style="color: #267F99">number</span><span style="color: #000000"> ]&gt;;</span>
 
 <span style="color: #000000">  </span><span style="color: #0000FF">public</span><span style="color: #000000"> </span><span style="color: #0000FF">constructor</span><span style="color: #000000">() {</span>
 <span style="color: #000000">    </span><span style="color: #0000FF">this</span><span style="color: #000000">.</span><span style="color: #001080">countUpdatedEvent</span><span style="color: #000000"> = </span><span style="color: #0000FF">new</span><span style="color: #000000"> </span><span style="color: #795E26">Event</span><span style="color: #000000">(</span><span style="color: #0000FF">this</span><span style="color: #000000">);</span>
 <span style="color: #000000">    </span><span style="color: #0000FF">this</span><span style="color: #000000">.</span><span style="color: #001080">count</span><span style="color: #000000"> = </span><span style="color: #098658">0</span><span style="color: #000000">;</span>
 <span style="color: #000000">  }</span>
 
-<span style="color: #000000">  </span><span style="color: #0000FF">public</span><span style="color: #000000"> </span><span style="color: #0000FF">get</span><span style="color: #000000"> </span><span style="color: #795E26">onCountUpdated</span><span style="color: #000000">(): </span><span style="color: #267F99">Subscribable</span><span style="color: #000000">&lt;</span><span style="color: #267F99">this</span><span style="color: #000000">, [ </span><span style="color: #267F99">number</span><span style="color: #000000"> ]&gt; {</span>
+<span style="color: #000000">  </span><span style="color: #0000FF">public</span><span style="color: #000000"> </span><span style="color: #0000FF">get</span><span style="color: #000000"> </span><span style="color: #795E26">onCountUpdated</span><span style="color: #000000">(): </span><span style="color: #267F99">Subscribable</span><span style="color: #000000">&lt;</span><span style="color: #267F99">this</span><span style="color: #000000">, [ count: </span><span style="color: #267F99">number</span><span style="color: #000000"> ]&gt; {</span>
 <span style="color: #000000">    </span><span style="color: #008000">// Return `subscribable` of event - which only supports listening and not emitting</span>
 <span style="color: #000000">    </span><span style="color: #AF00DB">return</span><span style="color: #000000"> </span><span style="color: #0000FF">this</span><span style="color: #000000">.</span><span style="color: #001080">countUpdatedEvent</span><span style="color: #000000">.</span><span style="color: #001080">subscribable</span><span style="color: #000000">;</span>
 <span style="color: #000000">  }</span>
@@ -209,7 +209,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/aholstenson/atvik/blob/ce3ea82/src/Event.ts#L102">Event.ts:102</a></li>
+									<li>Defined in <a href="https://github.com/aholstenson/atvik/blob/6cbdfc4/src/Event.ts#L102">Event.ts:102</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -249,7 +249,7 @@
 					<div class="tsd-signature tsd-kind-icon">subscribable<span class="tsd-signature-symbol">:</span> <a href="../interfaces/subscribable.html" class="tsd-signature-type" data-tsd-kind="Interface">Subscribable</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">Parent</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">Args</span><span class="tsd-signature-symbol">&gt;</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/aholstenson/atvik/blob/ce3ea82/src/Event.ts#L88">Event.ts:88</a></li>
+							<li>Defined in <a href="https://github.com/aholstenson/atvik/blob/6cbdfc4/src/Event.ts#L88">Event.ts:88</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -272,7 +272,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/aholstenson/atvik/blob/ce3ea82/src/Event.ts#L305">Event.ts:305</a></li>
+									<li>Defined in <a href="https://github.com/aholstenson/atvik/blob/6cbdfc4/src/Event.ts#L305">Event.ts:305</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -295,7 +295,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/aholstenson/atvik/blob/ce3ea82/src/Event.ts#L315">Event.ts:315</a></li>
+									<li>Defined in <a href="https://github.com/aholstenson/atvik/blob/6cbdfc4/src/Event.ts#L315">Event.ts:315</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -321,7 +321,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/aholstenson/atvik/blob/ce3ea82/src/Event.ts#L328">Event.ts:328</a></li>
+									<li>Defined in <a href="https://github.com/aholstenson/atvik/blob/6cbdfc4/src/Event.ts#L328">Event.ts:328</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -343,7 +343,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/aholstenson/atvik/blob/ce3ea82/src/Event.ts#L126">Event.ts:126</a></li>
+									<li>Defined in <a href="https://github.com/aholstenson/atvik/blob/6cbdfc4/src/Event.ts#L126">Event.ts:126</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -377,7 +377,7 @@
 							<aside class="tsd-sources">
 								<p>Implementation of <a href="../interfaces/subscriptionfunctions.html">SubscriptionFunctions</a>.<a href="../interfaces/subscriptionfunctions.html#filter">filter</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/aholstenson/atvik/blob/ce3ea82/src/Event.ts#L283">Event.ts:283</a></li>
+									<li>Defined in <a href="https://github.com/aholstenson/atvik/blob/6cbdfc4/src/Event.ts#L283">Event.ts:283</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -429,7 +429,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/aholstenson/atvik/blob/ce3ea82/src/Event.ts#L346">Event.ts:346</a></li>
+									<li>Defined in <a href="https://github.com/aholstenson/atvik/blob/6cbdfc4/src/Event.ts#L346">Event.ts:346</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -483,7 +483,7 @@
 							<aside class="tsd-sources">
 								<p>Implementation of <a href="../interfaces/subscriptionfunctions.html">SubscriptionFunctions</a>.<a href="../interfaces/subscriptionfunctions.html#once">once</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/aholstenson/atvik/blob/ce3ea82/src/Event.ts#L270">Event.ts:270</a></li>
+									<li>Defined in <a href="https://github.com/aholstenson/atvik/blob/6cbdfc4/src/Event.ts#L270">Event.ts:270</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -507,7 +507,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/aholstenson/atvik/blob/ce3ea82/src/Event.ts#L357">Event.ts:357</a></li>
+									<li>Defined in <a href="https://github.com/aholstenson/atvik/blob/6cbdfc4/src/Event.ts#L357">Event.ts:357</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -530,7 +530,7 @@
 							<aside class="tsd-sources">
 								<p>Implementation of <a href="../interfaces/subscriptionfunctions.html">SubscriptionFunctions</a>.<a href="../interfaces/subscriptionfunctions.html#subscribe">subscribe</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/aholstenson/atvik/blob/ce3ea82/src/Event.ts#L246">Event.ts:246</a></li>
+									<li>Defined in <a href="https://github.com/aholstenson/atvik/blob/6cbdfc4/src/Event.ts#L246">Event.ts:246</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -565,7 +565,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/aholstenson/atvik/blob/ce3ea82/src/Event.ts#L150">Event.ts:150</a></li>
+									<li>Defined in <a href="https://github.com/aholstenson/atvik/blob/6cbdfc4/src/Event.ts#L150">Event.ts:150</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -599,7 +599,7 @@
 							<aside class="tsd-sources">
 								<p>Implementation of <a href="../interfaces/subscriptionfunctions.html">SubscriptionFunctions</a>.<a href="../interfaces/subscriptionfunctions.html#unsubscribe">unsubscribe</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/aholstenson/atvik/blob/ce3ea82/src/Event.ts#L259">Event.ts:259</a></li>
+									<li>Defined in <a href="https://github.com/aholstenson/atvik/blob/6cbdfc4/src/Event.ts#L259">Event.ts:259</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -633,7 +633,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/aholstenson/atvik/blob/ce3ea82/src/Event.ts#L188">Event.ts:188</a></li>
+									<li>Defined in <a href="https://github.com/aholstenson/atvik/blob/6cbdfc4/src/Event.ts#L188">Event.ts:188</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -668,7 +668,7 @@
 							<aside class="tsd-sources">
 								<p>Implementation of <a href="../interfaces/subscriptionfunctions.html">SubscriptionFunctions</a>.<a href="../interfaces/subscriptionfunctions.html#withthis">withThis</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/aholstenson/atvik/blob/ce3ea82/src/Event.ts#L295">Event.ts:295</a></li>
+									<li>Defined in <a href="https://github.com/aholstenson/atvik/blob/6cbdfc4/src/Event.ts#L295">Event.ts:295</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -789,6 +789,9 @@
 					</li>
 					<li class=" tsd-kind-interface">
 						<a href="../interfaces/subscriptionhandle.html" class="tsd-kind-icon">Subscription<wbr>Handle</a>
+					</li>
+					<li class=" tsd-kind-type-alias tsd-has-type-parameter">
+						<a href="../modules.html#asynclistener" class="tsd-kind-icon">Async<wbr>Listener</a>
 					</li>
 					<li class=" tsd-kind-type-alias tsd-has-type-parameter">
 						<a href="../modules.html#asyncsubscribefunction" class="tsd-kind-icon">Async<wbr>Subscribe<wbr>Function</a>
