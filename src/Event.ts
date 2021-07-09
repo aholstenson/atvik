@@ -53,14 +53,14 @@ import { SubscriptionHandle } from './SubscriptionHandle';
  *
  * class Counter {
  *   // Declaration of the event including the parameters it supports
- *   private countUpdatedEvent: Event<this, [ number ]>;
+ *   private countUpdatedEvent: Event<this, [ count: number ]>;
  *
  *   public constructor() {
  *     this.countUpdatedEvent = new Event(this);
  *     this.count = 0;
  *   }
  *
- *   public get onCountUpdated(): Subscribable<this, [ number ]> {
+ *   public get onCountUpdated(): Subscribable<this, [ count: number ]> {
  *     // Return `subscribable` of event - which only supports listening and not emitting
  *     return this.countUpdatedEvent.subscribable;
  *   }
