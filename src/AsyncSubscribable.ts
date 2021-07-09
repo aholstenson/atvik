@@ -1,6 +1,6 @@
+import { AsyncListener } from './AsyncListener';
 import { AsyncSubscriptionFunctions } from './AsyncSubscriptionFunctions';
 import { AsyncSubscriptionHandle } from './AsyncSubscriptionHandle';
-import { Listener } from './Listener';
 
 /**
  * Functions used to asynchronously subscribe and unsubscribe to an event.
@@ -17,5 +17,5 @@ export interface AsyncSubscribable<This, Args extends any[] = []> extends AsyncS
 	 *   handle to the subscription, can be used to unsubscribe. Resolves
 	 *   when the subscription is fully registered
 	 */
-	(listener: Listener<This, Args>): Promise<AsyncSubscriptionHandle>;
+	(listener: AsyncListener<This, Args>): Promise<AsyncSubscriptionHandle>;
 }

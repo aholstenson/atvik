@@ -31,6 +31,25 @@ describe('AsyncEvent', function() {
 		expect(triggered).toEqual(true);
 	});
 
+	it('Can attach and trigger single async listener', async function() {
+		const parent = {};
+		const handler = new AsyncEvent(parent);
+
+		let triggered = false;
+
+		await handler.subscribe(async () => {
+			await new Promise(resolve => setTimeout(resolve, 100));
+			triggered = true;
+		});
+
+		expect(triggered).toEqual(false);
+
+		expect(handler.hasListeners).toEqual(true);
+		await handler.emit();
+
+		expect(triggered).toEqual(true);
+	});
+
 	it('Can attach and detach single listener', async function() {
 		const parent = {};
 		const handler = new AsyncEvent(parent);
@@ -374,7 +393,6 @@ describe('AsyncEvent', function() {
 
 		expect(triggered).toEqual(1);
 	});
-
 
 	it('Can remove handler added via withThis', async function() {
 		const parent = {};
