@@ -17,8 +17,7 @@ export interface AsyncEventOptions {
 }
 
 /**
- * An event that handles subscription in an asynchronous way. This type of
- *
+ * An event that handles subscription in an asynchronous way.
  *
  * Each instance represents a single event:
  *
