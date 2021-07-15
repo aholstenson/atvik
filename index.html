@@ -74,7 +74,7 @@
 <span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #0070C1">event</span><span style="color: #000000"> = </span><span style="color: #0000FF">new</span><span style="color: #000000"> </span><span style="color: #795E26">Event</span><span style="color: #000000">(</span><span style="color: #001080">thisValueForListeners</span><span style="color: #000000">);</span>
 
 <span style="color: #008000">// Subscribe to the event</span>
-<span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #0070C1">handle</span><span style="color: #000000"> = </span><span style="color: #001080">event</span><span style="color: #000000">.</span><span style="color: #795E26">subscribe</span><span style="color: #000000">((</span><span style="color: #001080">arg1</span><span style="color: #000000">) </span><span style="color: #0000FF">=&gt;</span><span style="color: #000000"> </span><span style="color: #008000">/* do stuff here */</span><span style="color: #000000">);</span>
+<span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #0070C1">handle</span><span style="color: #000000"> = </span><span style="color: #001080">event</span><span style="color: #000000">.</span><span style="color: #795E26">subscribe</span><span style="color: #000000">((</span><span style="color: #001080">arg1</span><span style="color: #000000">) </span><span style="color: #0000FF">=&gt;</span><span style="color: #000000"> </span><span style="color: #001080">console</span><span style="color: #000000">.</span><span style="color: #795E26">log</span><span style="color: #000000">(</span><span style="color: #A31515">&#039;event&#039;</span><span style="color: #000000">, </span><span style="color: #001080">arg1</span><span style="color: #000000">));</span>
 
 <span style="color: #008000">// Emit the event, triggering all listeners</span>
 <span style="color: #001080">event</span><span style="color: #000000">.</span><span style="color: #795E26">emit</span><span style="color: #000000">(</span><span style="color: #A31515">&#039;first argument&#039;</span><span style="color: #000000">);</span>
@@ -82,9 +82,18 @@
 <span style="color: #008000">// Unsubscribe from the event</span>
 <span style="color: #001080">handle</span><span style="color: #000000">.</span><span style="color: #795E26">unsubscribe</span><span style="color: #000000">();</span>
 
+<span style="color: #008000">// Using for await ... of listeners</span>
+<span style="color: #AF00DB">for</span><span style="color: #000000"> </span><span style="color: #AF00DB">await</span><span style="color: #000000"> (</span><span style="color: #0000FF">const</span><span style="color: #000000"> [ </span><span style="color: #0070C1">arg1</span><span style="color: #000000"> ] </span><span style="color: #0000FF">of</span><span style="color: #000000"> </span><span style="color: #001080">event</span><span style="color: #000000">) {</span>
+<span style="color: #000000">  </span><span style="color: #001080">console</span><span style="color: #000000">.</span><span style="color: #795E26">log</span><span style="color: #000000">(</span><span style="color: #A31515">&#039;event&#039;</span><span style="color: #000000">, </span><span style="color: #001080">arg1</span><span style="color: #000000">);</span>
+<span style="color: #000000">}</span>
+
 <span style="color: #008000">// Public API without emit is available</span>
 <span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #0070C1">subscribable</span><span style="color: #000000"> = </span><span style="color: #001080">event</span><span style="color: #000000">.</span><span style="color: #001080">subscribable</span><span style="color: #000000">;</span>
-<span style="color: #795E26">subscribable</span><span style="color: #000000">((</span><span style="color: #001080">arg1</span><span style="color: #000000">) </span><span style="color: #0000FF">=&gt;</span><span style="color: #000000"> </span><span style="color: #008000">/* do stuff here */</span><span style="color: #000000">);</span>
+<span style="color: #795E26">subscribable</span><span style="color: #000000">((</span><span style="color: #001080">arg1</span><span style="color: #000000">) </span><span style="color: #0000FF">=&gt;</span><span style="color: #000000"> </span><span style="color: #001080">console</span><span style="color: #000000">.</span><span style="color: #795E26">log</span><span style="color: #000000">(</span><span style="color: #A31515">&#039;event&#039;</span><span style="color: #000000">, </span><span style="color: #001080">arg1</span><span style="color: #000000">));</span>
+
+<span style="color: #AF00DB">for</span><span style="color: #000000"> </span><span style="color: #AF00DB">await</span><span style="color: #000000"> (</span><span style="color: #0000FF">const</span><span style="color: #000000"> [ </span><span style="color: #0070C1">arg1</span><span style="color: #000000"> ] </span><span style="color: #0000FF">of</span><span style="color: #000000"> </span><span style="color: #001080">subscribable</span><span style="color: #000000">) {</span>
+<span style="color: #000000">  </span><span style="color: #001080">console</span><span style="color: #000000">.</span><span style="color: #795E26">log</span><span style="color: #000000">(</span><span style="color: #A31515">&#039;event&#039;</span><span style="color: #000000">, </span><span style="color: #001080">arg1</span><span style="color: #000000">);</span>
+<span style="color: #000000">}</span>
 </code></pre>
 				<a href="#use-with-classes" id="use-with-classes" style="color: inherit; text-decoration: none;">
 					<h2>Use with classes</h2>
@@ -270,6 +279,9 @@
 					<li class=" tsd-kind-class tsd-has-type-parameter">
 						<a href="classes/Event.html" class="tsd-kind-icon">Event</a>
 					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/AsyncEventOptions.html" class="tsd-kind-icon">Async<wbr>Event<wbr>Options</a>
+					</li>
 					<li class=" tsd-kind-interface tsd-has-type-parameter">
 						<a href="interfaces/AsyncSubscribable.html" class="tsd-kind-icon">Async<wbr>Subscribable</a>
 					</li>
@@ -284,6 +296,9 @@
 					</li>
 					<li class=" tsd-kind-interface">
 						<a href="interfaces/EventIteratorOptions.html" class="tsd-kind-icon">Event<wbr>Iterator<wbr>Options</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/EventOptions.html" class="tsd-kind-icon">Event<wbr>Options</a>
 					</li>
 					<li class=" tsd-kind-interface tsd-has-type-parameter">
 						<a href="interfaces/Subscribable.html" class="tsd-kind-icon">Subscribable</a>
