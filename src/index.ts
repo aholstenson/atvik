@@ -13,3 +13,5 @@ export * from './AsyncSubscriptionHandle';
 export * from './AsyncEvent';
 
 export * from './EventIteratorOptions';
+
+export * from './createEventAdapter';
