@@ -38,6 +38,46 @@ export type AdaptableEventEmitter<Event extends string | symbol, Args extends an
 
 /**
  * Adapt an event emitted by a Node EventEmitter or by a DOM event target.
+ * Adapters are useful when wanting to bridge events from a third-party library
+ * or from the DOM.
+ *
+ * This adapter will register every listener with the event emitter, and let
+ * you use the {@link Subscribable} API to subscribe, unsubscribe, filter and
+ * iterate over events.
+ *
+ * Three different types of event emitters are supported:
+ *
+ * * Emitters with `on` and `off` methods, such as `EventEmitter` in NodeJS
+ * * Emitters with `addEventListener` and `removeEventListener` methods such
+ *   as DOM event targets like elements
+ * * Emitters with `addListener` and `removeListener` methods
+ *
+ * **Limitations**: If the adapted event emitter has a method to clear all
+ * listeners the returned {@link Subscribable} may falsely report `true` when
+ * `unsubscribe` is called.
+ *
+ * ## Node EventEmitter
+ *
+ * ```javascript
+ * const events = new EventEmitter();
+ *
+ * const onEcho = createEventAdapter(events, 'echo');
+ * onEcho.subscribe(value => console.log('echo', value));
+ *
+ * events.emit('echo, 'argument');
+ * ```
+ *
+ * ## DOM events
+ *
+ * DOM events can be adapted:
+ *
+ * ```javascript
+ * // Adapt DOM events
+ * await createEventAdapter(document, 'DOMContentLoaded').once();
+ *
+ * const onFocus = createEventAdapter(htmlElement, 'focus');
+ * onFocus(event => console.log('focused', event));
+ * ```
  *
  * @param emitter -
  *   emitter to adapt an event from
@@ -80,18 +120,57 @@ export function createEventAdapter<
 	throw new Error('Unsupported event emitter');
 }
 
+/**
+ * Check if an object has add/removeEventListener methods.
+ *
+ * @param a -
+ *   object to check
+ * @returns
+ *   if emitter has add/removeEventListener methods
+ */
 function isAddRemoveEventListener(a: any): a is AddRemoveEventListener<any, any> {
 	return a.addEventListener && a.removeEventListener;
 }
 
+/**
+ * Check if an object has add/removeListener methods.
+ *
+ * @param a -
+ *   object to check
+ * @returns
+ *   if emitter has add/removeListener methods
+ */
 function isAddRemoveListener(a: any): a is AddRemoveListener<any, any> {
 	return a.addListener && a.removeListener;
 }
 
+/**
+ * Check if an object has on/off methods.
+ *
+ * @param a -
+ *   object to check
+ * @returns
+ *   if emitter has on/off methods
+ */
 function isOnOff(a: any): a is OnOff<any, any> {
 	return a.on && a.off;
 }
 
+/**
+ * Create the actual {@link Subscribable} that adapts an event from the
+ * emitter.
+ *
+ * @param emitter -
+ *   the emitter to register listeners with
+ * @param event -
+ *   event to register for
+ * @param subscribe -
+ *   method used to subscribe listeners
+ * @param unsubscribe -
+ *   method used to unsubscribe listeners
+ * @returns
+ *   subscribable
+ */
 function createTrackingSubscribable<
 	Event extends string | symbol,
 	Args extends any[],
