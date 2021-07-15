@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>AsyncSubscriptionHandle | atvik</title>
+	<title>SubscribableOptions | atvik</title>
 	<meta name="description" content="Documentation for atvik">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
@@ -55,10 +55,10 @@
 					<a href="../modules.html">atvik</a>
 				</li>
 				<li>
-					<a href="asyncsubscriptionhandle.html">AsyncSubscriptionHandle</a>
+					<a href="SubscribableOptions.html">SubscribableOptions</a>
 				</li>
 			</ul>
-			<h1>Interface AsyncSubscriptionHandle</h1>
+			<h1>Interface SubscribableOptions&lt;This, Args&gt;</h1>
 		</div>
 	</div>
 </header>
@@ -68,17 +68,26 @@
 			<section class="tsd-panel tsd-comment">
 				<div class="tsd-comment tsd-typography">
 					<div class="lead">
-						<p>Handle that points to a previously subscribed listener. This handle is
-							returned when a subscription occurs and can be used to remove the
-						subscription.</p>
+						<p>Options for <code>createSubscribable</code>.</p>
 					</div>
 				</div>
+			</section>
+			<section class="tsd-panel tsd-type-parameters">
+				<h3>Type parameters</h3>
+				<ul class="tsd-type-parameters">
+					<li>
+						<h4>This</h4>
+					</li>
+					<li>
+						<h4>Args<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">[]</span></h4>
+					</li>
+				</ul>
 			</section>
 			<section class="tsd-panel tsd-hierarchy">
 				<h3>Hierarchy</h3>
 				<ul class="tsd-hierarchy">
 					<li>
-						<span class="target">AsyncSubscriptionHandle</span>
+						<span class="target">SubscribableOptions</span>
 					</li>
 				</ul>
 			</section>
@@ -87,38 +96,46 @@
 				<section class="tsd-panel tsd-index-panel">
 					<div class="tsd-index-content">
 						<section class="tsd-index-section ">
-							<h3>Methods</h3>
+							<h3>Properties</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-method tsd-parent-kind-interface"><a href="asyncsubscriptionhandle.html#unsubscribe" class="tsd-kind-icon">unsubscribe</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="SubscribableOptions.html#subscribe" class="tsd-kind-icon">subscribe</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="SubscribableOptions.html#unsubscribe" class="tsd-kind-icon">unsubscribe</a></li>
 							</ul>
 						</section>
 					</div>
 				</section>
 			</section>
 			<section class="tsd-panel-group tsd-member-group ">
-				<h2>Methods</h2>
-				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface">
+				<h2>Properties</h2>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+					<a name="subscribe" class="tsd-anchor"></a>
+					<h3>subscribe</h3>
+					<div class="tsd-signature tsd-kind-icon">subscribe<span class="tsd-signature-symbol">:</span> <a href="../modules.html#SubscribeFunction" class="tsd-signature-type" data-tsd-kind="Type alias">SubscribeFunction</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">This</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">Args</span><span class="tsd-signature-symbol">&gt;</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/aholstenson/atvik/blob/fcee355/src/createSubscribable.ts#L24">src/createSubscribable.ts:24</a></li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>Function used to subscribe a listener.</p>
+						</div>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
 					<a name="unsubscribe" class="tsd-anchor"></a>
 					<h3>unsubscribe</h3>
-					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface">
-						<li class="tsd-signature tsd-kind-icon">unsubscribe<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></li>
-					</ul>
-					<ul class="tsd-descriptions">
-						<li class="tsd-description">
-							<aside class="tsd-sources">
-								<ul>
-									<li>Defined in <a href="https://github.com/aholstenson/atvik/blob/d710658/src/AsyncSubscriptionHandle.ts#L13">AsyncSubscriptionHandle.ts:13</a></li>
-								</ul>
-							</aside>
-							<div class="tsd-comment tsd-typography">
-								<div class="lead">
-									<p>Unsubscribe, the listener will no longer receive events.</p>
-								</div>
-							</div>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></h4>
-							<p>  promise that resolves when the listener is fully unsubscribed</p>
-						</li>
-					</ul>
+					<div class="tsd-signature tsd-kind-icon">unsubscribe<span class="tsd-signature-symbol">:</span> <a href="../modules.html#UnsubscribeFunction" class="tsd-signature-type" data-tsd-kind="Type alias">UnsubscribeFunction</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">This</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">Args</span><span class="tsd-signature-symbol">&gt;</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/aholstenson/atvik/blob/fcee355/src/createSubscribable.ts#L29">src/createSubscribable.ts:29</a></li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>Function used to unsubscribe a listener.</p>
+						</div>
+					</div>
 				</section>
 			</section>
 		</div>
@@ -132,68 +149,77 @@
 			</nav>
 			<nav class="tsd-navigation secondary menu-sticky">
 				<ul class="before-current">
-					<li class=" tsd-kind-class tsd-has-type-parameter">
-						<a href="../classes/asyncevent.html" class="tsd-kind-icon">Async<wbr>Event</a>
+					<li class=" tsd-kind-enum">
+						<a href="../enums/EventIteratorOverflowBehavior.html" class="tsd-kind-icon">Event<wbr>Iterator<wbr>Overflow<wbr>Behavior</a>
 					</li>
 					<li class=" tsd-kind-class tsd-has-type-parameter">
-						<a href="../classes/event.html" class="tsd-kind-icon">Event</a>
+						<a href="../classes/AsyncEvent.html" class="tsd-kind-icon">Async<wbr>Event</a>
+					</li>
+					<li class=" tsd-kind-class tsd-has-type-parameter">
+						<a href="../classes/Event.html" class="tsd-kind-icon">Event</a>
 					</li>
 					<li class=" tsd-kind-interface tsd-has-type-parameter">
-						<a href="asyncsubscribable.html" class="tsd-kind-icon">Async<wbr>Subscribable</a>
+						<a href="AsyncSubscribable.html" class="tsd-kind-icon">Async<wbr>Subscribable</a>
 					</li>
 					<li class=" tsd-kind-interface tsd-has-type-parameter">
-						<a href="asyncsubscribableoptions.html" class="tsd-kind-icon">Async<wbr>Subscribable<wbr>Options</a>
+						<a href="AsyncSubscribableOptions.html" class="tsd-kind-icon">Async<wbr>Subscribable<wbr>Options</a>
 					</li>
 					<li class=" tsd-kind-interface tsd-has-type-parameter">
-						<a href="asyncsubscriptionfunctions.html" class="tsd-kind-icon">Async<wbr>Subscription<wbr>Functions</a>
+						<a href="AsyncSubscriptionFunctions.html" class="tsd-kind-icon">Async<wbr>Subscription<wbr>Functions</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="AsyncSubscriptionHandle.html" class="tsd-kind-icon">Async<wbr>Subscription<wbr>Handle</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="EventIteratorOptions.html" class="tsd-kind-icon">Event<wbr>Iterator<wbr>Options</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-has-type-parameter">
+						<a href="Subscribable.html" class="tsd-kind-icon">Subscribable</a>
 					</li>
 				</ul>
 				<ul class="current">
-					<li class="current tsd-kind-interface">
-						<a href="asyncsubscriptionhandle.html" class="tsd-kind-icon">Async<wbr>Subscription<wbr>Handle</a>
+					<li class="current tsd-kind-interface tsd-has-type-parameter">
+						<a href="SubscribableOptions.html" class="tsd-kind-icon">Subscribable<wbr>Options</a>
 						<ul>
-							<li class=" tsd-kind-method tsd-parent-kind-interface">
-								<a href="asyncsubscriptionhandle.html#unsubscribe" class="tsd-kind-icon">unsubscribe</a>
+							<li class=" tsd-kind-property tsd-parent-kind-interface">
+								<a href="SubscribableOptions.html#subscribe" class="tsd-kind-icon">subscribe</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-interface">
+								<a href="SubscribableOptions.html#unsubscribe" class="tsd-kind-icon">unsubscribe</a>
 							</li>
 						</ul>
 					</li>
 				</ul>
 				<ul class="after-current">
 					<li class=" tsd-kind-interface tsd-has-type-parameter">
-						<a href="subscribable.html" class="tsd-kind-icon">Subscribable</a>
-					</li>
-					<li class=" tsd-kind-interface tsd-has-type-parameter">
-						<a href="subscribableoptions.html" class="tsd-kind-icon">Subscribable<wbr>Options</a>
-					</li>
-					<li class=" tsd-kind-interface tsd-has-type-parameter">
-						<a href="subscriptionfunctions.html" class="tsd-kind-icon">Subscription<wbr>Functions</a>
+						<a href="SubscriptionFunctions.html" class="tsd-kind-icon">Subscription<wbr>Functions</a>
 					</li>
 					<li class=" tsd-kind-interface">
-						<a href="subscriptionhandle.html" class="tsd-kind-icon">Subscription<wbr>Handle</a>
+						<a href="SubscriptionHandle.html" class="tsd-kind-icon">Subscription<wbr>Handle</a>
 					</li>
 					<li class=" tsd-kind-type-alias tsd-has-type-parameter">
-						<a href="../modules.html#asynclistener" class="tsd-kind-icon">Async<wbr>Listener</a>
+						<a href="../modules.html#AsyncListener" class="tsd-kind-icon">Async<wbr>Listener</a>
 					</li>
 					<li class=" tsd-kind-type-alias tsd-has-type-parameter">
-						<a href="../modules.html#asyncsubscribefunction" class="tsd-kind-icon">Async<wbr>Subscribe<wbr>Function</a>
+						<a href="../modules.html#AsyncSubscribeFunction" class="tsd-kind-icon">Async<wbr>Subscribe<wbr>Function</a>
 					</li>
 					<li class=" tsd-kind-type-alias tsd-has-type-parameter">
-						<a href="../modules.html#asyncunsubscribefunction" class="tsd-kind-icon">Async<wbr>Unsubscribe<wbr>Function</a>
+						<a href="../modules.html#AsyncUnsubscribeFunction" class="tsd-kind-icon">Async<wbr>Unsubscribe<wbr>Function</a>
 					</li>
 					<li class=" tsd-kind-type-alias tsd-has-type-parameter">
-						<a href="../modules.html#listener" class="tsd-kind-icon">Listener</a>
+						<a href="../modules.html#Listener" class="tsd-kind-icon">Listener</a>
 					</li>
 					<li class=" tsd-kind-type-alias tsd-has-type-parameter">
-						<a href="../modules.html#subscribefunction" class="tsd-kind-icon">Subscribe<wbr>Function</a>
+						<a href="../modules.html#SubscribeFunction" class="tsd-kind-icon">Subscribe<wbr>Function</a>
 					</li>
 					<li class=" tsd-kind-type-alias tsd-has-type-parameter">
-						<a href="../modules.html#unsubscribefunction" class="tsd-kind-icon">Unsubscribe<wbr>Function</a>
+						<a href="../modules.html#UnsubscribeFunction" class="tsd-kind-icon">Unsubscribe<wbr>Function</a>
 					</li>
 					<li class=" tsd-kind-function tsd-has-type-parameter">
-						<a href="../modules.html#createasyncsubscribable" class="tsd-kind-icon">create<wbr>Async<wbr>Subscribable</a>
+						<a href="../modules.html#createAsyncSubscribable" class="tsd-kind-icon">create<wbr>Async<wbr>Subscribable</a>
 					</li>
 					<li class=" tsd-kind-function tsd-has-type-parameter">
-						<a href="../modules.html#createsubscribable" class="tsd-kind-icon">create<wbr>Subscribable</a>
+						<a href="../modules.html#createSubscribable" class="tsd-kind-icon">create<wbr>Subscribable</a>
 					</li>
 				</ul>
 			</nav>

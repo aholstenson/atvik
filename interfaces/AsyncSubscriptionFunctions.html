@@ -55,7 +55,7 @@
 					<a href="../modules.html">atvik</a>
 				</li>
 				<li>
-					<a href="asyncsubscriptionfunctions.html">AsyncSubscriptionFunctions</a>
+					<a href="AsyncSubscriptionFunctions.html">AsyncSubscriptionFunctions</a>
 				</li>
 			</ul>
 			<h1>Interface AsyncSubscriptionFunctions&lt;This, Args&gt;</h1>
@@ -87,10 +87,15 @@
 				<h3>Hierarchy</h3>
 				<ul class="tsd-hierarchy">
 					<li>
-						<span class="target">AsyncSubscriptionFunctions</span>
+						<span class="tsd-signature-type">AsyncIterable</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">Args</span><span class="tsd-signature-symbol">&gt;</span>
 						<ul class="tsd-hierarchy">
 							<li>
-								<a href="asyncsubscribable.html" class="tsd-signature-type" data-tsd-kind="Interface">AsyncSubscribable</a>
+								<span class="target">AsyncSubscriptionFunctions</span>
+								<ul class="tsd-hierarchy">
+									<li>
+										<a href="AsyncSubscribable.html" class="tsd-signature-type" data-tsd-kind="Interface">AsyncSubscribable</a>
+									</li>
+								</ul>
 							</li>
 						</ul>
 					</li>
@@ -99,7 +104,7 @@
 			<section class="tsd-panel">
 				<h3>Implemented by</h3>
 				<ul class="tsd-hierarchy">
-					<li><a href="../classes/asyncevent.html" class="tsd-signature-type" data-tsd-kind="Class">AsyncEvent</a></li>
+					<li><a href="../classes/AsyncEvent.html" class="tsd-signature-type" data-tsd-kind="Class">AsyncEvent</a></li>
 				</ul>
 			</section>
 			<section class="tsd-panel-group tsd-index-group">
@@ -109,11 +114,13 @@
 						<section class="tsd-index-section ">
 							<h3>Methods</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-method tsd-parent-kind-interface"><a href="asyncsubscriptionfunctions.html#filter" class="tsd-kind-icon">filter</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-interface"><a href="asyncsubscriptionfunctions.html#once" class="tsd-kind-icon">once</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-interface"><a href="asyncsubscriptionfunctions.html#subscribe" class="tsd-kind-icon">subscribe</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-interface"><a href="asyncsubscriptionfunctions.html#unsubscribe" class="tsd-kind-icon">unsubscribe</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-interface tsd-has-type-parameter"><a href="asyncsubscriptionfunctions.html#withthis" class="tsd-kind-icon">with<wbr>This</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-interface tsd-is-inherited tsd-is-external"><a href="AsyncSubscriptionFunctions.html#_asyncIterator_" class="tsd-kind-icon">[async<wbr>Iterator]</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-interface"><a href="AsyncSubscriptionFunctions.html#filter" class="tsd-kind-icon">filter</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-interface"><a href="AsyncSubscriptionFunctions.html#iterator" class="tsd-kind-icon">iterator</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-interface"><a href="AsyncSubscriptionFunctions.html#once" class="tsd-kind-icon">once</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-interface"><a href="AsyncSubscriptionFunctions.html#subscribe" class="tsd-kind-icon">subscribe</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-interface"><a href="AsyncSubscriptionFunctions.html#unsubscribe" class="tsd-kind-icon">unsubscribe</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-interface tsd-has-type-parameter"><a href="AsyncSubscriptionFunctions.html#withThis" class="tsd-kind-icon">with<wbr>This</a></li>
 							</ul>
 						</section>
 					</div>
@@ -121,17 +128,35 @@
 			</section>
 			<section class="tsd-panel-group tsd-member-group ">
 				<h2>Methods</h2>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface tsd-is-inherited tsd-is-external">
+					<a name="_asyncIterator_" class="tsd-anchor"></a>
+					<h3>[async<wbr>Iterator]</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface tsd-is-inherited tsd-is-external">
+						<li class="tsd-signature tsd-kind-icon">[async<wbr>Iterator]<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">AsyncIterator</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">Args</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol">&gt;</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<p>Inherited from AsyncIterable.__@asyncIterator@3268</p>
+								<ul>
+									<li>Defined in node_modules/typescript/lib/lib.es2018.asynciterable.d.ts:40</li>
+								</ul>
+							</aside>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">AsyncIterator</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">Args</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol">&gt;</span></h4>
+						</li>
+					</ul>
+				</section>
 				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface">
 					<a name="filter" class="tsd-anchor"></a>
 					<h3>filter</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface">
-						<li class="tsd-signature tsd-kind-icon">filter<span class="tsd-signature-symbol">(</span>filter<span class="tsd-signature-symbol">: </span><span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">...</span>args<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Args</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="asyncsubscribable.html" class="tsd-signature-type" data-tsd-kind="Interface">AsyncSubscribable</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">This</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">Args</span><span class="tsd-signature-symbol">&gt;</span></li>
+						<li class="tsd-signature tsd-kind-icon">filter<span class="tsd-signature-symbol">(</span>filter<span class="tsd-signature-symbol">: </span><span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">...</span>args<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Args</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="AsyncSubscribable.html" class="tsd-signature-type" data-tsd-kind="Interface">AsyncSubscribable</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">This</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">Args</span><span class="tsd-signature-symbol">&gt;</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/aholstenson/atvik/blob/d710658/src/AsyncSubscriptionFunctions.ts#L53">AsyncSubscriptionFunctions.ts:53</a></li>
+									<li>Defined in <a href="https://github.com/aholstenson/atvik/blob/fcee355/src/AsyncSubscriptionFunctions.ts#L55">src/AsyncSubscriptionFunctions.ts:55</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -168,8 +193,41 @@
 									</ul>
 								</li>
 							</ul>
-							<h4 class="tsd-returns-title">Returns <a href="asyncsubscribable.html" class="tsd-signature-type" data-tsd-kind="Interface">AsyncSubscribable</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">This</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">Args</span><span class="tsd-signature-symbol">&gt;</span></h4>
+							<h4 class="tsd-returns-title">Returns <a href="AsyncSubscribable.html" class="tsd-signature-type" data-tsd-kind="Interface">AsyncSubscribable</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">This</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">Args</span><span class="tsd-signature-symbol">&gt;</span></h4>
 							<p>  filtered <code>AsyncSubscribable</code></p>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface">
+					<a name="iterator" class="tsd-anchor"></a>
+					<h3>iterator</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface">
+						<li class="tsd-signature tsd-kind-icon">iterator<span class="tsd-signature-symbol">(</span>options<span class="tsd-signature-symbol">?: </span><a href="EventIteratorOptions.html" class="tsd-signature-type" data-tsd-kind="Interface">EventIteratorOptions</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">AsyncIterableIterator</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">Args</span><span class="tsd-signature-symbol">&gt;</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/aholstenson/atvik/blob/fcee355/src/AsyncSubscriptionFunctions.ts#L75">src/AsyncSubscriptionFunctions.ts:75</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Create an iterator that supports async iteration of events emitted.</p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5><span class="tsd-flag ts-flagOptional">Optional</span> options: <a href="EventIteratorOptions.html" class="tsd-signature-type" data-tsd-kind="Interface">EventIteratorOptions</a></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>-
+										options for this iterator</p>
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">AsyncIterableIterator</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">Args</span><span class="tsd-signature-symbol">&gt;</span></h4>
+							<p>  iterable/iterator</p>
 						</li>
 					</ul>
 				</section>
@@ -183,7 +241,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/aholstenson/atvik/blob/d710658/src/AsyncSubscriptionFunctions.ts#L42">AsyncSubscriptionFunctions.ts:42</a></li>
+									<li>Defined in <a href="https://github.com/aholstenson/atvik/blob/fcee355/src/AsyncSubscriptionFunctions.ts#L44">src/AsyncSubscriptionFunctions.ts:44</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -201,13 +259,13 @@
 					<a name="subscribe" class="tsd-anchor"></a>
 					<h3>subscribe</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface">
-						<li class="tsd-signature tsd-kind-icon">subscribe<span class="tsd-signature-symbol">(</span>listener<span class="tsd-signature-symbol">: </span><a href="../modules.html#asynclistener" class="tsd-signature-type" data-tsd-kind="Type alias">AsyncListener</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">This</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">Args</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="asyncsubscriptionhandle.html" class="tsd-signature-type" data-tsd-kind="Interface">AsyncSubscriptionHandle</a><span class="tsd-signature-symbol">&gt;</span></li>
+						<li class="tsd-signature tsd-kind-icon">subscribe<span class="tsd-signature-symbol">(</span>listener<span class="tsd-signature-symbol">: </span><a href="../modules.html#AsyncListener" class="tsd-signature-type" data-tsd-kind="Type alias">AsyncListener</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">This</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">Args</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="AsyncSubscriptionHandle.html" class="tsd-signature-type" data-tsd-kind="Interface">AsyncSubscriptionHandle</a><span class="tsd-signature-symbol">&gt;</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/aholstenson/atvik/blob/d710658/src/AsyncSubscriptionFunctions.ts#L20">AsyncSubscriptionFunctions.ts:20</a></li>
+									<li>Defined in <a href="https://github.com/aholstenson/atvik/blob/fcee355/src/AsyncSubscriptionFunctions.ts#L22">src/AsyncSubscriptionFunctions.ts:22</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -220,14 +278,14 @@
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5>listener: <a href="../modules.html#asynclistener" class="tsd-signature-type" data-tsd-kind="Type alias">AsyncListener</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">This</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">Args</span><span class="tsd-signature-symbol">&gt;</span></h5>
+									<h5>listener: <a href="../modules.html#AsyncListener" class="tsd-signature-type" data-tsd-kind="Type alias">AsyncListener</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">This</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">Args</span><span class="tsd-signature-symbol">&gt;</span></h5>
 									<div class="tsd-comment tsd-typography">
 										<p>-
 										listener to subscribe</p>
 									</div>
 								</li>
 							</ul>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="asyncsubscriptionhandle.html" class="tsd-signature-type" data-tsd-kind="Interface">AsyncSubscriptionHandle</a><span class="tsd-signature-symbol">&gt;</span></h4>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="AsyncSubscriptionHandle.html" class="tsd-signature-type" data-tsd-kind="Interface">AsyncSubscriptionHandle</a><span class="tsd-signature-symbol">&gt;</span></h4>
 							<p>  promise with handle to the subscription, can be used to unsubscribe.
 							Resolves when the subscription is fully registered</p>
 						</li>
@@ -237,13 +295,13 @@
 					<a name="unsubscribe" class="tsd-anchor"></a>
 					<h3>unsubscribe</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface">
-						<li class="tsd-signature tsd-kind-icon">unsubscribe<span class="tsd-signature-symbol">(</span>listener<span class="tsd-signature-symbol">: </span><a href="../modules.html#asynclistener" class="tsd-signature-type" data-tsd-kind="Type alias">AsyncListener</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">This</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">Args</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">&gt;</span></li>
+						<li class="tsd-signature tsd-kind-icon">unsubscribe<span class="tsd-signature-symbol">(</span>listener<span class="tsd-signature-symbol">: </span><a href="../modules.html#AsyncListener" class="tsd-signature-type" data-tsd-kind="Type alias">AsyncListener</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">This</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">Args</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">&gt;</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/aholstenson/atvik/blob/d710658/src/AsyncSubscriptionFunctions.ts#L33">AsyncSubscriptionFunctions.ts:33</a></li>
+									<li>Defined in <a href="https://github.com/aholstenson/atvik/blob/fcee355/src/AsyncSubscriptionFunctions.ts#L35">src/AsyncSubscriptionFunctions.ts:35</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -255,7 +313,7 @@
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5>listener: <a href="../modules.html#asynclistener" class="tsd-signature-type" data-tsd-kind="Type alias">AsyncListener</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">This</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">Args</span><span class="tsd-signature-symbol">&gt;</span></h5>
+									<h5>listener: <a href="../modules.html#AsyncListener" class="tsd-signature-type" data-tsd-kind="Type alias">AsyncListener</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">This</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">Args</span><span class="tsd-signature-symbol">&gt;</span></h5>
 									<div class="tsd-comment tsd-typography">
 										<p>-
 										listener to unsubscribe</p>
@@ -270,16 +328,16 @@
 					</ul>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface tsd-has-type-parameter">
-					<a name="withthis" class="tsd-anchor"></a>
+					<a name="withThis" class="tsd-anchor"></a>
 					<h3>with<wbr>This</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface tsd-has-type-parameter">
-						<li class="tsd-signature tsd-kind-icon">with<wbr>This&lt;NewThis&gt;<span class="tsd-signature-symbol">(</span>newThis<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">NewThis</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="asyncsubscribable.html" class="tsd-signature-type" data-tsd-kind="Interface">AsyncSubscribable</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">NewThis</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">Args</span><span class="tsd-signature-symbol">&gt;</span></li>
+						<li class="tsd-signature tsd-kind-icon">with<wbr>This&lt;NewThis&gt;<span class="tsd-signature-symbol">(</span>newThis<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">NewThis</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="AsyncSubscribable.html" class="tsd-signature-type" data-tsd-kind="Interface">AsyncSubscribable</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">NewThis</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">Args</span><span class="tsd-signature-symbol">&gt;</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/aholstenson/atvik/blob/d710658/src/AsyncSubscriptionFunctions.ts#L63">AsyncSubscriptionFunctions.ts:63</a></li>
+									<li>Defined in <a href="https://github.com/aholstenson/atvik/blob/fcee355/src/AsyncSubscriptionFunctions.ts#L65">src/AsyncSubscriptionFunctions.ts:65</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -303,7 +361,7 @@
 									</div>
 								</li>
 							</ul>
-							<h4 class="tsd-returns-title">Returns <a href="asyncsubscribable.html" class="tsd-signature-type" data-tsd-kind="Interface">AsyncSubscribable</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">NewThis</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">Args</span><span class="tsd-signature-symbol">&gt;</span></h4>
+							<h4 class="tsd-returns-title">Returns <a href="AsyncSubscribable.html" class="tsd-signature-type" data-tsd-kind="Interface">AsyncSubscribable</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">NewThis</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">Args</span><span class="tsd-signature-symbol">&gt;</span></h4>
 							<p>  modified <code>AsyncSubscribable</code></p>
 						</li>
 					</ul>
@@ -320,80 +378,92 @@
 			</nav>
 			<nav class="tsd-navigation secondary menu-sticky">
 				<ul class="before-current">
-					<li class=" tsd-kind-class tsd-has-type-parameter">
-						<a href="../classes/asyncevent.html" class="tsd-kind-icon">Async<wbr>Event</a>
+					<li class=" tsd-kind-enum">
+						<a href="../enums/EventIteratorOverflowBehavior.html" class="tsd-kind-icon">Event<wbr>Iterator<wbr>Overflow<wbr>Behavior</a>
 					</li>
 					<li class=" tsd-kind-class tsd-has-type-parameter">
-						<a href="../classes/event.html" class="tsd-kind-icon">Event</a>
+						<a href="../classes/AsyncEvent.html" class="tsd-kind-icon">Async<wbr>Event</a>
+					</li>
+					<li class=" tsd-kind-class tsd-has-type-parameter">
+						<a href="../classes/Event.html" class="tsd-kind-icon">Event</a>
 					</li>
 					<li class=" tsd-kind-interface tsd-has-type-parameter">
-						<a href="asyncsubscribable.html" class="tsd-kind-icon">Async<wbr>Subscribable</a>
+						<a href="AsyncSubscribable.html" class="tsd-kind-icon">Async<wbr>Subscribable</a>
 					</li>
 					<li class=" tsd-kind-interface tsd-has-type-parameter">
-						<a href="asyncsubscribableoptions.html" class="tsd-kind-icon">Async<wbr>Subscribable<wbr>Options</a>
+						<a href="AsyncSubscribableOptions.html" class="tsd-kind-icon">Async<wbr>Subscribable<wbr>Options</a>
 					</li>
 				</ul>
 				<ul class="current">
 					<li class="current tsd-kind-interface tsd-has-type-parameter">
-						<a href="asyncsubscriptionfunctions.html" class="tsd-kind-icon">Async<wbr>Subscription<wbr>Functions</a>
+						<a href="AsyncSubscriptionFunctions.html" class="tsd-kind-icon">Async<wbr>Subscription<wbr>Functions</a>
 						<ul>
-							<li class=" tsd-kind-method tsd-parent-kind-interface">
-								<a href="asyncsubscriptionfunctions.html#filter" class="tsd-kind-icon">filter</a>
+							<li class=" tsd-kind-method tsd-parent-kind-interface tsd-is-inherited tsd-is-external">
+								<a href="AsyncSubscriptionFunctions.html#_asyncIterator_" class="tsd-kind-icon">[async<wbr>Iterator]</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-interface">
-								<a href="asyncsubscriptionfunctions.html#once" class="tsd-kind-icon">once</a>
+								<a href="AsyncSubscriptionFunctions.html#filter" class="tsd-kind-icon">filter</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-interface">
-								<a href="asyncsubscriptionfunctions.html#subscribe" class="tsd-kind-icon">subscribe</a>
+								<a href="AsyncSubscriptionFunctions.html#iterator" class="tsd-kind-icon">iterator</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-interface">
-								<a href="asyncsubscriptionfunctions.html#unsubscribe" class="tsd-kind-icon">unsubscribe</a>
+								<a href="AsyncSubscriptionFunctions.html#once" class="tsd-kind-icon">once</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-interface">
+								<a href="AsyncSubscriptionFunctions.html#subscribe" class="tsd-kind-icon">subscribe</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-interface">
+								<a href="AsyncSubscriptionFunctions.html#unsubscribe" class="tsd-kind-icon">unsubscribe</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-interface tsd-has-type-parameter">
-								<a href="asyncsubscriptionfunctions.html#withthis" class="tsd-kind-icon">with<wbr>This</a>
+								<a href="AsyncSubscriptionFunctions.html#withThis" class="tsd-kind-icon">with<wbr>This</a>
 							</li>
 						</ul>
 					</li>
 				</ul>
 				<ul class="after-current">
 					<li class=" tsd-kind-interface">
-						<a href="asyncsubscriptionhandle.html" class="tsd-kind-icon">Async<wbr>Subscription<wbr>Handle</a>
-					</li>
-					<li class=" tsd-kind-interface tsd-has-type-parameter">
-						<a href="subscribable.html" class="tsd-kind-icon">Subscribable</a>
-					</li>
-					<li class=" tsd-kind-interface tsd-has-type-parameter">
-						<a href="subscribableoptions.html" class="tsd-kind-icon">Subscribable<wbr>Options</a>
-					</li>
-					<li class=" tsd-kind-interface tsd-has-type-parameter">
-						<a href="subscriptionfunctions.html" class="tsd-kind-icon">Subscription<wbr>Functions</a>
+						<a href="AsyncSubscriptionHandle.html" class="tsd-kind-icon">Async<wbr>Subscription<wbr>Handle</a>
 					</li>
 					<li class=" tsd-kind-interface">
-						<a href="subscriptionhandle.html" class="tsd-kind-icon">Subscription<wbr>Handle</a>
+						<a href="EventIteratorOptions.html" class="tsd-kind-icon">Event<wbr>Iterator<wbr>Options</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-has-type-parameter">
+						<a href="Subscribable.html" class="tsd-kind-icon">Subscribable</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-has-type-parameter">
+						<a href="SubscribableOptions.html" class="tsd-kind-icon">Subscribable<wbr>Options</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-has-type-parameter">
+						<a href="SubscriptionFunctions.html" class="tsd-kind-icon">Subscription<wbr>Functions</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="SubscriptionHandle.html" class="tsd-kind-icon">Subscription<wbr>Handle</a>
 					</li>
 					<li class=" tsd-kind-type-alias tsd-has-type-parameter">
-						<a href="../modules.html#asynclistener" class="tsd-kind-icon">Async<wbr>Listener</a>
+						<a href="../modules.html#AsyncListener" class="tsd-kind-icon">Async<wbr>Listener</a>
 					</li>
 					<li class=" tsd-kind-type-alias tsd-has-type-parameter">
-						<a href="../modules.html#asyncsubscribefunction" class="tsd-kind-icon">Async<wbr>Subscribe<wbr>Function</a>
+						<a href="../modules.html#AsyncSubscribeFunction" class="tsd-kind-icon">Async<wbr>Subscribe<wbr>Function</a>
 					</li>
 					<li class=" tsd-kind-type-alias tsd-has-type-parameter">
-						<a href="../modules.html#asyncunsubscribefunction" class="tsd-kind-icon">Async<wbr>Unsubscribe<wbr>Function</a>
+						<a href="../modules.html#AsyncUnsubscribeFunction" class="tsd-kind-icon">Async<wbr>Unsubscribe<wbr>Function</a>
 					</li>
 					<li class=" tsd-kind-type-alias tsd-has-type-parameter">
-						<a href="../modules.html#listener" class="tsd-kind-icon">Listener</a>
+						<a href="../modules.html#Listener" class="tsd-kind-icon">Listener</a>
 					</li>
 					<li class=" tsd-kind-type-alias tsd-has-type-parameter">
-						<a href="../modules.html#subscribefunction" class="tsd-kind-icon">Subscribe<wbr>Function</a>
+						<a href="../modules.html#SubscribeFunction" class="tsd-kind-icon">Subscribe<wbr>Function</a>
 					</li>
 					<li class=" tsd-kind-type-alias tsd-has-type-parameter">
-						<a href="../modules.html#unsubscribefunction" class="tsd-kind-icon">Unsubscribe<wbr>Function</a>
+						<a href="../modules.html#UnsubscribeFunction" class="tsd-kind-icon">Unsubscribe<wbr>Function</a>
 					</li>
 					<li class=" tsd-kind-function tsd-has-type-parameter">
-						<a href="../modules.html#createasyncsubscribable" class="tsd-kind-icon">create<wbr>Async<wbr>Subscribable</a>
+						<a href="../modules.html#createAsyncSubscribable" class="tsd-kind-icon">create<wbr>Async<wbr>Subscribable</a>
 					</li>
 					<li class=" tsd-kind-function tsd-has-type-parameter">
-						<a href="../modules.html#createsubscribable" class="tsd-kind-icon">create<wbr>Subscribable</a>
+						<a href="../modules.html#createSubscribable" class="tsd-kind-icon">create<wbr>Subscribable</a>
 					</li>
 				</ul>
 			</nav>
