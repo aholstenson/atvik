@@ -1,4 +1,5 @@
 import { createSubscribable } from './createSubscribable';
+import { EventIteratorOptions } from './EventIteratorOptions';
 import { Listener } from './Listener';
 import { Subscribable } from './Subscribable';
 import { SubscriptionFunctions } from './SubscriptionFunctions';
@@ -294,6 +295,28 @@ export class Event<Parent, Args extends any[] = []> implements SubscriptionFunct
 	 */
 	public withThis<NewThis>(newThis: NewThis): Subscribable<NewThis, Args> {
 		return this.subscribable.withThis(newThis);
+	}
+
+	/**
+	 * Return an async iterator for this event.
+	 *
+	 * @returns
+	 *   async iterator for this event
+	 */
+	public [Symbol.asyncIterator]() {
+		return this.subscribable[Symbol.asyncIterator]();
+	}
+
+	/**
+	 * Create an iterator that supports async iteration of events emitted.
+	 *
+	 * @param options -
+	 *   options for this iterator
+	 * @returns
+	 *   iterable/iterator
+	 */
+	public iterator(options?: EventIteratorOptions) {
+		return this.subscribable.iterator(options);
 	}
 
 	/**

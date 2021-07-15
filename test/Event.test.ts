@@ -1,5 +1,7 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
+import exp from 'constants';
 import { Event } from '../src/Event';
+import { EventIteratorOverflowBehavior } from '../src/EventIteratorOptions';
 
 describe('Synchronous event', function() {
 	it('Can create', function() {
@@ -296,6 +298,102 @@ describe('Synchronous event', function() {
 		setTimeout(() => handler.emit(), 50);
 
 		await handler.once();
+	});
+
+	it('Can iterate over event', async function() {
+		const parent = {};
+		const event = new Event<object, [ string ]>(parent);
+
+		setTimeout(() => event.emit('value'), 50);
+
+		for await (const value of event) {
+			expect(value).toEqual([ 'value' ]);
+			return;
+		}
+	});
+
+	it('Event iteration queues events', async function() {
+		const parent = {};
+		const event = new Event<object, [ string ]>(parent);
+
+		setTimeout(() => event.emit('v1'), 50);
+		setTimeout(() => event.emit('v2'), 100);
+
+		for await (const value of event) {
+			switch(value[0]) {
+				case 'v1':
+					await new Promise(resolve => setTimeout(resolve, 200));
+					break;
+				case 'v2':
+					// Test is done when v2 is received
+					return;
+				default:
+					fail();
+			}
+		}
+	});
+
+	it('Event iteration drops oldest event when overflowing', async function() {
+		const parent = {};
+		const event = new Event<object, [ string ]>(parent);
+
+		setTimeout(() => event.emit('v1'), 50);
+		setTimeout(() => event.emit('v2'), 100);
+		setTimeout(() => event.emit('v3'), 150);
+
+		for await (const value of event.iterator({ limit: 1 })) {
+			switch(value[0]) {
+				case 'v1':
+					await new Promise(resolve => setTimeout(resolve, 200));
+					break;
+				case 'v2':
+					fail('Received v2, but should have been dropped');
+					break;
+				case 'v3':
+					return;
+				default:
+					fail();
+			}
+		}
+	});
+
+	it('Event iteration drops newest event when overflowing', async function() {
+		const parent = {};
+		const event = new Event<object, [ string ]>(parent);
+
+		setTimeout(() => event.emit('v1'), 50);
+		setTimeout(() => event.emit('v2'), 100);
+		setTimeout(() => event.emit('v3'), 150);
+
+		for await (const value of event.iterator({ limit: 1, overflowBehavior: EventIteratorOverflowBehavior.DropNewest })) {
+			switch(value[0]) {
+				case 'v1':
+					await new Promise(resolve => setTimeout(resolve, 200));
+					break;
+				case 'v2':
+					return;
+				case 'v3':
+					fail('Received v3, but should have been dropped');
+					break;
+				default:
+					fail();
+			}
+		}
+	});
+
+	it('Event iteration removes listener when done', async function() {
+		const parent = {};
+		const event = new Event<object, [ string ]>(parent);
+
+		// Used to break out of the loop
+		setTimeout(() => event.emit('value'), 50);
+
+		// eslint-disable-next-line @typescript-eslint/no-unused-vars
+		for await (const value of event) {
+			break;
+		}
+
+		expect(event.hasListeners).toBe(false);
 	});
 
 	it('Can filter event', async function() {

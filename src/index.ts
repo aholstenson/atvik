@@ -11,3 +11,5 @@ export * from './AsyncSubscribable';
 export * from './AsyncSubscriptionFunctions';
 export * from './AsyncSubscriptionHandle';
 export * from './AsyncEvent';
+
+export * from './EventIteratorOptions';

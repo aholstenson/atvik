@@ -1,3 +1,4 @@
+import { EventIteratorOptions } from './EventIteratorOptions';
 import { Listener } from './Listener';
 import { Subscribable } from './Subscribable';
 import { SubscriptionHandle } from './SubscriptionHandle';
@@ -5,7 +6,8 @@ import { SubscriptionHandle } from './SubscriptionHandle';
 /**
  * Functions used to subscribe and unsubscribe to an event.
  */
-export interface SubscriptionFunctions<This, Args extends any[] = []> {
+export interface SubscriptionFunctions<This, Args extends any[] = []>
+	extends AsyncIterable<Args> {
 	/**
 	 * Subscribe to this event using the given listener. The listener will
 	 * be invoked any time the event is emitted. The returned handle can be
@@ -58,4 +60,14 @@ export interface SubscriptionFunctions<This, Args extends any[] = []> {
 	 *   modified `Subscribable`
 	 */
 	withThis<NewThis>(newThis: NewThis): Subscribable<NewThis, Args>;
+
+	/**
+	 * Create an iterator that supports async iteration of events emitted.
+	 *
+	 * @param options -
+	 *   options for this iterator
+	 * @returns
+	 *   iterable/iterator
+	 */
+	iterator(options?: EventIteratorOptions): AsyncIterableIterator<Args>;
 }

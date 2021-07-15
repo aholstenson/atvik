@@ -3,6 +3,7 @@ import { AsyncSubscribable } from './AsyncSubscribable';
 import { AsyncSubscriptionFunctions } from './AsyncSubscriptionFunctions';
 import { AsyncSubscriptionHandle } from './AsyncSubscriptionHandle';
 import { createAsyncSubscribable } from './createAsyncSubscribable';
+import { EventIteratorOptions } from './EventIteratorOptions';
 
 /**
  * An event that handles subscription in an asynchronous way. This type of
@@ -262,6 +263,28 @@ export class AsyncEvent<Parent, Args extends any[] = []> implements AsyncSubscri
 	 */
 	public withThis<NewThis>(newThis: NewThis): AsyncSubscribable<NewThis, Args> {
 		return this.subscribable.withThis(newThis);
+	}
+
+	/**
+	 * Return an async iterator for this event.
+	 *
+	 * @returns
+	 *   async iterator for this event
+	 */
+	public [Symbol.asyncIterator]() {
+		return this.subscribable[Symbol.asyncIterator]();
+	}
+
+	/**
+	 * Create an iterator that supports async iteration of events emitted.
+	 *
+	 * @param options -
+	 *   options for this iterator
+	 * @returns
+	 *   iterable/iterator
+	 */
+	public iterator(options?: EventIteratorOptions) {
+		return this.subscribable.iterator(options);
 	}
 
 	/**

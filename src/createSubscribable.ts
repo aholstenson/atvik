@@ -1,3 +1,4 @@
+import { EventIteratorOptions, EventIteratorOverflowBehavior } from './EventIteratorOptions';
 import { Listener } from './Listener';
 import { Subscribable } from './Subscribable';
 import { SubscriptionHandle } from './SubscriptionHandle';
@@ -74,7 +75,10 @@ export function createSubscribable<This, Args extends any[]>(
 
 	subscribable.withThis = <NewThis>(newThis: NewThis) => createNewThisSubscribable(subscribe, unsubscribe, newThis);
 
-	return subscribable;
+	subscribable.iterator = (itOptions?: EventIteratorOptions) => createAsyncIterator(subscribe, unsubscribe, itOptions);
+	(subscribable as any)[Symbol.asyncIterator] = () => createAsyncIterator(subscribe, unsubscribe);
+
+	return subscribable as any;
 }
 
 /**
@@ -159,4 +163,92 @@ function createNewThisSubscribable<CurrentThis, NewThis, Args extends any[]>(
 			}
 		}
 	});
+}
+
+/**
+ * Create an async iterator that will register a listener and emit events as
+ * they are received.
+ *
+ * @param subscribe -
+ *   function used to subscribe listeners
+ * @param unsubscribe -
+ *   function used to unsubscribe listeners
+ * @param options -
+ *   options to apply to this iterator
+ * @returns
+ *   async iterator
+ */
+function createAsyncIterator<Args extends any[]>(
+	subscribe: SubscribeFunction<unknown, Args>,
+	unsubscribe: UnsubscribeFunction<unknown, Args>,
+	options?: EventIteratorOptions
+): AsyncIterableIterator<Args> {
+	const limit = options?.limit ?? 0;
+	const behavior = options?.overflowBehavior ?? EventIteratorOverflowBehavior.DropOldest;
+	if(behavior === EventIteratorOverflowBehavior.Block) {
+		throw new Error('Blocking is not a supported strategy for non-async events');
+	}
+
+	const queue: Args[] = [];
+	let current: ((v: IteratorResult<Args>) => void) | null = null;
+
+	const listener = (...args: Args) => {
+		if(current) {
+			current({
+				value: args,
+				done: false
+			});
+			current = null;
+		} else {
+			if(limit > 0) {
+				if(queue.length >= limit) {
+					switch(behavior) {
+						case EventIteratorOverflowBehavior.DropNewest:
+							return;
+						case EventIteratorOverflowBehavior.DropOldest:
+							queue.shift();
+							break;
+					}
+				}
+			}
+
+			queue.push(args);
+		}
+	};
+
+	subscribe(listener);
+
+	return {
+		next() {
+			if(queue.length > 0) {
+				// There is data in the queue, pull it
+				const result = queue.shift();
+				if(! result) {
+					return Promise.reject('Unexpected error, event queue is empty');
+				}
+
+				return Promise.resolve({
+					value: result,
+					done: false
+				});
+			} else {
+				// Nothing in the queue, register the promise
+				return new Promise<IteratorResult<Args>>(resolve => {
+					current = resolve;
+				});
+			}
+		},
+
+		async return(value?: any) {
+			unsubscribe(listener);
+			return {
+				value: value,
+				done: true
+			};
+		},
+
+		[Symbol.asyncIterator]() {
+			return this;
+		}
+	};
 }
