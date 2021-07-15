@@ -71,8 +71,8 @@ describe('createEventAdapter', function() {
 
 	it('Can trigger single listener for on/off', function() {
 		const emitter = new EventEmitter();
-		delete (emitter as any).addListener;
-		delete (emitter as any).removeListener;
+		(emitter as any).addListener = undefined;
+		(emitter as any).removeListener = undefined;
 		const onTest = createEventAdapter(emitter, 'test');
 
 		let triggered = false;
@@ -90,8 +90,8 @@ describe('createEventAdapter', function() {
 
 	it('Can trigger multiple listeners for on/off', function() {
 		const emitter = new EventEmitter();
-		delete (emitter as any).addListener;
-		delete (emitter as any).removeListener;
+		(emitter as any).addListener = undefined;
+		(emitter as any).removeListener = undefined;
 		const onTest = createEventAdapter(emitter, 'test');
 
 		let triggered1 = false;
@@ -123,8 +123,8 @@ describe('createEventAdapter', function() {
 
 	it('Can unsubscribe listener for on/off', function() {
 		const emitter = new EventEmitter();
-		delete (emitter as any).addListener;
-		delete (emitter as any).removeListener;
+		(emitter as any).addListener = undefined;
+		(emitter as any).removeListener = undefined;
 		const onTest = createEventAdapter(emitter, 'test');
 
 		let triggered = false;

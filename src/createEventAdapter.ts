@@ -81,15 +81,15 @@ export function createEventAdapter<
 }
 
 function isAddRemoveEventListener(a: any): a is AddRemoveEventListener<any, any> {
-	return 'addEventListener' in a && 'removeEventListener' in a;
+	return a.addEventListener && a.removeEventListener;
 }
 
 function isAddRemoveListener(a: any): a is AddRemoveListener<any, any> {
-	return 'addListener' in a && 'removeListener' in a;
+	return a.addListener && a.removeListener;
 }
 
 function isOnOff(a: any): a is OnOff<any, any> {
-	return 'on' in a && 'off' in a;
+	return a.on && a.off;
 }
 
 function createTrackingSubscribable<
