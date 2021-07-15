@@ -399,6 +399,63 @@ describe('AsyncEvent', function() {
 		}
 	});
 
+
+	it('Event iteration supports default options', async function() {
+		const parent = {};
+		const event = new AsyncEvent<object, [ string ]>(parent, {
+			defaultIterator: {
+				limit: 1
+			}
+		});
+
+		setTimeout(() => event.emit('v1'), 50);
+		setTimeout(() => event.emit('v2'), 100);
+		setTimeout(() => event.emit('v3'), 150);
+
+		for await (const value of event) {
+			switch(value[0]) {
+				case 'v1':
+					await new Promise(resolve => setTimeout(resolve, 200));
+					break;
+				case 'v2':
+					fail('Received v2, but should have been dropped');
+					break;
+				case 'v3':
+					return;
+				default:
+					fail();
+			}
+		}
+	});
+
+	it('Event iteration can override default options', async function() {
+		const parent = {};
+		const event = new AsyncEvent<object, [ string ]>(parent, {
+			defaultIterator: {
+				limit: 1
+			}
+		});
+
+		setTimeout(() => event.emit('v1'), 50);
+		setTimeout(() => event.emit('v2'), 100);
+		setTimeout(() => event.emit('v3'), 150);
+
+		for await (const value of event.iterator({ overflowBehavior: EventIteratorOverflowBehavior.DropNewest })) {
+			switch(value[0]) {
+				case 'v1':
+					await new Promise(resolve => setTimeout(resolve, 200));
+					break;
+				case 'v2':
+					return;
+				case 'v3':
+					fail('Received v3, but should have been dropped');
+					break;
+				default:
+					fail();
+			}
+		}
+	});
+
 	it('Event iteration removes listener when done', async function() {
 		const parent = {};
 		const event = new AsyncEvent<object, [ string ]>(parent);

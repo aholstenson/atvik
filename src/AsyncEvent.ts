@@ -6,6 +6,17 @@ import { createAsyncSubscribable } from './createAsyncSubscribable';
 import { EventIteratorOptions } from './EventIteratorOptions';
 
 /**
+ * Options that can be passed when creating an instance of {@link AsyncEvent}.
+ */
+export interface AsyncEventOptions {
+	/**
+	 * The default options that are applied to iterators. Use this to setup
+	 * default limits and overflow behavior for iterators of this event.
+	 */
+	defaultIterator?: EventIteratorOptions;
+}
+
+/**
  * An event that handles subscription in an asynchronous way. This type of
  *
  *
@@ -72,13 +83,19 @@ export class AsyncEvent<Parent, Args extends any[] = []> implements AsyncSubscri
 	 *
 	 * @param parent -
 	 *   the parent that will be passed to listener as their `this`
+	 * @param options -
+	 *   options for this event
 	 */
-	public constructor(parent: Parent) {
+	public constructor(
+		parent: Parent,
+		options?: AsyncEventOptions
+	) {
 		this.parent = parent;
 
 		this.subscribable = createAsyncSubscribable({
 			subscribe: this.subscribe0.bind(this),
-			unsubscribe: this.unsubscribe0.bind(this)
+			unsubscribe: this.unsubscribe0.bind(this),
+			defaultIterator: options?.defaultIterator
 		});
 	}
 

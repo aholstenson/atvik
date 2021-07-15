@@ -27,6 +27,11 @@ export interface SubscribableOptions<This, Args extends any[]> {
 	 * Function used to unsubscribe a listener.
 	 */
 	unsubscribe: UnsubscribeFunction<This, Args>;
+
+	/**
+	 * Options to apply to iterators created by this subscribable.
+	 */
+	defaultIterator?: EventIteratorOptions;
 }
 
 /**
@@ -75,8 +80,12 @@ export function createSubscribable<This, Args extends any[]>(
 
 	subscribable.withThis = <NewThis>(newThis: NewThis) => createNewThisSubscribable(subscribe, unsubscribe, newThis);
 
-	subscribable.iterator = (itOptions?: EventIteratorOptions) => createAsyncIterator(subscribe, unsubscribe, itOptions);
-	(subscribable as any)[Symbol.asyncIterator] = () => createAsyncIterator(subscribe, unsubscribe);
+	const defaultIteratorOptions = options.defaultIterator;
+	subscribable.iterator = (itOptions?: EventIteratorOptions) => createAsyncIterator(subscribe, unsubscribe, {
+		...defaultIteratorOptions,
+		...itOptions
+	});
+	(subscribable as any)[Symbol.asyncIterator] = () => createAsyncIterator(subscribe, unsubscribe, defaultIteratorOptions);
 
 	return subscribable as any;
 }

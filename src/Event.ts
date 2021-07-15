@@ -6,6 +6,17 @@ import { SubscriptionFunctions } from './SubscriptionFunctions';
 import { SubscriptionHandle } from './SubscriptionHandle';
 
 /**
+ * Options that can be passed when creating an instance of {@link Event}.
+ */
+export interface EventOptions {
+	/**
+	 * The default options that are applied to iterators. Use this to setup
+	 * default limits and overflow behavior for iterators of this event.
+	 */
+	defaultIterator?: EventIteratorOptions;
+}
+
+/**
  * An event that handles subscription and fires its listeners in a synchronous
  * fashion.
  *
@@ -107,13 +118,19 @@ export class Event<Parent, Args extends any[] = []> implements SubscriptionFunct
 	 *
 	 * @param parent -
 	 *   the parent that will be passed to listener as their `this`
+	 * @param options -
+	 *   options for creating this event
 	 */
-	public constructor(parent: Parent) {
+	public constructor(
+		parent: Parent,
+		options?: EventOptions
+	) {
 		this.parent = parent;
 
 		this.subscribable = createSubscribable({
 			subscribe: this.subscribe0.bind(this),
-			unsubscribe: this.unsubscribe0.bind(this)
+			unsubscribe: this.unsubscribe0.bind(this),
+			defaultIterator: options?.defaultIterator
 		});
 	}
 
