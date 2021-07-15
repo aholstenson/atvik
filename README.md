@@ -16,7 +16,7 @@ import { Event } from 'atvik';
 const event = new Event(thisValueForListeners);
 
 // Subscribe to the event
-const handle = event.subscribe((arg1) => /* do stuff here */);
+const handle = event.subscribe((arg1) => console.log('event', arg1));
 
 // Emit the event, triggering all listeners
 event.emit('first argument');
@@ -24,9 +24,18 @@ event.emit('first argument');
 // Unsubscribe from the event
 handle.unsubscribe();
 
+// Using for await ... of listeners
+for await (const [ arg1 ] of event) {
+  console.log('event', arg1);
+}
+
 // Public API without emit is available
 const subscribable = event.subscribable;
-subscribable((arg1) => /* do stuff here */);
+subscribable((arg1) => console.log('event', arg1));
+
+for await (const [ arg1 ] of subscribable) {
+  console.log('event', arg1);
+}
 ```
 
 ## Use with classes
