@@ -151,7 +151,44 @@ event.emit(1);
 event.emit(2);
 ```
 
-## Monitoring for listener changes
+## Iterating over events
+
+Events and subscribables can be iterated over using a `for await .. of` loop,
+allowing for the creation of simple event loops:
+
+```javascript
+for await (const [ arg1 ] of event) {
+  console.log('event', arg1)
+}
+```
+
+Sometimes events are emitted faster than they can be consumed, limiting and
+controlling overflow of events can be done via {@link iterator}.
+
+As an example this will limit to 10 queued events and then start dropping
+the earliest ones:
+
+```javascript
+for await (const [ arg1 ] of subscribable.iterator({ limit: 10 })) {
+  console.log('event', arg1);
+}
+```
+
+The behavior to use when the queue is full can be controlled by setting the
+[OverflowBehavior](https://aholstenson.github.io/atvik/enums/OverflowBehavior.html):
+
+```javascript
+const iteratorOptions = {
+  limit: 10,
+  overflowBehavior: OverflowBehavior.DropNewest
+};
+
+for await (const [ arg1 ] of subscribable.iterator(iteratorOptions)) {
+  console.log('event', arg1);
+}
+```
+
+### Monitoring for listener changes
 
 For some use cases it is necessary to monitor if an event has any listeners,
 for this library provides the `monitorListeners` function. If a monitor is
@@ -223,4 +260,18 @@ const event = new AsyncEvent(thisValueForListeners);
 
 // Emit the event, triggering all listeners
 await event.emit('first argument');
+```
+
+## Adapting other event emitters
+
+Support is included for adapting some common event emitters such as Nodes
+`EventEmitter` and DOM events using [createEventAdapter](https://aholstenson.github.io/atvik/modules.html#createEventAdapter).
+
+```javascript
+import { createEventAdapter } from 'atvik';
+
+const subscribable = createEventAdapter(eventEmitter, 'nameOfEvent');
+
+// Use subscribable as normal
+subscribable(arg1 => console.log('event', arg1));
 ```
