@@ -1,7 +1,7 @@
-import { AsyncListener } from './AsyncListener';
 import { AsyncSubscribable } from './AsyncSubscribable';
 import { AsyncSubscriptionHandle } from './AsyncSubscriptionHandle';
 import { EventIteratorOptions } from './EventIteratorOptions';
+import { Listener } from './Listener';
 
 /**
  * Functions used to asynchronously subscribe and unsubscribe to an event.
@@ -19,7 +19,7 @@ export interface AsyncSubscriptionFunctions<This, Args extends any[] = []>
 	 *   promise with handle to the subscription, can be used to unsubscribe.
 	 *   Resolves when the subscription is fully registered
 	 */
-	subscribe(listener: AsyncListener<This, Args>): Promise<AsyncSubscriptionHandle>;
+	subscribe(listener: Listener<This, Args>): Promise<AsyncSubscriptionHandle>;
 
 	/**
 	 * Unsubscribe a listener from this handler. The specified listener will
@@ -32,7 +32,7 @@ export interface AsyncSubscriptionFunctions<This, Args extends any[] = []>
 	 *   the listener was subscribed. Resolves when the listener is fully
 	 *   unsubscribed
 	 */
-	unsubscribe(listener: AsyncListener<This, Args>): Promise<boolean>;
+	unsubscribe(listener: Listener<This, Args>): Promise<boolean>;
 
 	/**
 	 * Get a promise that will resolve the first time this event is fired

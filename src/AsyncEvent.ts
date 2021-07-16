@@ -1,9 +1,9 @@
-import { AsyncListener } from './AsyncListener';
 import { AsyncSubscribable } from './AsyncSubscribable';
 import { AsyncSubscriptionFunctions } from './AsyncSubscriptionFunctions';
 import { AsyncSubscriptionHandle } from './AsyncSubscriptionHandle';
 import { createAsyncSubscribable } from './createAsyncSubscribable';
 import { EventIteratorOptions } from './EventIteratorOptions';
+import { Listener } from './Listener';
 
 /**
  * Options that can be passed when creating an instance of {@link AsyncEvent}.
@@ -70,7 +70,7 @@ export class AsyncEvent<Parent, Args extends any[] = []> implements AsyncSubscri
 	/**
 	 * Listener(s) that have been attached to this event handler.
 	 */
-	private registeredListeners?: AsyncListener<Parent, Args> | AsyncListener<Parent, Args>[];
+	private registeredListeners?: Listener<Parent, Args> | Listener<Parent, Args>[];
 
 	/**
 	 * Monitor that will be notified on any listener change.
@@ -131,7 +131,7 @@ export class AsyncEvent<Parent, Args extends any[] = []> implements AsyncSubscri
 	 * @returns
 	 *   promise
 	 */
-	protected subscribe0(listener: AsyncListener<Parent, Args>): Promise<void> {
+	protected subscribe0(listener: Listener<Parent, Args>): Promise<void> {
 		if(Array.isArray(this.registeredListeners)) {
 			// Listeners is already an array, create a copy with the new listener appended
 			const idx = this.registeredListeners.indexOf(listener);
@@ -169,7 +169,7 @@ export class AsyncEvent<Parent, Args extends any[] = []> implements AsyncSubscri
 	 * @returns
 	 *   promise indicating if the listener was subscribed
 	 */
-	protected unsubscribe0(listener: AsyncListener<Parent, Args>): Promise<boolean> {
+	protected unsubscribe0(listener: Listener<Parent, Args>): Promise<boolean> {
 		if(Array.isArray(this.registeredListeners)) {
 			/*
 			 * Array has been allocated, find the index of the listener and
@@ -228,7 +228,7 @@ export class AsyncEvent<Parent, Args extends any[] = []> implements AsyncSubscri
 	 *   handle to the subscription, can be used to unsubscribe. Resolves
 	 *   when the subscription is fully registered
 	 */
-	public subscribe(listener: AsyncListener<Parent, Args>): Promise<AsyncSubscriptionHandle> {
+	public subscribe(listener: Listener<Parent, Args>): Promise<AsyncSubscriptionHandle> {
 		return this.subscribable.subscribe(listener);
 	}
 
@@ -241,7 +241,7 @@ export class AsyncEvent<Parent, Args extends any[] = []> implements AsyncSubscri
 	 * @returns
 	 *   promise that resolves when the listener is fully unsubscribed
 	 */
-	public unsubscribe(listener: AsyncListener<Parent, Args>): Promise<boolean> {
+	public unsubscribe(listener: Listener<Parent, Args>): Promise<boolean> {
 		return this.subscribable.unsubscribe(listener);
 	}
 

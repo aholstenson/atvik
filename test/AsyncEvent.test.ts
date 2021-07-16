@@ -80,7 +80,7 @@ describe('AsyncEvent', function() {
 			triggered = true;
 		});
 
-		await handler.unsubscribe(() => null);
+		await handler.unsubscribe(() => {});
 
 		expect(handler.hasListeners).toEqual(true);
 
@@ -252,7 +252,7 @@ describe('AsyncEvent', function() {
 			triggered3 = true;
 		});
 
-		await handler.unsubscribe(() => null);
+		await handler.unsubscribe(() => {});
 
 		await handler.emit();
 
@@ -477,7 +477,9 @@ describe('AsyncEvent', function() {
 
 		const filtered = handler.filter(i => i < 10);
 		let triggered = 0;
-		filtered(() => triggered++);
+		filtered(() => {
+			triggered++;
+		});
 
 		await handler.emit(2);
 		await handler.emit(12);
@@ -491,7 +493,9 @@ describe('AsyncEvent', function() {
 
 		const filtered = handler.subscribable.filter(i => i < 10);
 		let triggered = 0;
-		filtered(() => triggered++);
+		filtered(() => {
+			triggered++;
+		});
 
 		await handler.emit(2);
 		await handler.emit(12);
@@ -505,7 +509,9 @@ describe('AsyncEvent', function() {
 
 		const filtered = handler.subscribable.filter(i => i < 10);
 		let triggered = 0;
-		const handle = await filtered(() => triggered++);
+		const handle = await filtered(() => {
+			triggered++;
+		});
 
 		await handler.emit(2);
 
