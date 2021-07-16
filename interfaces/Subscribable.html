@@ -68,8 +68,71 @@
 			<section class="tsd-panel tsd-comment">
 				<div class="tsd-comment tsd-typography">
 					<div class="lead">
-						<p>Functions used to subscribe and unsubscribe to an event.</p>
+						<p>Function that can be used to subscribe, filter and iterate over events.
+							Subscribables are commonly fetched from an <a href="../classes/Event.html">Event</a>, adapted from
+							another event emitters using <a href="../modules.html#createEventAdapter">createEventAdapter</a> or manually created
+						via <a href="../modules.html#createSubscribable">createSubscribable</a>.</p>
 					</div>
+					<a href="#subscribing-and-unsubscribing" id="subscribing-and-unsubscribing" style="color: inherit; text-decoration: none;">
+						<h2>Subscribing and unsubscribing</h2>
+					</a>
+					<p>Subscribables are functions that allow them to be called directly to
+					subscribe to the event:</p>
+					<pre><code class="language-javascript"><span style="color: #008000">// Subscribe to the event</span>
+<span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #0070C1">handle</span><span style="color: #000000"> = </span><span style="color: #795E26">subscribable</span><span style="color: #000000">(</span><span style="color: #001080">arg1</span><span style="color: #000000"> </span><span style="color: #0000FF">=&gt;</span><span style="color: #000000"> </span><span style="color: #001080">console</span><span style="color: #000000">.</span><span style="color: #795E26">log</span><span style="color: #000000">(</span><span style="color: #A31515">&#039;event&#039;</span><span style="color: #000000">, </span><span style="color: #001080">arg1</span><span style="color: #000000">));</span>
+
+<span style="color: #008000">// Unsubscribe via the returned handle</span>
+<span style="color: #001080">handle</span><span style="color: #000000">.</span><span style="color: #795E26">unsubscribe</span><span style="color: #000000">();</span>
+</code></pre>
+					<p>It is also possible to subscribe/unsubscribe a listener using methods on
+					the subscribable:</p>
+					<pre><code class="language-javascript"><span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #795E26">listener</span><span style="color: #000000"> = </span><span style="color: #001080">arg1</span><span style="color: #000000"> </span><span style="color: #0000FF">=&gt;</span><span style="color: #000000"> </span><span style="color: #001080">console</span><span style="color: #000000">.</span><span style="color: #795E26">log</span><span style="color: #000000">(</span><span style="color: #A31515">&#039;event&#039;</span><span style="color: #000000">, </span><span style="color: #001080">arg1</span><span style="color: #000000">);</span>
+<span style="color: #001080">subscribable</span><span style="color: #000000">.</span><span style="color: #795E26">subscribe</span><span style="color: #000000">(</span><span style="color: #001080">listener</span><span style="color: #000000">);</span>
+<span style="color: #001080">subscribable</span><span style="color: #000000">.</span><span style="color: #795E26">unsubscribe</span><span style="color: #000000">(</span><span style="color: #001080">listener</span><span style="color: #000000">);</span>
+</code></pre>
+					<a href="#filtering" id="filtering" style="color: inherit; text-decoration: none;">
+						<h2>Filtering</h2>
+					</a>
+					<p>Subscribables may be filtered to create an instance that only emits certain
+					events:</p>
+					<pre><code class="language-javascript"><span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #0070C1">filteredSubscribable</span><span style="color: #000000"> = </span><span style="color: #001080">subscribable</span><span style="color: #000000">.</span><span style="color: #795E26">filter</span><span style="color: #000000">(</span><span style="color: #001080">arg1</span><span style="color: #000000"> </span><span style="color: #0000FF">=&gt;</span><span style="color: #000000"> </span><span style="color: #001080">arg1</span><span style="color: #000000"> &gt; </span><span style="color: #098658">10</span><span style="color: #000000">);</span>
+</code></pre>
+					<a href="#listening-to-something-once" id="listening-to-something-once" style="color: inherit; text-decoration: none;">
+						<h2>Listening to something once</h2>
+					</a>
+					<p>Listening for a single event may be done via <a href="Subscribable.html#once">once</a> which returns
+					a promise:</p>
+					<pre><code class="language-javascript"><span style="color: #0000FF">const</span><span style="color: #000000"> [ </span><span style="color: #0070C1">arg1</span><span style="color: #000000"> ] = </span><span style="color: #AF00DB">await</span><span style="color: #000000"> </span><span style="color: #001080">subscribable</span><span style="color: #000000">.</span><span style="color: #795E26">once</span><span style="color: #000000">();</span>
+</code></pre>
+					<a href="#async-iteration-of-events" id="async-iteration-of-events" style="color: inherit; text-decoration: none;">
+						<h2>Async iteration of events</h2>
+					</a>
+					<p>Subscribables can also be used with an async iterator to allow for event
+					loops:</p>
+					<p>With default values:</p>
+					<pre><code class="language-javascript"><span style="color: #AF00DB">for</span><span style="color: #000000"> </span><span style="color: #AF00DB">await</span><span style="color: #000000"> (</span><span style="color: #0000FF">const</span><span style="color: #000000"> [ </span><span style="color: #0070C1">arg1</span><span style="color: #000000"> ] </span><span style="color: #0000FF">of</span><span style="color: #000000"> </span><span style="color: #001080">subscribable</span><span style="color: #000000">) {</span>
+<span style="color: #000000">  </span><span style="color: #001080">console</span><span style="color: #000000">.</span><span style="color: #795E26">log</span><span style="color: #000000">(</span><span style="color: #A31515">&#039;event&#039;</span><span style="color: #000000">, </span><span style="color: #001080">arg1</span><span style="color: #000000">);</span>
+<span style="color: #000000">}</span>
+</code></pre>
+					<p>Sometimes events are emitted faster than they can be consumed, limiting and
+					controlling overflow of events can be done via <a href="Subscribable.html#iterator">iterator</a>.</p>
+					<p>As an example this will limit to 10 queued events and then start dropping
+					the earliest ones:</p>
+					<pre><code class="language-javascript"><span style="color: #AF00DB">for</span><span style="color: #000000"> </span><span style="color: #AF00DB">await</span><span style="color: #000000"> (</span><span style="color: #0000FF">const</span><span style="color: #000000"> [ </span><span style="color: #0070C1">arg1</span><span style="color: #000000"> ] </span><span style="color: #0000FF">of</span><span style="color: #000000"> </span><span style="color: #001080">subscribable</span><span style="color: #000000">.</span><span style="color: #795E26">iterator</span><span style="color: #000000">({ </span><span style="color: #001080">limit:</span><span style="color: #000000"> </span><span style="color: #098658">10</span><span style="color: #000000"> })) {</span>
+<span style="color: #000000">  </span><span style="color: #001080">console</span><span style="color: #000000">.</span><span style="color: #795E26">log</span><span style="color: #000000">(</span><span style="color: #A31515">&#039;event&#039;</span><span style="color: #000000">, </span><span style="color: #001080">arg1</span><span style="color: #000000">);</span>
+<span style="color: #000000">}</span>
+</code></pre>
+					<p>The behavior to use when the queue is full can be controlled by setting the
+					overflow behavior to either <a href="../enums/OverflowBehavior.html#DropNewest">DropNewest</a> or <a href="../enums/OverflowBehavior.html#DropOldest">DropOldest</a>.</p>
+					<pre><code class="language-javascript"><span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #0070C1">iteratorOptions</span><span style="color: #000000"> = {</span>
+<span style="color: #000000">  </span><span style="color: #001080">limit:</span><span style="color: #000000"> </span><span style="color: #098658">10</span><span style="color: #000000">,</span>
+<span style="color: #000000">  </span><span style="color: #001080">overflowBehavior:</span><span style="color: #000000"> </span><span style="color: #001080">OverflowBehavior</span><span style="color: #000000">.</span><span style="color: #001080">DropNewest</span>
+<span style="color: #000000">};</span>
+
+<span style="color: #AF00DB">for</span><span style="color: #000000"> </span><span style="color: #AF00DB">await</span><span style="color: #000000"> (</span><span style="color: #0000FF">const</span><span style="color: #000000"> [ </span><span style="color: #0070C1">arg1</span><span style="color: #000000"> ] </span><span style="color: #0000FF">of</span><span style="color: #000000"> </span><span style="color: #001080">subscribable</span><span style="color: #000000">.</span><span style="color: #795E26">iterator</span><span style="color: #000000">(</span><span style="color: #001080">iteratorOptions</span><span style="color: #000000">)) {</span>
+<span style="color: #000000">  </span><span style="color: #001080">console</span><span style="color: #000000">.</span><span style="color: #795E26">log</span><span style="color: #000000">(</span><span style="color: #A31515">&#039;event&#039;</span><span style="color: #000000">, </span><span style="color: #001080">arg1</span><span style="color: #000000">);</span>
+<span style="color: #000000">}</span>
+</code></pre>
 				</div>
 			</section>
 			<section class="tsd-panel tsd-type-parameters">
@@ -105,7 +168,7 @@
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/aholstenson/atvik/blob/01ee51b/src/Subscribable.ts#L19">src/Subscribable.ts:19</a></li>
+								<li>Defined in <a href="https://github.com/aholstenson/atvik/blob/96f155b/src/Subscribable.ts#L101">src/Subscribable.ts:101</a></li>
 							</ul>
 						</aside>
 						<div class="tsd-comment tsd-typography">
@@ -114,6 +177,66 @@
 									be invoked any time the event is emitted. The returned handle can be
 								used to unsubscribe.</p>
 							</div>
+							<a href="#subscribing-and-unsubscribing" id="subscribing-and-unsubscribing" style="color: inherit; text-decoration: none;">
+								<h2>Subscribing and unsubscribing</h2>
+							</a>
+							<p>Subscribables are functions that allow them to be called directly to
+							subscribe to the event:</p>
+							<pre><code class="language-javascript"><span style="color: #008000">// Subscribe to the event</span>
+<span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #0070C1">handle</span><span style="color: #000000"> = </span><span style="color: #795E26">subscribable</span><span style="color: #000000">(</span><span style="color: #001080">arg1</span><span style="color: #000000"> </span><span style="color: #0000FF">=&gt;</span><span style="color: #000000"> </span><span style="color: #001080">console</span><span style="color: #000000">.</span><span style="color: #795E26">log</span><span style="color: #000000">(</span><span style="color: #A31515">&#039;event&#039;</span><span style="color: #000000">, </span><span style="color: #001080">arg1</span><span style="color: #000000">));</span>
+
+<span style="color: #008000">// Unsubscribe via the returned handle</span>
+<span style="color: #001080">handle</span><span style="color: #000000">.</span><span style="color: #795E26">unsubscribe</span><span style="color: #000000">();</span>
+</code></pre>
+							<p>It is also possible to subscribe/unsubscribe a listener using methods on
+							the subscribable:</p>
+							<pre><code class="language-javascript"><span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #795E26">listener</span><span style="color: #000000"> = </span><span style="color: #001080">arg1</span><span style="color: #000000"> </span><span style="color: #0000FF">=&gt;</span><span style="color: #000000"> </span><span style="color: #001080">console</span><span style="color: #000000">.</span><span style="color: #795E26">log</span><span style="color: #000000">(</span><span style="color: #A31515">&#039;event&#039;</span><span style="color: #000000">, </span><span style="color: #001080">arg1</span><span style="color: #000000">);</span>
+<span style="color: #001080">subscribable</span><span style="color: #000000">.</span><span style="color: #795E26">subscribe</span><span style="color: #000000">(</span><span style="color: #001080">listener</span><span style="color: #000000">);</span>
+<span style="color: #001080">subscribable</span><span style="color: #000000">.</span><span style="color: #795E26">unsubscribe</span><span style="color: #000000">(</span><span style="color: #001080">listener</span><span style="color: #000000">);</span>
+</code></pre>
+							<a href="#filtering" id="filtering" style="color: inherit; text-decoration: none;">
+								<h2>Filtering</h2>
+							</a>
+							<p>Subscribables may be filtered to create an instance that only emits certain
+							events:</p>
+							<pre><code class="language-javascript"><span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #0070C1">filteredSubscribable</span><span style="color: #000000"> = </span><span style="color: #001080">subscribable</span><span style="color: #000000">.</span><span style="color: #795E26">filter</span><span style="color: #000000">(</span><span style="color: #001080">arg1</span><span style="color: #000000"> </span><span style="color: #0000FF">=&gt;</span><span style="color: #000000"> </span><span style="color: #001080">arg1</span><span style="color: #000000"> &gt; </span><span style="color: #098658">10</span><span style="color: #000000">);</span>
+</code></pre>
+							<a href="#listening-to-something-once" id="listening-to-something-once" style="color: inherit; text-decoration: none;">
+								<h2>Listening to something once</h2>
+							</a>
+							<p>Listening for a single event may be done via <a href="Subscribable.html#once">once</a> which returns
+							a promise:</p>
+							<pre><code class="language-javascript"><span style="color: #0000FF">const</span><span style="color: #000000"> [ </span><span style="color: #0070C1">arg1</span><span style="color: #000000"> ] = </span><span style="color: #AF00DB">await</span><span style="color: #000000"> </span><span style="color: #001080">subscribable</span><span style="color: #000000">.</span><span style="color: #795E26">once</span><span style="color: #000000">();</span>
+</code></pre>
+							<a href="#async-iteration-of-events" id="async-iteration-of-events" style="color: inherit; text-decoration: none;">
+								<h2>Async iteration of events</h2>
+							</a>
+							<p>Subscribables can also be used with an async iterator to allow for event
+							loops:</p>
+							<p>With default values:</p>
+							<pre><code class="language-javascript"><span style="color: #AF00DB">for</span><span style="color: #000000"> </span><span style="color: #AF00DB">await</span><span style="color: #000000"> (</span><span style="color: #0000FF">const</span><span style="color: #000000"> [ </span><span style="color: #0070C1">arg1</span><span style="color: #000000"> ] </span><span style="color: #0000FF">of</span><span style="color: #000000"> </span><span style="color: #001080">subscribable</span><span style="color: #000000">) {</span>
+<span style="color: #000000">  </span><span style="color: #001080">console</span><span style="color: #000000">.</span><span style="color: #795E26">log</span><span style="color: #000000">(</span><span style="color: #A31515">&#039;event&#039;</span><span style="color: #000000">, </span><span style="color: #001080">arg1</span><span style="color: #000000">);</span>
+<span style="color: #000000">}</span>
+</code></pre>
+							<p>Sometimes events are emitted faster than they can be consumed, limiting and
+							controlling overflow of events can be done via <a href="Subscribable.html#iterator">iterator</a>.</p>
+							<p>As an example this will limit to 10 queued events and then start dropping
+							the earliest ones:</p>
+							<pre><code class="language-javascript"><span style="color: #AF00DB">for</span><span style="color: #000000"> </span><span style="color: #AF00DB">await</span><span style="color: #000000"> (</span><span style="color: #0000FF">const</span><span style="color: #000000"> [ </span><span style="color: #0070C1">arg1</span><span style="color: #000000"> ] </span><span style="color: #0000FF">of</span><span style="color: #000000"> </span><span style="color: #001080">subscribable</span><span style="color: #000000">.</span><span style="color: #795E26">iterator</span><span style="color: #000000">({ </span><span style="color: #001080">limit:</span><span style="color: #000000"> </span><span style="color: #098658">10</span><span style="color: #000000"> })) {</span>
+<span style="color: #000000">  </span><span style="color: #001080">console</span><span style="color: #000000">.</span><span style="color: #795E26">log</span><span style="color: #000000">(</span><span style="color: #A31515">&#039;event&#039;</span><span style="color: #000000">, </span><span style="color: #001080">arg1</span><span style="color: #000000">);</span>
+<span style="color: #000000">}</span>
+</code></pre>
+							<p>The behavior to use when the queue is full can be controlled by setting the
+							overflow behavior to either <a href="../enums/OverflowBehavior.html#DropNewest">DropNewest</a> or <a href="../enums/OverflowBehavior.html#DropOldest">DropOldest</a>.</p>
+							<pre><code class="language-javascript"><span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #0070C1">iteratorOptions</span><span style="color: #000000"> = {</span>
+<span style="color: #000000">  </span><span style="color: #001080">limit:</span><span style="color: #000000"> </span><span style="color: #098658">10</span><span style="color: #000000">,</span>
+<span style="color: #000000">  </span><span style="color: #001080">overflowBehavior:</span><span style="color: #000000"> </span><span style="color: #001080">OverflowBehavior</span><span style="color: #000000">.</span><span style="color: #001080">DropNewest</span>
+<span style="color: #000000">};</span>
+
+<span style="color: #AF00DB">for</span><span style="color: #000000"> </span><span style="color: #AF00DB">await</span><span style="color: #000000"> (</span><span style="color: #0000FF">const</span><span style="color: #000000"> [ </span><span style="color: #0070C1">arg1</span><span style="color: #000000"> ] </span><span style="color: #0000FF">of</span><span style="color: #000000"> </span><span style="color: #001080">subscribable</span><span style="color: #000000">.</span><span style="color: #795E26">iterator</span><span style="color: #000000">(</span><span style="color: #001080">iteratorOptions</span><span style="color: #000000">)) {</span>
+<span style="color: #000000">  </span><span style="color: #001080">console</span><span style="color: #000000">.</span><span style="color: #795E26">log</span><span style="color: #000000">(</span><span style="color: #A31515">&#039;event&#039;</span><span style="color: #000000">, </span><span style="color: #001080">arg1</span><span style="color: #000000">);</span>
+<span style="color: #000000">}</span>
+</code></pre>
 						</div>
 						<h4 class="tsd-parameters-title">Parameters</h4>
 						<ul class="tsd-parameters">
@@ -180,7 +303,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="SubscriptionFunctions.html">SubscriptionFunctions</a>.<a href="SubscriptionFunctions.html#filter">filter</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/aholstenson/atvik/blob/01ee51b/src/SubscriptionFunctions.ts#L52">src/SubscriptionFunctions.ts:52</a></li>
+									<li>Defined in <a href="https://github.com/aholstenson/atvik/blob/96f155b/src/SubscriptionFunctions.ts#L52">src/SubscriptionFunctions.ts:52</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -233,7 +356,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="SubscriptionFunctions.html">SubscriptionFunctions</a>.<a href="SubscriptionFunctions.html#iterator">iterator</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/aholstenson/atvik/blob/01ee51b/src/SubscriptionFunctions.ts#L72">src/SubscriptionFunctions.ts:72</a></li>
+									<li>Defined in <a href="https://github.com/aholstenson/atvik/blob/96f155b/src/SubscriptionFunctions.ts#L72">src/SubscriptionFunctions.ts:72</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -267,7 +390,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="SubscriptionFunctions.html">SubscriptionFunctions</a>.<a href="SubscriptionFunctions.html#once">once</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/aholstenson/atvik/blob/01ee51b/src/SubscriptionFunctions.ts#L41">src/SubscriptionFunctions.ts:41</a></li>
+									<li>Defined in <a href="https://github.com/aholstenson/atvik/blob/96f155b/src/SubscriptionFunctions.ts#L41">src/SubscriptionFunctions.ts:41</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -292,7 +415,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="SubscriptionFunctions.html">SubscriptionFunctions</a>.<a href="SubscriptionFunctions.html#subscribe">subscribe</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/aholstenson/atvik/blob/01ee51b/src/SubscriptionFunctions.ts#L21">src/SubscriptionFunctions.ts:21</a></li>
+									<li>Defined in <a href="https://github.com/aholstenson/atvik/blob/96f155b/src/SubscriptionFunctions.ts#L21">src/SubscriptionFunctions.ts:21</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -328,7 +451,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="SubscriptionFunctions.html">SubscriptionFunctions</a>.<a href="SubscriptionFunctions.html#unsubscribe">unsubscribe</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/aholstenson/atvik/blob/01ee51b/src/SubscriptionFunctions.ts#L32">src/SubscriptionFunctions.ts:32</a></li>
+									<li>Defined in <a href="https://github.com/aholstenson/atvik/blob/96f155b/src/SubscriptionFunctions.ts#L32">src/SubscriptionFunctions.ts:32</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -363,7 +486,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="SubscriptionFunctions.html">SubscriptionFunctions</a>.<a href="SubscriptionFunctions.html#withThis">withThis</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/aholstenson/atvik/blob/01ee51b/src/SubscriptionFunctions.ts#L62">src/SubscriptionFunctions.ts:62</a></li>
+									<li>Defined in <a href="https://github.com/aholstenson/atvik/blob/96f155b/src/SubscriptionFunctions.ts#L62">src/SubscriptionFunctions.ts:62</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -405,7 +528,7 @@
 			<nav class="tsd-navigation secondary menu-sticky">
 				<ul class="before-current">
 					<li class=" tsd-kind-enum">
-						<a href="../enums/EventIteratorOverflowBehavior.html" class="tsd-kind-icon">Event<wbr>Iterator<wbr>Overflow<wbr>Behavior</a>
+						<a href="../enums/OverflowBehavior.html" class="tsd-kind-icon">Overflow<wbr>Behavior</a>
 					</li>
 					<li class=" tsd-kind-class tsd-has-type-parameter">
 						<a href="../classes/AsyncEvent.html" class="tsd-kind-icon">Async<wbr>Event</a>
@@ -433,6 +556,9 @@
 					</li>
 					<li class=" tsd-kind-interface">
 						<a href="AsyncSubscriptionHandle.html" class="tsd-kind-icon">Async<wbr>Subscription<wbr>Handle</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="EventAdapterOptions.html" class="tsd-kind-icon">Event<wbr>Adapter<wbr>Options</a>
 					</li>
 					<li class=" tsd-kind-interface">
 						<a href="EventIteratorOptions.html" class="tsd-kind-icon">Event<wbr>Iterator<wbr>Options</a>

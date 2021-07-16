@@ -197,8 +197,36 @@
 <span style="color: #008000">// This will invoke the listener</span>
 <span style="color: #001080">event</span><span style="color: #000000">.</span><span style="color: #795E26">emit</span><span style="color: #000000">(</span><span style="color: #098658">2</span><span style="color: #000000">);</span>
 </code></pre>
+				<a href="#iterating-over-events" id="iterating-over-events" style="color: inherit; text-decoration: none;">
+					<h2>Iterating over events</h2>
+				</a>
+				<p>Events and subscribables can be iterated over using a <code>for await .. of</code> loop,
+				allowing for the creation of simple event loops:</p>
+				<pre><code class="language-javascript"><span style="color: #AF00DB">for</span><span style="color: #000000"> </span><span style="color: #AF00DB">await</span><span style="color: #000000"> (</span><span style="color: #0000FF">const</span><span style="color: #000000"> [ </span><span style="color: #0070C1">arg1</span><span style="color: #000000"> ] </span><span style="color: #0000FF">of</span><span style="color: #000000"> </span><span style="color: #001080">event</span><span style="color: #000000">) {</span>
+<span style="color: #000000">  </span><span style="color: #001080">console</span><span style="color: #000000">.</span><span style="color: #795E26">log</span><span style="color: #000000">(</span><span style="color: #A31515">&#039;event&#039;</span><span style="color: #000000">, </span><span style="color: #001080">arg1</span><span style="color: #000000">)</span>
+<span style="color: #000000">}</span>
+</code></pre>
+				<p>Sometimes events are emitted faster than they can be consumed, limiting and
+				controlling overflow of events can be done via <a href="interfaces/Subscribable.html#iterator">iterator</a>.</p>
+				<p>As an example this will limit to 10 queued events and then start dropping
+				the earliest ones:</p>
+				<pre><code class="language-javascript"><span style="color: #AF00DB">for</span><span style="color: #000000"> </span><span style="color: #AF00DB">await</span><span style="color: #000000"> (</span><span style="color: #0000FF">const</span><span style="color: #000000"> [ </span><span style="color: #0070C1">arg1</span><span style="color: #000000"> ] </span><span style="color: #0000FF">of</span><span style="color: #000000"> </span><span style="color: #001080">subscribable</span><span style="color: #000000">.</span><span style="color: #795E26">iterator</span><span style="color: #000000">({ </span><span style="color: #001080">limit:</span><span style="color: #000000"> </span><span style="color: #098658">10</span><span style="color: #000000"> })) {</span>
+<span style="color: #000000">  </span><span style="color: #001080">console</span><span style="color: #000000">.</span><span style="color: #795E26">log</span><span style="color: #000000">(</span><span style="color: #A31515">&#039;event&#039;</span><span style="color: #000000">, </span><span style="color: #001080">arg1</span><span style="color: #000000">);</span>
+<span style="color: #000000">}</span>
+</code></pre>
+				<p>The behavior to use when the queue is full can be controlled by setting the
+				<a href="https://aholstenson.github.io/atvik/enums/OverflowBehavior.html">OverflowBehavior</a>:</p>
+				<pre><code class="language-javascript"><span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #0070C1">iteratorOptions</span><span style="color: #000000"> = {</span>
+<span style="color: #000000">  </span><span style="color: #001080">limit:</span><span style="color: #000000"> </span><span style="color: #098658">10</span><span style="color: #000000">,</span>
+<span style="color: #000000">  </span><span style="color: #001080">overflowBehavior:</span><span style="color: #000000"> </span><span style="color: #001080">OverflowBehavior</span><span style="color: #000000">.</span><span style="color: #001080">DropNewest</span>
+<span style="color: #000000">};</span>
+
+<span style="color: #AF00DB">for</span><span style="color: #000000"> </span><span style="color: #AF00DB">await</span><span style="color: #000000"> (</span><span style="color: #0000FF">const</span><span style="color: #000000"> [ </span><span style="color: #0070C1">arg1</span><span style="color: #000000"> ] </span><span style="color: #0000FF">of</span><span style="color: #000000"> </span><span style="color: #001080">subscribable</span><span style="color: #000000">.</span><span style="color: #795E26">iterator</span><span style="color: #000000">(</span><span style="color: #001080">iteratorOptions</span><span style="color: #000000">)) {</span>
+<span style="color: #000000">  </span><span style="color: #001080">console</span><span style="color: #000000">.</span><span style="color: #795E26">log</span><span style="color: #000000">(</span><span style="color: #A31515">&#039;event&#039;</span><span style="color: #000000">, </span><span style="color: #001080">arg1</span><span style="color: #000000">);</span>
+<span style="color: #000000">}</span>
+</code></pre>
 				<a href="#monitoring-for-listener-changes" id="monitoring-for-listener-changes" style="color: inherit; text-decoration: none;">
-					<h2>Monitoring for listener changes</h2>
+					<h3>Monitoring for listener changes</h3>
 				</a>
 				<p>For some use cases it is necessary to monitor if an event has any listeners,
 					for this library provides the <code>monitorListeners</code> function. If a monitor is
@@ -258,6 +286,18 @@
 <span style="color: #008000">// Emit the event, triggering all listeners</span>
 <span style="color: #AF00DB">await</span><span style="color: #000000"> </span><span style="color: #001080">event</span><span style="color: #000000">.</span><span style="color: #795E26">emit</span><span style="color: #000000">(</span><span style="color: #A31515">&#039;first argument&#039;</span><span style="color: #000000">);</span>
 </code></pre>
+				<a href="#adapting-other-event-emitters" id="adapting-other-event-emitters" style="color: inherit; text-decoration: none;">
+					<h2>Adapting other event emitters</h2>
+				</a>
+				<p>Support is included for adapting some common event emitters such as Nodes
+				<code>EventEmitter</code> and DOM events using <a href="https://aholstenson.github.io/atvik/modules.html#createEventAdapter">createEventAdapter</a>.</p>
+				<pre><code class="language-javascript"><span style="color: #AF00DB">import</span><span style="color: #000000"> { </span><span style="color: #001080">createEventAdapter</span><span style="color: #000000"> } </span><span style="color: #AF00DB">from</span><span style="color: #000000"> </span><span style="color: #A31515">&#039;atvik&#039;</span><span style="color: #000000">;</span>
+
+<span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #0070C1">subscribable</span><span style="color: #000000"> = </span><span style="color: #795E26">createEventAdapter</span><span style="color: #000000">(</span><span style="color: #001080">eventEmitter</span><span style="color: #000000">, </span><span style="color: #A31515">&#039;nameOfEvent&#039;</span><span style="color: #000000">);</span>
+
+<span style="color: #008000">// Use subscribable as normal</span>
+<span style="color: #795E26">subscribable</span><span style="color: #000000">(</span><span style="color: #001080">arg1</span><span style="color: #000000"> </span><span style="color: #0000FF">=&gt;</span><span style="color: #000000"> </span><span style="color: #001080">console</span><span style="color: #000000">.</span><span style="color: #795E26">log</span><span style="color: #000000">(</span><span style="color: #A31515">&#039;event&#039;</span><span style="color: #000000">, </span><span style="color: #001080">arg1</span><span style="color: #000000">));</span>
+</code></pre>
 			</div>
 		</div>
 		<div class="col-4 col-menu menu-sticky-wrap menu-highlight">
@@ -271,7 +311,7 @@
 			<nav class="tsd-navigation secondary menu-sticky">
 				<ul class="before-current">
 					<li class=" tsd-kind-enum">
-						<a href="enums/EventIteratorOverflowBehavior.html" class="tsd-kind-icon">Event<wbr>Iterator<wbr>Overflow<wbr>Behavior</a>
+						<a href="enums/OverflowBehavior.html" class="tsd-kind-icon">Overflow<wbr>Behavior</a>
 					</li>
 					<li class=" tsd-kind-class tsd-has-type-parameter">
 						<a href="classes/AsyncEvent.html" class="tsd-kind-icon">Async<wbr>Event</a>
@@ -299,6 +339,9 @@
 					</li>
 					<li class=" tsd-kind-interface">
 						<a href="interfaces/AsyncSubscriptionHandle.html" class="tsd-kind-icon">Async<wbr>Subscription<wbr>Handle</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/EventAdapterOptions.html" class="tsd-kind-icon">Event<wbr>Adapter<wbr>Options</a>
 					</li>
 					<li class=" tsd-kind-interface">
 						<a href="interfaces/EventIteratorOptions.html" class="tsd-kind-icon">Event<wbr>Iterator<wbr>Options</a>
