@@ -13,7 +13,7 @@ export type AsyncSubscribeFunction<This, Args extends any[]> = (listener: Listen
  * Function used to unsubscribe a listener, should return if the listener was
  * subscribed or not.
  */
-export type AsyncUnsubscribeFunction<This, Args extends any[]> = (listener: Listener<This, Args>) => Promise<boolean>;
+export type AsyncUnsubscribeFunction<This, Args extends any[]> = (listener: Listener<This, Args>) => Promise<void>;
 
 /**
  * Options for `createAsyncSubscribable`.
@@ -146,7 +146,7 @@ function createFilteredAsyncSubscribable<This, Args extends any[]>(
 				listenerMapping.delete(listener);
 				return unsubscribe(actual);
 			} else {
-				return Promise.resolve(false);
+				return Promise.resolve(undefined);
 			}
 		}
 	});
@@ -173,21 +173,19 @@ function createNewThisAsyncSubscribable<CurrentThis, NewThis, Args extends any[]
 	const listenerMapping = new Map<Listener<NewThis, Args>, Listener<CurrentThis, Args>>();
 
 	return createAsyncSubscribable({
-		subscribe: listener => {
+		subscribe: async listener => {
 			const actualListener = function(this: CurrentThis, ...args: Args) {
 				listener.call(newThis, ...args);
 			};
 
 			listenerMapping.set(listener, actualListener);
-			return subscribe(actualListener);
+			return await subscribe(actualListener);
 		},
-		unsubscribe: listener => {
+		unsubscribe: async listener => {
 			const actual = listenerMapping.get(listener);
 			if(actual) {
 				listenerMapping.delete(listener);
-				return unsubscribe(actual);
-			} else {
-				return Promise.resolve(false);
+				return await unsubscribe(actual);
 			}
 		}
 	});

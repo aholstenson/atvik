@@ -207,7 +207,6 @@ function createTrackingSubscribable<
 
 		unsubscribe(listener) {
 			unsubscribe.call(emitter, event, listener);
-			return true;
 		},
 
 		defaultIterator: options?.defaultIterator

@@ -280,17 +280,15 @@ export class Event<Parent, Args extends any[] = []> implements SubscriptionFunct
 	 *
 	 * @param listener -
 	 *   listener to unsubscribe
-	 * @returns
-	 *   `true` if the listener was subscribed
 	 */
-	protected unsubscribe0(listener: Listener<Parent, Args>): boolean {
+	protected unsubscribe0(listener: Listener<Parent, Args>): void {
 		if(Array.isArray(this.registeredListeners)) {
 			/*
 			 * Array has been allocated, find the index of the listener and
 			 * then remove it from the array.
 			 */
 			const idx = this.registeredListeners.indexOf(listener);
-			if(idx < 0) return false;
+			if(idx < 0) return;
 
 			// Copy-on-write for deletions
 			const listeners = [ ...this.registeredListeners ];
@@ -310,8 +308,6 @@ export class Event<Parent, Args extends any[] = []> implements SubscriptionFunct
 				// Trigger the monitor if available
 				this.monitor(this);
 			}
-
-			return true;
 		} else if(this.registeredListeners === listener) {
 			/*
 			 * Single listener is present and its the current match. Reset
@@ -323,12 +319,7 @@ export class Event<Parent, Args extends any[] = []> implements SubscriptionFunct
 				// Trigger the monitor if available
 				this.monitor(this);
 			}
-
-			return true;
 		}
-
-		// Listener is not active
-		return false;
 	}
 
 	/**

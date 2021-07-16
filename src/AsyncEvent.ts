@@ -202,16 +202,16 @@ export class AsyncEvent<Parent, Args extends any[] = []> implements AsyncSubscri
 	 * @param listener -
 	 *   listener to unsubscribe
 	 * @returns
-	 *   promise indicating if the listener was subscribed
+	 *   promise that resolves when the listener is removed
 	 */
-	protected unsubscribe0(listener: Listener<Parent, Args>): Promise<boolean> {
+	protected async unsubscribe0(listener: Listener<Parent, Args>): Promise<void> {
 		if(Array.isArray(this.registeredListeners)) {
 			/*
 			 * Array has been allocated, find the index of the listener and
 			 * then remove it from the array.
 			 */
 			const idx = this.registeredListeners.indexOf(listener);
-			if(idx < 0) return Promise.resolve(false);
+			if(idx < 0) return;
 
 			// Copy-on-write for deletions
 			const listeners = [ ...this.registeredListeners ];
@@ -231,8 +231,6 @@ export class AsyncEvent<Parent, Args extends any[] = []> implements AsyncSubscri
 				// Trigger the monitor if available
 				this.monitor(this);
 			}
-
-			return Promise.resolve(true);
 		} else if(this.registeredListeners === listener) {
 			/*
 			 * Single listener is present and its the current match. Reset
@@ -244,12 +242,7 @@ export class AsyncEvent<Parent, Args extends any[] = []> implements AsyncSubscri
 				// Trigger the monitor if available
 				this.monitor(this);
 			}
-
-			return Promise.resolve(true);
 		}
-
-		// Listener is not active
-		return Promise.resolve(false);
 	}
 
 	/**

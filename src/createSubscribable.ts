@@ -13,7 +13,7 @@ export type SubscribeFunction<This, Args extends any[]> = (listener: Listener<Th
  * Function used to unsubscribe a listener, should return if the listener was
  * subscribed or not.
  */
-export type UnsubscribeFunction<This, Args extends any[]> = (listener: Listener<This, Args>) => boolean;
+export type UnsubscribeFunction<This, Args extends any[]> = (listener: Listener<This, Args>) => void;
 
 /**
  * Options for `createSubscribable`.
@@ -146,9 +146,7 @@ function createFilteredSubscribable<This, Args extends any[]>(
 			const actual = listenerMapping.get(listener);
 			if(actual) {
 				listenerMapping.delete(listener);
-				return unsubscribe(actual);
-			} else {
-				return false;
+				unsubscribe(actual);
 			}
 		}
 	});
@@ -187,9 +185,7 @@ function createNewThisSubscribable<CurrentThis, NewThis, Args extends any[]>(
 			const actual = listenerMapping.get(listener);
 			if(actual) {
 				listenerMapping.delete(listener);
-				return unsubscribe(actual);
-			} else {
-				return false;
+				unsubscribe(actual);
 			}
 		}
 	});
