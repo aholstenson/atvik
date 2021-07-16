@@ -182,12 +182,14 @@
 							<h3>Methods</h3>
 							<ul class="tsd-index-list">
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="Event.html#_asyncIterator_" class="tsd-kind-icon">[async<wbr>Iterator]</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="Event.html#asyncEmit" class="tsd-kind-icon">async<wbr>Emit</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="Event.html#clear" class="tsd-kind-icon">clear</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="Event.html#emit" class="tsd-kind-icon">emit</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="Event.html#filter" class="tsd-kind-icon">filter</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="Event.html#iterator" class="tsd-kind-icon">iterator</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="Event.html#monitorListeners" class="tsd-kind-icon">monitor<wbr>Listeners</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="Event.html#once" class="tsd-kind-icon">once</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="Event.html#parallelEmit" class="tsd-kind-icon">parallel<wbr>Emit</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="Event.html#removeMonitor" class="tsd-kind-icon">remove<wbr>Monitor</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="Event.html#subscribe" class="tsd-kind-icon">subscribe</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-protected"><a href="Event.html#subscribe0" class="tsd-kind-icon">subscribe0</a></li>
@@ -211,7 +213,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/aholstenson/atvik/blob/96f155b/src/Event.ts#L124">src/Event.ts:124</a></li>
+									<li>Defined in <a href="https://github.com/aholstenson/atvik/blob/df89be9/src/Event.ts#L136">src/Event.ts:136</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -262,7 +264,7 @@
 					<div class="tsd-signature tsd-kind-icon">subscribable<span class="tsd-signature-symbol">:</span> <a href="../interfaces/Subscribable.html" class="tsd-signature-type" data-tsd-kind="Interface">Subscribable</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">Parent</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">Args</span><span class="tsd-signature-symbol">&gt;</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/aholstenson/atvik/blob/96f155b/src/Event.ts#L100">src/Event.ts:100</a></li>
+							<li>Defined in <a href="https://github.com/aholstenson/atvik/blob/df89be9/src/Event.ts#L108">src/Event.ts:108</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -285,7 +287,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/aholstenson/atvik/blob/96f155b/src/Event.ts#L345">src/Event.ts:345</a></li>
+									<li>Defined in <a href="https://github.com/aholstenson/atvik/blob/df89be9/src/Event.ts#L423">src/Event.ts:423</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -308,7 +310,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/aholstenson/atvik/blob/96f155b/src/Event.ts#L355">src/Event.ts:355</a></li>
+									<li>Defined in <a href="https://github.com/aholstenson/atvik/blob/df89be9/src/Event.ts#L433">src/Event.ts:433</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -335,7 +337,7 @@
 							<aside class="tsd-sources">
 								<p>Implementation of <a href="../interfaces/SubscriptionFunctions.html">SubscriptionFunctions</a>.<a href="../interfaces/SubscriptionFunctions.html#_asyncIterator_">[asyncIterator]</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/aholstenson/atvik/blob/96f155b/src/Event.ts#L323">src/Event.ts:323</a></li>
+									<li>Defined in <a href="https://github.com/aholstenson/atvik/blob/df89be9/src/Event.ts#L401">src/Event.ts:401</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -349,6 +351,45 @@
 					</ul>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="asyncEmit" class="tsd-anchor"></a>
+					<h3>async<wbr>Emit</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">async<wbr>Emit<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">...</span>args<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Args</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/aholstenson/atvik/blob/df89be9/src/Event.ts#L197">src/Event.ts:197</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Emit this event asynchronously. This will invoke all of the listeners
+										with the passed arguments. Triggering of the listeners will be done
+										in order, waiting for a previous listener to finish before invoking the
+									next one.</p>
+								</div>
+								<p>This method will not use the current <a href="../interfaces/ErrorStrategy.html">ErrorStrategy</a> and will
+								instead reject if an error occurs.</p>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5><span class="tsd-flag ts-flagRest">Rest</span> <span class="tsd-signature-symbol">...</span>args: <span class="tsd-signature-type">Args</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>-
+										arguments that the listeners will receive</p>
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></h4>
+							<p>-
+							promise that resolves when all listeners have handled the event</p>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
 					<a name="clear" class="tsd-anchor"></a>
 					<h3>clear</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
@@ -358,7 +399,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/aholstenson/atvik/blob/96f155b/src/Event.ts#L368">src/Event.ts:368</a></li>
+									<li>Defined in <a href="https://github.com/aholstenson/atvik/blob/df89be9/src/Event.ts#L446">src/Event.ts:446</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -380,13 +421,15 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/aholstenson/atvik/blob/96f155b/src/Event.ts#L144">src/Event.ts:144</a></li>
+									<li>Defined in <a href="https://github.com/aholstenson/atvik/blob/df89be9/src/Event.ts#L160">src/Event.ts:160</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
 								<div class="lead">
 									<p>Emit this event. This will invoke all of the listeners with the passed
-									arguments.</p>
+										arguments. If a listener is asynchronous this will method will use the
+										current <a href="../interfaces/ErrorStrategy.html">ErrorStrategy</a> to handle errors, and will continue to
+									trigger listeners while the listener is handling the event.</p>
 								</div>
 							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -414,7 +457,7 @@
 							<aside class="tsd-sources">
 								<p>Implementation of <a href="../interfaces/SubscriptionFunctions.html">SubscriptionFunctions</a>.<a href="../interfaces/SubscriptionFunctions.html#filter">filter</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/aholstenson/atvik/blob/96f155b/src/Event.ts#L301">src/Event.ts:301</a></li>
+									<li>Defined in <a href="https://github.com/aholstenson/atvik/blob/df89be9/src/Event.ts#L379">src/Event.ts:379</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -467,7 +510,7 @@
 							<aside class="tsd-sources">
 								<p>Implementation of <a href="../interfaces/SubscriptionFunctions.html">SubscriptionFunctions</a>.<a href="../interfaces/SubscriptionFunctions.html#iterator">iterator</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/aholstenson/atvik/blob/96f155b/src/Event.ts#L335">src/Event.ts:335</a></li>
+									<li>Defined in <a href="https://github.com/aholstenson/atvik/blob/df89be9/src/Event.ts#L413">src/Event.ts:413</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -500,7 +543,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/aholstenson/atvik/blob/96f155b/src/Event.ts#L386">src/Event.ts:386</a></li>
+									<li>Defined in <a href="https://github.com/aholstenson/atvik/blob/df89be9/src/Event.ts#L464">src/Event.ts:464</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -554,7 +597,7 @@
 							<aside class="tsd-sources">
 								<p>Implementation of <a href="../interfaces/SubscriptionFunctions.html">SubscriptionFunctions</a>.<a href="../interfaces/SubscriptionFunctions.html#once">once</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/aholstenson/atvik/blob/96f155b/src/Event.ts#L288">src/Event.ts:288</a></li>
+									<li>Defined in <a href="https://github.com/aholstenson/atvik/blob/df89be9/src/Event.ts#L366">src/Event.ts:366</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -569,6 +612,44 @@
 					</ul>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="parallelEmit" class="tsd-anchor"></a>
+					<h3>parallel<wbr>Emit</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">parallel<wbr>Emit<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">...</span>args<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Args</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/aholstenson/atvik/blob/df89be9/src/Event.ts#L227">src/Event.ts:227</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Emit this event in parallel. This will invoke all of the listeners
+										with the passed arguments. Triggering of the listeners will done in
+									parallel.</p>
+								</div>
+								<p>This method will not use the current <a href="../interfaces/ErrorStrategy.html">ErrorStrategy</a> and will
+								instead reject if an error occurs.</p>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5><span class="tsd-flag ts-flagRest">Rest</span> <span class="tsd-signature-symbol">...</span>args: <span class="tsd-signature-type">Args</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>-
+										arguments that the listeners will receive</p>
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></h4>
+							<p>-
+							promise that resolves when all listeners have handled the event</p>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
 					<a name="removeMonitor" class="tsd-anchor"></a>
 					<h3>remove<wbr>Monitor</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
@@ -578,7 +659,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/aholstenson/atvik/blob/96f155b/src/Event.ts#L397">src/Event.ts:397</a></li>
+									<li>Defined in <a href="https://github.com/aholstenson/atvik/blob/df89be9/src/Event.ts#L475">src/Event.ts:475</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -601,7 +682,7 @@
 							<aside class="tsd-sources">
 								<p>Implementation of <a href="../interfaces/SubscriptionFunctions.html">SubscriptionFunctions</a>.<a href="../interfaces/SubscriptionFunctions.html#subscribe">subscribe</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/aholstenson/atvik/blob/96f155b/src/Event.ts#L264">src/Event.ts:264</a></li>
+									<li>Defined in <a href="https://github.com/aholstenson/atvik/blob/df89be9/src/Event.ts#L344">src/Event.ts:344</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -636,7 +717,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/aholstenson/atvik/blob/96f155b/src/Event.ts#L168">src/Event.ts:168</a></li>
+									<li>Defined in <a href="https://github.com/aholstenson/atvik/blob/df89be9/src/Event.ts#L248">src/Event.ts:248</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -663,14 +744,14 @@
 					<a name="unsubscribe" class="tsd-anchor"></a>
 					<h3>unsubscribe</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">unsubscribe<span class="tsd-signature-symbol">(</span>listener<span class="tsd-signature-symbol">: </span><a href="../modules.html#Listener" class="tsd-signature-type" data-tsd-kind="Type alias">Listener</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">Parent</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">Args</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span></li>
+						<li class="tsd-signature tsd-kind-icon">unsubscribe<span class="tsd-signature-symbol">(</span>listener<span class="tsd-signature-symbol">: </span><a href="../modules.html#Listener" class="tsd-signature-type" data-tsd-kind="Type alias">Listener</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">Parent</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">Args</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<p>Implementation of <a href="../interfaces/SubscriptionFunctions.html">SubscriptionFunctions</a>.<a href="../interfaces/SubscriptionFunctions.html#unsubscribe">unsubscribe</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/aholstenson/atvik/blob/96f155b/src/Event.ts#L277">src/Event.ts:277</a></li>
+									<li>Defined in <a href="https://github.com/aholstenson/atvik/blob/df89be9/src/Event.ts#L355">src/Event.ts:355</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -689,8 +770,7 @@
 									</div>
 								</li>
 							</ul>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4>
-							<p>  <code>true</code> if the listener was subscribed</p>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
 						</li>
 					</ul>
 				</section>
@@ -704,7 +784,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/aholstenson/atvik/blob/96f155b/src/Event.ts#L206">src/Event.ts:206</a></li>
+									<li>Defined in <a href="https://github.com/aholstenson/atvik/blob/df89be9/src/Event.ts#L286">src/Event.ts:286</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -739,7 +819,7 @@
 							<aside class="tsd-sources">
 								<p>Implementation of <a href="../interfaces/SubscriptionFunctions.html">SubscriptionFunctions</a>.<a href="../interfaces/SubscriptionFunctions.html#withThis">withThis</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/aholstenson/atvik/blob/96f155b/src/Event.ts#L313">src/Event.ts:313</a></li>
+									<li>Defined in <a href="https://github.com/aholstenson/atvik/blob/df89be9/src/Event.ts#L391">src/Event.ts:391</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -807,6 +887,9 @@
 								<a href="Event.html#_asyncIterator_" class="tsd-kind-icon">[async<wbr>Iterator]</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="Event.html#asyncEmit" class="tsd-kind-icon">async<wbr>Emit</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
 								<a href="Event.html#clear" class="tsd-kind-icon">clear</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
@@ -823,6 +906,9 @@
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
 								<a href="Event.html#once" class="tsd-kind-icon">once</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="Event.html#parallelEmit" class="tsd-kind-icon">parallel<wbr>Emit</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
 								<a href="Event.html#removeMonitor" class="tsd-kind-icon">remove<wbr>Monitor</a>
@@ -847,10 +933,10 @@
 				</ul>
 				<ul class="after-current">
 					<li class=" tsd-kind-interface tsd-has-type-parameter">
-						<a href="../interfaces/AddRemoveEventListener.html" class="tsd-kind-icon">Add<wbr>Remove<wbr>Event<wbr>Listener</a>
+						<a href="../interfaces/AddRemoveEventListenerEventEmitter.html" class="tsd-kind-icon">Add<wbr>Remove<wbr>Event<wbr>Listener<wbr>Event<wbr>Emitter</a>
 					</li>
 					<li class=" tsd-kind-interface tsd-has-type-parameter">
-						<a href="../interfaces/AddRemoveListener.html" class="tsd-kind-icon">Add<wbr>Remove<wbr>Listener</a>
+						<a href="../interfaces/AddRemoveListenerEventEmitter.html" class="tsd-kind-icon">Add<wbr>Remove<wbr>Listener<wbr>Event<wbr>Emitter</a>
 					</li>
 					<li class=" tsd-kind-interface">
 						<a href="../interfaces/AsyncEventOptions.html" class="tsd-kind-icon">Async<wbr>Event<wbr>Options</a>
@@ -868,6 +954,9 @@
 						<a href="../interfaces/AsyncSubscriptionHandle.html" class="tsd-kind-icon">Async<wbr>Subscription<wbr>Handle</a>
 					</li>
 					<li class=" tsd-kind-interface">
+						<a href="../interfaces/ErrorStrategy.html" class="tsd-kind-icon">Error<wbr>Strategy</a>
+					</li>
+					<li class=" tsd-kind-interface">
 						<a href="../interfaces/EventAdapterOptions.html" class="tsd-kind-icon">Event<wbr>Adapter<wbr>Options</a>
 					</li>
 					<li class=" tsd-kind-interface">
@@ -877,7 +966,7 @@
 						<a href="../interfaces/EventOptions.html" class="tsd-kind-icon">Event<wbr>Options</a>
 					</li>
 					<li class=" tsd-kind-interface tsd-has-type-parameter">
-						<a href="../interfaces/OnOff.html" class="tsd-kind-icon">On<wbr>Off</a>
+						<a href="../interfaces/OnOffEventEmitter.html" class="tsd-kind-icon">On<wbr>Off<wbr>Event<wbr>Emitter</a>
 					</li>
 					<li class=" tsd-kind-interface tsd-has-type-parameter">
 						<a href="../interfaces/Subscribable.html" class="tsd-kind-icon">Subscribable</a>
@@ -895,9 +984,6 @@
 						<a href="../modules.html#AdaptableEventEmitter" class="tsd-kind-icon">Adaptable<wbr>Event<wbr>Emitter</a>
 					</li>
 					<li class=" tsd-kind-type-alias tsd-has-type-parameter">
-						<a href="../modules.html#AsyncListener" class="tsd-kind-icon">Async<wbr>Listener</a>
-					</li>
-					<li class=" tsd-kind-type-alias tsd-has-type-parameter">
 						<a href="../modules.html#AsyncSubscribeFunction" class="tsd-kind-icon">Async<wbr>Subscribe<wbr>Function</a>
 					</li>
 					<li class=" tsd-kind-type-alias tsd-has-type-parameter">
@@ -911,6 +997,9 @@
 					</li>
 					<li class=" tsd-kind-type-alias tsd-has-type-parameter">
 						<a href="../modules.html#UnsubscribeFunction" class="tsd-kind-icon">Unsubscribe<wbr>Function</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="../modules.html#rethrowErrors" class="tsd-kind-icon">rethrow<wbr>Errors</a>
 					</li>
 					<li class=" tsd-kind-function tsd-has-type-parameter">
 						<a href="../modules.html#createAsyncSubscribable" class="tsd-kind-icon">create<wbr>Async<wbr>Subscribable</a>
