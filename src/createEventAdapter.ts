@@ -7,7 +7,7 @@ import { Subscribable } from './Subscribable';
  * Event emitter that uses `addEventListener` and `removeEventListener`
  * methods.
  */
-export interface AddRemoveEventListener<Event extends string | symbol, Args extends any[]> {
+export interface AddRemoveEventListenerEventEmitter<Event extends string | symbol, Args extends any[]> {
 	addEventListener(event: Event, listener: Listener<this, Args>): void;
 	removeEventListener(event: Event, listener: Listener<this, Args>): void;
 }
@@ -15,7 +15,7 @@ export interface AddRemoveEventListener<Event extends string | symbol, Args exte
 /**
  * Event emitter that uses `addListener` and `removeEventListener` methods.
  */
-export interface AddRemoveListener<Event extends string | symbol, Args extends any[]> {
+export interface AddRemoveListenerEventEmitter<Event extends string | symbol, Args extends any[]> {
 	addListener(event: Event, listener: Listener<this, Args>): void;
 	removeListener(event: Event, listener: Listener<this, Args>): void;
 }
@@ -23,7 +23,7 @@ export interface AddRemoveListener<Event extends string | symbol, Args extends a
 /**
  * Event emitter that uses `on` and `off` methods.
  */
-export interface OnOff<Event extends string | symbol, Args extends any[]> {
+export interface OnOffEventEmitter<Event extends string | symbol, Args extends any[]> {
 	on(event: Event, listener: Listener<this, Args>): void;
 	off(event: Event, listener: Listener<this, Args>): void;
 }
@@ -32,9 +32,9 @@ export interface OnOff<Event extends string | symbol, Args extends any[]> {
  * Supported types of event emitters.
  */
 export type AdaptableEventEmitter<Event extends string | symbol, Args extends any[]>
-	= AddRemoveEventListener<Event, Args>
-	| AddRemoveListener<Event, Args>
-	| OnOff<Event, Args>;
+	= AddRemoveEventListenerEventEmitter<Event, Args>
+	| AddRemoveListenerEventEmitter<Event, Args>
+	| OnOffEventEmitter<Event, Args>;
 
 /**
  * Options that can be passed when using {@link createEventAdapter}.
@@ -145,7 +145,7 @@ export function createEventAdapter<
  * @returns
  *   if emitter has add/removeEventListener methods
  */
-function isAddRemoveEventListener(a: any): a is AddRemoveEventListener<any, any> {
+function isAddRemoveEventListener(a: any): a is AddRemoveEventListenerEventEmitter<any, any> {
 	return a.addEventListener && a.removeEventListener;
 }
 
@@ -157,7 +157,7 @@ function isAddRemoveEventListener(a: any): a is AddRemoveEventListener<any, any>
  * @returns
  *   if emitter has add/removeListener methods
  */
-function isAddRemoveListener(a: any): a is AddRemoveListener<any, any> {
+function isAddRemoveListener(a: any): a is AddRemoveListenerEventEmitter<any, any> {
 	return a.addListener && a.removeListener;
 }
 
@@ -169,7 +169,7 @@ function isAddRemoveListener(a: any): a is AddRemoveListener<any, any> {
  * @returns
  *   if emitter has on/off methods
  */
-function isOnOff(a: any): a is OnOff<any, any> {
+function isOnOff(a: any): a is OnOffEventEmitter<any, any> {
 	return a.on && a.off;
 }
 
