@@ -211,7 +211,7 @@ export class Event<Parent, Args extends any[] = []> implements SubscriptionFunct
 	}
 
 	/**
-	 * Emit this event asynchronously. This will invoke all of the listeners
+	 * Emit this event in parallel. This will invoke all of the listeners
 	 * with the passed arguments. Triggering of the listeners will done in
 	 * parallel.
 	 *

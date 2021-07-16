@@ -51,6 +51,24 @@ describe('AsyncEvent', function() {
 		expect(triggered).toEqual(true);
 	});
 
+	it('Can attach and trigger single async listener via parallelEmit', async function() {
+		const parent = {};
+		const handler = new AsyncEvent<object, [ string ]>(parent);
+
+		let triggered = false;
+
+		handler.subscribe(async v1 => {
+			await new Promise(resolve => setTimeout(resolve, 100));
+			triggered = v1 === 'test';
+		});
+
+		expect(triggered).toEqual(false);
+
+		await handler.parallelEmit('test');
+
+		expect(triggered).toEqual(true);
+	});
+
 	it('Can attach and detach single listener', async function() {
 		const parent = {};
 		const handler = new AsyncEvent(parent);
@@ -166,6 +184,38 @@ describe('AsyncEvent', function() {
 		expect(triggered3).toEqual(false);
 
 		await handler.emit();
+
+		expect(triggered1).toEqual(true);
+		expect(triggered2).toEqual(true);
+		expect(triggered3).toEqual(true);
+	});
+
+	it('Can attach and trigger multiple listeners via parallelEmit', async function() {
+		const parent = {};
+		const handler = new AsyncEvent(parent);
+
+		let triggered1 = false;
+		let triggered2 = false;
+		let triggered3 = false;
+
+		handler.subscribe(async () => {
+			await new Promise(resolve => setTimeout(resolve, 100));
+			triggered1 = true;
+		});
+
+		handler.subscribe(() => {
+			triggered2 = true;
+		});
+
+		handler.subscribe(() => {
+			triggered3 = true;
+		});
+
+		expect(triggered1).toEqual(false);
+		expect(triggered2).toEqual(false);
+		expect(triggered3).toEqual(false);
+
+		await handler.parallelEmit();
 
 		expect(triggered1).toEqual(true);
 		expect(triggered2).toEqual(true);

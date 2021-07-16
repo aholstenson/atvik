@@ -123,6 +123,33 @@ export class AsyncEvent<Parent, Args extends any[] = []> implements AsyncSubscri
 	}
 
 	/**
+	 * Emit this event in parallel. This will invoke all of the listeners
+	 * with the passed arguments. Triggering of the listeners will done in
+	 * parallel.
+	 *
+	 * This method will not use the current {@link ErrorStrategy} and will
+	 * instead reject if an error occurs.
+	 *
+	 * @param args -
+	 *   arguments that the listeners will receive
+	 * @returns -
+	 *   promise that resolves when all listeners have handled the event
+	 */
+	public async parallelEmit(...args: Args): Promise<void> {
+		if(Array.isArray(this.registeredListeners)) {
+			/*
+			 * Array is present, invoke listeners in parallel.
+			 */
+			await Promise.all(this.registeredListeners.map(l => l.apply(this.parent, args)));
+		} else if(this.registeredListeners) {
+			/*
+			 * Single listener is present, simply invoke the listener.
+			 */
+			await this.registeredListeners.apply(this.parent, args);
+		}
+	}
+
+	/**
 	 * Subscribe to this event using the given listener. The listener will
 	 * be invoked any time the event is emitted.
 	 *
