@@ -26,10 +26,8 @@ export interface SubscriptionFunctions<This, Args extends any[] = []>
 	 *
 	 * @param listener -
 	 *   listener to unsubscribe
-	 * @returns
-	 *   `true` if the listener was subscribed
 	 */
-	unsubscribe(listener: Listener<This, Args>): boolean;
+	unsubscribe(listener: Listener<This, Args>): void;
 
 	/**
 	 * Get a promise that will resolve the first time this event is fired

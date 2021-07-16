@@ -200,23 +200,12 @@ function createTrackingSubscribable<
 	unsubscribe: (event: Event, listener: Listener<Emitter, Args>) => void,
 	options?: EventAdapterOptions
 ): Subscribable<Emitter, Args> {
-	const listeners = new Map<Listener<Emitter, Args>, boolean>();
 	return createSubscribable({
 		subscribe(listener) {
-			if(listeners.has(listener)) {
-				return;
-			}
-
-			listeners.set(listener, true);
 			subscribe.call(emitter, event, listener);
 		},
 
 		unsubscribe(listener) {
-			if(! listeners.has(listener)) {
-				return false;
-			}
-
-			listeners.delete(listener);
 			unsubscribe.call(emitter, event, listener);
 			return true;
 		},

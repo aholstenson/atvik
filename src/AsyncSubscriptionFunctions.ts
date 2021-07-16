@@ -28,11 +28,9 @@ export interface AsyncSubscriptionFunctions<This, Args extends any[] = []>
 	 * @param listener -
 	 *   listener to unsubscribe
 	 * @returns
-	 *   Promise with if the listener was subscribed or not. Will be `true` if
-	 *   the listener was subscribed. Resolves when the listener is fully
-	 *   unsubscribed
+	 *   promise that resolves when the listener is unsubscribed
 	 */
-	unsubscribe(listener: Listener<This, Args>): Promise<boolean>;
+	unsubscribe(listener: Listener<This, Args>): Promise<void>;
 
 	/**
 	 * Get a promise that will resolve the first time this event is fired

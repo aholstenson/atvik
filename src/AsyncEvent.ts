@@ -268,7 +268,7 @@ export class AsyncEvent<Parent, Args extends any[] = []> implements AsyncSubscri
 	 * @returns
 	 *   promise that resolves when the listener is fully unsubscribed
 	 */
-	public unsubscribe(listener: Listener<Parent, Args>): Promise<boolean> {
+	public unsubscribe(listener: Listener<Parent, Args>): Promise<void> {
 		return this.subscribable.unsubscribe(listener);
 	}
 

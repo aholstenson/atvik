@@ -350,11 +350,9 @@ export class Event<Parent, Args extends any[] = []> implements SubscriptionFunct
 	 *
 	 * @param listener -
 	 *   listener to unsubscribe
-	 * @returns
-	 *   `true` if the listener was subscribed
 	 */
-	public unsubscribe(listener: Listener<Parent, Args>): boolean {
-		return this.subscribable.unsubscribe(listener);
+	public unsubscribe(listener: Listener<Parent, Args>): void {
+		this.subscribable.unsubscribe(listener);
 	}
 
 	/**

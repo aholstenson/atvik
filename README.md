@@ -79,8 +79,7 @@ supported:
 
 * `subscribe(listener: Listener): SubscriptionHandle` - Subscribe a listener, 
   the same as invoking the function directly
-* `unsubscribe(listener: Listener): boolean` - Unsubscribe a listener, returning
-  `true` if it was actually removed
+* `unsubscribe(listener: Listener): void` - Unsubscribe a listener
 * `once(): Promise` - Create a promise that will resolve once the event is
   emitted
 * `filter(filter: (...args) => boolean)` - Filter the subscribable, returning
