@@ -1,4 +1,5 @@
 import { createSubscribable } from './createSubscribable';
+import { ErrorStrategy, rethrowErrors } from './ErrorStrategy';
 import { EventIteratorOptions } from './EventIteratorOptions';
 import { Listener } from './Listener';
 import { Subscribable } from './Subscribable';
@@ -14,6 +15,13 @@ export interface EventOptions {
 	 * default limits and overflow behavior for iterators of this event.
 	 */
 	defaultIterator?: EventIteratorOptions;
+
+	/**
+	 * The default error strategy to use. This allows for control over what
+	 * happens when an asynchronous error happens during triggering of
+	 * listeners or filtering.
+	 */
+	defaultErrorStrategy?: ErrorStrategy;
 }
 
 /**
@@ -104,6 +112,10 @@ export class Event<Parent, Args extends any[] = []> implements SubscriptionFunct
 	 */
 	private readonly parent: Parent;
 	/**
+	 * Error strategy for asynchronous operations.
+	 */
+	private readonly errorStrategy: ErrorStrategy;
+	/**
 	 * Listener(s) that have been attached to this event handler.
 	 */
 	private registeredListeners?: Listener<Parent, Args> | Listener<Parent, Args>[];
@@ -127,6 +139,7 @@ export class Event<Parent, Args extends any[] = []> implements SubscriptionFunct
 	) {
 		this.parent = parent;
 
+		this.errorStrategy = options?.defaultErrorStrategy ?? rethrowErrors;
 		this.subscribable = createSubscribable({
 			subscribe: this.subscribe0.bind(this),
 			unsubscribe: this.unsubscribe0.bind(this),
@@ -136,7 +149,9 @@ export class Event<Parent, Args extends any[] = []> implements SubscriptionFunct
 
 	/**
 	 * Emit this event. This will invoke all of the listeners with the passed
-	 * arguments.
+	 * arguments. If a listener is asynchronous this will method will use the
+	 * current {@link ErrorStrategy} to handle errors, and will continue to
+	 * trigger listeners while the listener is handling the event.
 	 *
 	 * @param args -
 	 *   arguments that the listeners will receive
@@ -148,13 +163,77 @@ export class Event<Parent, Args extends any[] = []> implements SubscriptionFunct
 			 * listeners.
 			 */
 			for(const listener of this.registeredListeners) {
-				listener.apply(this.parent, args);
+				const result = listener.apply(this.parent, args);
+				if(result?.catch) {
+					result.catch(this.errorStrategy.handle);
+				}
 			}
 		} else if(this.registeredListeners) {
 			/*
 			 * Single listener is present, simply invoke the listener.
 			 */
-			this.registeredListeners.apply(this.parent, args);
+			const result = this.registeredListeners.apply(this.parent, args);
+			if(result?.catch) {
+				result.catch(this.errorStrategy.handle);
+			}
+		}
+	}
+
+	/**
+	 * Emit this event asynchronously. This will invoke all of the listeners
+	 * with the passed arguments. Triggering of the listeners will be done
+	 * in order, waiting for a previous listener to finish before invoking the
+	 * next one.
+	 *
+	 * This method will not use the current {@link ErrorStrategy} and will
+	 * instead reject if an error occurs.
+	 *
+	 * @param args -
+	 *   arguments that the listeners will receive
+	 * @returns -
+	 *   promise that resolves when all listeners have handled the event
+	 */
+	public async asyncEmit(...args: Args): Promise<void> {
+		if(Array.isArray(this.registeredListeners)) {
+			/*
+			 * Array is present, iterate over array and invoke all of the
+			 * listeners.
+			 */
+			for(const listener of this.registeredListeners) {
+				await listener.apply(this.parent, args);
+			}
+		} else if(this.registeredListeners) {
+			/*
+			 * Single listener is present, simply invoke the listener.
+			 */
+			await this.registeredListeners.apply(this.parent, args);
+		}
+	}
+
+	/**
+	 * Emit this event asynchronously. This will invoke all of the listeners
+	 * with the passed arguments. Triggering of the listeners will done in
+	 * parallel.
+	 *
+	 * This method will not use the current {@link ErrorStrategy} and will
+	 * instead reject if an error occurs.
+	 *
+	 * @param args -
+	 *   arguments that the listeners will receive
+	 * @returns -
+	 *   promise that resolves when all listeners have handled the event
+	 */
+	public async parallelEmit(...args: Args): Promise<void> {
+		if(Array.isArray(this.registeredListeners)) {
+			/*
+			 * Array is present, invoke listeners in parallel.
+			 */
+			await Promise.all(this.registeredListeners.map(l => l.apply(this.parent, args)));
+		} else if(this.registeredListeners) {
+			/*
+			 * Single listener is present, simply invoke the listener.
+			 */
+			await this.registeredListeners.apply(this.parent, args);
 		}
 	}
 

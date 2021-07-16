@@ -62,7 +62,7 @@ describe('Synchronous event', function() {
 			triggered = true;
 		});
 
-		handler.unsubscribe(() => null);
+		handler.unsubscribe(() => {});
 
 		expect(handler.hasListeners).toEqual(true);
 
@@ -123,6 +123,77 @@ describe('Synchronous event', function() {
 		expect(triggered).toEqual(true);
 	});
 
+	it('Can attach and trigger single async listener', function() {
+		const parent = {};
+		const handler = new Event<object, [ string ]>(parent);
+
+		let triggered = false;
+
+		handler.subscribe(async v1 => {
+			triggered = v1 === 'test';
+		});
+
+		expect(triggered).toEqual(false);
+
+		handler.emit('test');
+
+		expect(triggered).toEqual(true);
+	});
+
+	it('Can attach and trigger single async listener - emit does not wait', async function() {
+		const parent = {};
+		const handler = new Event<object, [ string ]>(parent);
+
+		let triggered = false;
+
+		handler.subscribe(async v1 => {
+			await new Promise(resolve => setTimeout(resolve, 100));
+			triggered = v1 === 'test';
+		});
+
+		expect(triggered).toEqual(false);
+
+		handler.emit('test');
+
+		expect(triggered).toEqual(false);
+	});
+
+	it('Can attach and trigger single async listener via asyncEmit', async function() {
+		const parent = {};
+		const handler = new Event<object, [ string ]>(parent);
+
+		let triggered = false;
+
+		handler.subscribe(async v1 => {
+			await new Promise(resolve => setTimeout(resolve, 100));
+			triggered = v1 === 'test';
+		});
+
+		expect(triggered).toEqual(false);
+
+		await handler.asyncEmit('test');
+
+		expect(triggered).toEqual(true);
+	});
+
+	it('Can attach and trigger single async listener via parallelEmit', async function() {
+		const parent = {};
+		const handler = new Event<object, [ string ]>(parent);
+
+		let triggered = false;
+
+		handler.subscribe(async v1 => {
+			await new Promise(resolve => setTimeout(resolve, 100));
+			triggered = v1 === 'test';
+		});
+
+		expect(triggered).toEqual(false);
+
+		await handler.parallelEmit('test');
+
+		expect(triggered).toEqual(true);
+	});
+
 	it('Can attach and trigger multiple listeners', function() {
 		const parent = {};
 		const handler = new Event(parent);
@@ -148,6 +219,134 @@ describe('Synchronous event', function() {
 		expect(triggered3).toEqual(false);
 
 		handler.emit();
+
+		expect(triggered1).toEqual(true);
+		expect(triggered2).toEqual(true);
+		expect(triggered3).toEqual(true);
+	});
+
+	it('Can attach and trigger multiple async/non-async listeners', function() {
+		const parent = {};
+		const handler = new Event(parent);
+
+		let triggered1 = false;
+		let triggered2 = false;
+		let triggered3 = false;
+
+		handler.subscribe(async () => {
+			triggered1 = true;
+		});
+
+		handler.subscribe(() => {
+			triggered2 = true;
+		});
+
+		handler.subscribe(() => {
+			triggered3 = true;
+		});
+
+		expect(triggered1).toEqual(false);
+		expect(triggered2).toEqual(false);
+		expect(triggered3).toEqual(false);
+
+		handler.emit();
+
+		expect(triggered1).toEqual(true);
+		expect(triggered2).toEqual(true);
+		expect(triggered3).toEqual(true);
+	});
+
+	it('Can attach and trigger multiple async/non-async listeners - emit does not wait', function() {
+		const parent = {};
+		const handler = new Event(parent);
+
+		let triggered1 = false;
+		let triggered2 = false;
+		let triggered3 = false;
+
+		handler.subscribe(async () => {
+			await new Promise(resolve => setTimeout(resolve, 100));
+			triggered1 = true;
+		});
+
+		handler.subscribe(() => {
+			triggered2 = true;
+		});
+
+		handler.subscribe(() => {
+			triggered3 = true;
+		});
+
+		expect(triggered1).toEqual(false);
+		expect(triggered2).toEqual(false);
+		expect(triggered3).toEqual(false);
+
+		handler.emit();
+
+		expect(triggered1).toEqual(false);
+		expect(triggered2).toEqual(true);
+		expect(triggered3).toEqual(true);
+	});
+
+	it('Can attach and trigger multiple listeners via asyncEmit', async function() {
+		const parent = {};
+		const handler = new Event(parent);
+
+		let triggered1 = false;
+		let triggered2 = false;
+		let triggered3 = false;
+
+		handler.subscribe(async () => {
+			await new Promise(resolve => setTimeout(resolve, 100));
+			triggered1 = true;
+		});
+
+		handler.subscribe(() => {
+			triggered2 = true;
+		});
+
+		handler.subscribe(() => {
+			triggered3 = true;
+		});
+
+		expect(triggered1).toEqual(false);
+		expect(triggered2).toEqual(false);
+		expect(triggered3).toEqual(false);
+
+		await handler.asyncEmit();
+
+		expect(triggered1).toEqual(true);
+		expect(triggered2).toEqual(true);
+		expect(triggered3).toEqual(true);
+	});
+
+
+	it('Can attach and trigger multiple listeners via parallelEmit', async function() {
+		const parent = {};
+		const handler = new Event(parent);
+
+		let triggered1 = false;
+		let triggered2 = false;
+		let triggered3 = false;
+
+		handler.subscribe(async () => {
+			await new Promise(resolve => setTimeout(resolve, 100));
+			triggered1 = true;
+		});
+
+		handler.subscribe(() => {
+			triggered2 = true;
+		});
+
+		handler.subscribe(() => {
+			triggered3 = true;
+		});
+
+		expect(triggered1).toEqual(false);
+		expect(triggered2).toEqual(false);
+		expect(triggered3).toEqual(false);
+
+		await handler.parallelEmit();
 
 		expect(triggered1).toEqual(true);
 		expect(triggered2).toEqual(true);
@@ -234,7 +433,7 @@ describe('Synchronous event', function() {
 			triggered3 = true;
 		});
 
-		handler.unsubscribe(() => null);
+		handler.unsubscribe(() => {});
 
 		handler.emit();
 
@@ -458,7 +657,9 @@ describe('Synchronous event', function() {
 
 		const filtered = handler.filter(i => i < 10);
 		let triggered = 0;
-		filtered(() => triggered++);
+		filtered(() => {
+			triggered++;
+		});
 
 		handler.emit(2);
 		handler.emit(12);
@@ -472,7 +673,9 @@ describe('Synchronous event', function() {
 
 		const filtered = handler.subscribable.filter(i => i < 10);
 		let triggered = 0;
-		filtered(() => triggered++);
+		filtered(() => {
+			triggered++;
+		});
 
 		handler.emit(2);
 		handler.emit(12);
@@ -486,7 +689,9 @@ describe('Synchronous event', function() {
 
 		const filtered = handler.subscribable.filter(i => i < 10);
 		let triggered = 0;
-		const handle = filtered(() => triggered++);
+		const handle = filtered(() => {
+			triggered++;
+		});
 
 		handler.emit(2);
 
