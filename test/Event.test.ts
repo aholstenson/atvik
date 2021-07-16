@@ -702,6 +702,22 @@ describe('Synchronous event', function() {
 		expect(triggered).toEqual(1);
 	});
 
+	it('Can filter event async', async function() {
+		const parent = {};
+		const handler = new Event<object, [ number ]>(parent);
+
+		const filtered = handler.filter(async i => i < 10);
+		let triggered = 0;
+		filtered(() => {
+			triggered++;
+		});
+
+		await handler.asyncEmit(2);
+		await handler.asyncEmit(12);
+
+		expect(triggered).toEqual(1);
+	});
+
 	it('Can change this via withThis', async function() {
 		const parent = {};
 		const otherParent = {};

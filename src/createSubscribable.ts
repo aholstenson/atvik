@@ -124,13 +124,18 @@ function createFilteredSubscribable<This, Args extends any[]>(
 
 	return createSubscribable({
 		subscribe: listener => {
-			const actualListener = async function(this: This, ...args: Args) {
-				try {
-					if(await filterToApply.apply(this, args)) {
+			const actualListener = function(this: This, ...args: Args) {
+				const f = filterToApply.apply(this, args);
+				if(typeof f === 'boolean') {
+					if(f) {
 						listener.call(this, ...args);
 					}
-				} catch(ex) {
-					errorStrategy.handle(ex);
+				} else {
+					return f.then(v => {
+						if(v) {
+							listener.call(this, ...args);
+						}
+					}).catch(ex => errorStrategy.handle(ex));
 				}
 			};
 
