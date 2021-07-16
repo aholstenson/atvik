@@ -2,6 +2,7 @@ import { AsyncSubscribable } from './AsyncSubscribable';
 import { AsyncSubscriptionFunctions } from './AsyncSubscriptionFunctions';
 import { AsyncSubscriptionHandle } from './AsyncSubscriptionHandle';
 import { createAsyncSubscribable } from './createAsyncSubscribable';
+import { ErrorStrategy, rethrowErrors } from './ErrorStrategy';
 import { EventIteratorOptions } from './EventIteratorOptions';
 import { Listener } from './Listener';
 
@@ -14,6 +15,12 @@ export interface AsyncEventOptions {
 	 * default limits and overflow behavior for iterators of this event.
 	 */
 	defaultIterator?: EventIteratorOptions;
+
+	/**
+	 * The error strategy to use by default. If not specified this will
+	 * default to {@link rethrowErrors}.
+	 */
+	defaultErrorStrategy?: ErrorStrategy;
 }
 
 /**
@@ -94,7 +101,8 @@ export class AsyncEvent<Parent, Args extends any[] = []> implements AsyncSubscri
 		this.subscribable = createAsyncSubscribable({
 			subscribe: this.subscribe0.bind(this),
 			unsubscribe: this.unsubscribe0.bind(this),
-			defaultIterator: options?.defaultIterator
+			defaultIterator: options?.defaultIterator,
+			defaultErrorStrategy: options?.defaultErrorStrategy ?? rethrowErrors
 		});
 	}
 

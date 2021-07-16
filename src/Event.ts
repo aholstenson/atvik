@@ -143,7 +143,8 @@ export class Event<Parent, Args extends any[] = []> implements SubscriptionFunct
 		this.subscribable = createSubscribable({
 			subscribe: this.subscribe0.bind(this),
 			unsubscribe: this.unsubscribe0.bind(this),
-			defaultIterator: options?.defaultIterator
+			defaultIterator: options?.defaultIterator,
+			defaultErrorStrategy: this.errorStrategy
 		});
 	}
 

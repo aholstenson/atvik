@@ -1,3 +1,4 @@
+import { ErrorStrategy, rethrowErrors } from './ErrorStrategy';
 import { EventIteratorOptions, OverflowBehavior } from './EventIteratorOptions';
 import { Listener } from './Listener';
 import { Subscribable } from './Subscribable';
@@ -32,6 +33,11 @@ export interface SubscribableOptions<This, Args extends any[]> {
 	 * Options to apply to iterators created by this subscribable.
 	 */
 	defaultIterator?: EventIteratorOptions;
+
+	/**
+	 * The error strategy to use by default.
+	 */
+	defaultErrorStrategy?: ErrorStrategy;
 }
 
 /**
@@ -47,6 +53,8 @@ export function createSubscribable<This, Args extends any[]>(
 ): Subscribable<This, Args> {
 	const subscribe = options.subscribe;
 	const unsubscribe = options.unsubscribe;
+
+	const defaultErrorStrategy = options.defaultErrorStrategy ?? rethrowErrors;
 
 	const subscribable = (listener: Listener<This, Args>): SubscriptionHandle => {
 		subscribe(listener);
@@ -75,7 +83,8 @@ export function createSubscribable<This, Args extends any[]>(
 	subscribable.filter = (filter: (this: This, ...args: Args) => boolean) => createFilteredSubscribable(
 		subscribe,
 		unsubscribe,
-		filter
+		filter,
+		defaultErrorStrategy
 	);
 
 	subscribable.withThis = <NewThis>(newThis: NewThis) => createNewThisSubscribable(subscribe, unsubscribe, newThis);
@@ -98,23 +107,30 @@ export function createSubscribable<This, Args extends any[]>(
  * @param unsubscribe -
  *   function used to unsubscribe listeners
  * @param filterToApply -
- *   function used to fitler events
+ *   function used to filter events
+ * @param errorStrategy -
+ *   error strategy to use when filter or listener triggering fails
  * @returns
  *   `Subscribable`
  */
 function createFilteredSubscribable<This, Args extends any[]>(
 	subscribe: SubscribeFunction<This, Args>,
 	unsubscribe: UnsubscribeFunction<This, Args>,
-	filterToApply: (this: This, ...args: Args) => boolean
+	filterToApply: (this: This, ...args: Args) => boolean | Promise<boolean>,
+	errorStrategy: ErrorStrategy
 ): Subscribable<This, Args> {
 	// Map used to keep track of the filtered listener of an added listener
 	const listenerMapping = new Map<Listener<This, Args>, Listener<This, Args>>();
 
 	return createSubscribable({
 		subscribe: listener => {
-			const actualListener = function(this: This, ...args: Args) {
-				if(filterToApply.apply(this, args)) {
-					listener.call(this, ...args);
+			const actualListener = async function(this: This, ...args: Args) {
+				try {
+					if(await filterToApply.apply(this, args)) {
+						listener.call(this, ...args);
+					}
+				} catch(ex) {
+					errorStrategy.handle(ex);
 				}
 			};
 
