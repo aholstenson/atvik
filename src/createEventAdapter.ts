@@ -1,7 +1,7 @@
 import { createSubscribable } from './createSubscribable';
+import { EventIteratorOptions } from './EventIteratorOptions';
 import { Listener } from './Listener';
 import { Subscribable } from './Subscribable';
-
 
 /**
  * Event emitter that uses `addEventListener` and `removeEventListener`
@@ -35,6 +35,17 @@ export type AdaptableEventEmitter<Event extends string | symbol, Args extends an
 	= AddRemoveEventListener<Event, Args>
 	| AddRemoveListener<Event, Args>
 	| OnOff<Event, Args>;
+
+/**
+ * Options that can be passed when using {@link createEventAdapter}.
+ */
+export interface EventAdapterOptions {
+	/**
+	 * The default options that are applied to iterators. Use this to setup
+	 * default limits and overflow behavior for iterators of this event.
+	 */
+	defaultIterator?: EventIteratorOptions;
+}
 
 /**
  * Adapt an event emitted by a Node EventEmitter or by a DOM event target.
@@ -83,6 +94,8 @@ export type AdaptableEventEmitter<Event extends string | symbol, Args extends an
  *   emitter to adapt an event from
  * @param event -
  *   event to adapt
+ * @param options -
+ *   options for adapter
  * @returns
  *   subscribable
  */
@@ -92,28 +105,32 @@ export function createEventAdapter<
 	Emitter extends AdaptableEventEmitter<Event, Args>
 >(
 	emitter: Emitter,
-	event: Event
+	event: Event,
+	options?: EventAdapterOptions
 ): Subscribable<Emitter, Args> {
 	if(isAddRemoveEventListener(emitter)) {
 		return createTrackingSubscribable(
 			emitter,
 			event,
 			emitter.addEventListener,
-			emitter.removeEventListener
+			emitter.removeEventListener,
+			options
 		);
 	} else if(isAddRemoveListener(emitter)) {
 		return createTrackingSubscribable(
 			emitter,
 			event,
 			emitter.addListener,
-			emitter.removeListener
+			emitter.removeListener,
+			options
 		);
 	} else if(isOnOff(emitter)) {
 		return createTrackingSubscribable(
 			emitter,
 			event,
 			emitter.on,
-			emitter.off
+			emitter.off,
+			options
 		);
 	}
 
@@ -168,6 +185,8 @@ function isOnOff(a: any): a is OnOff<any, any> {
  *   method used to subscribe listeners
  * @param unsubscribe -
  *   method used to unsubscribe listeners
+ * @param options -
+ *   options
  * @returns
  *   subscribable
  */
@@ -178,7 +197,8 @@ function createTrackingSubscribable<
 >(emitter: Emitter,
 	event: Event,
 	subscribe: (event: Event, listener: Listener<Emitter, Args>) => void,
-	unsubscribe: (event: Event, listener: Listener<Emitter, Args>) => void
+	unsubscribe: (event: Event, listener: Listener<Emitter, Args>) => void,
+	options?: EventAdapterOptions
 ): Subscribable<Emitter, Args> {
 	const listeners = new Map<Listener<Emitter, Args>, boolean>();
 	return createSubscribable({
@@ -199,6 +219,8 @@ function createTrackingSubscribable<
 			listeners.delete(listener);
 			unsubscribe.call(emitter, event, listener);
 			return true;
-		}
+		},
+
+		defaultIterator: options?.defaultIterator
 	});
 }
