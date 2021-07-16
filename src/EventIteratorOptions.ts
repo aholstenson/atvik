@@ -1,7 +1,7 @@
 /**
  * Behavior to use when an iterator is overflowing.
  */
-export enum EventIteratorOverflowBehavior {
+export enum OverflowBehavior {
 	/**
 	 * Drop the oldest event.
 	 */
@@ -38,5 +38,5 @@ export interface EventIteratorOptions {
 	 * Behavior to use when this iterator has reached its limit for queued
 	 * events.
 	 */
-	overflowBehavior?: EventIteratorOverflowBehavior;
+	overflowBehavior?: OverflowBehavior;
 }

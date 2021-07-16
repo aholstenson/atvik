@@ -1,6 +1,6 @@
 import { AsyncSubscribable } from './AsyncSubscribable';
 import { AsyncSubscriptionHandle } from './AsyncSubscriptionHandle';
-import { EventIteratorOptions, EventIteratorOverflowBehavior } from './EventIteratorOptions';
+import { EventIteratorOptions, OverflowBehavior } from './EventIteratorOptions';
 import { Listener } from './Listener';
 
 /**
@@ -196,7 +196,7 @@ function createAsyncIterator<Args extends any[]>(
 	options?: EventIteratorOptions
 ): AsyncIterableIterator<Args> {
 	const limit = options?.limit ?? 0;
-	const behavior = options?.overflowBehavior ?? EventIteratorOverflowBehavior.DropOldest;
+	const behavior = options?.overflowBehavior ?? OverflowBehavior.DropOldest;
 
 	const queue: Args[] = [];
 	let current: ((v: IteratorResult<Args>) => void) | null = null;
@@ -214,12 +214,12 @@ function createAsyncIterator<Args extends any[]>(
 			if(limit > 0) {
 				if(queue.length >= limit) {
 					switch(behavior) {
-						case EventIteratorOverflowBehavior.DropNewest:
+						case OverflowBehavior.DropNewest:
 							return;
-						case EventIteratorOverflowBehavior.DropOldest:
+						case OverflowBehavior.DropOldest:
 							queue.shift();
 							break;
-						case EventIteratorOverflowBehavior.Block:
+						case OverflowBehavior.Block:
 							await new Promise<void>(resolve => {
 								block = resolve;
 							});

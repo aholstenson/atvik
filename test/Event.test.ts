@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
 import exp from 'constants';
 import { Event } from '../src/Event';
-import { EventIteratorOverflowBehavior } from '../src/EventIteratorOptions';
+import { OverflowBehavior } from '../src/EventIteratorOptions';
 
 describe('Synchronous event', function() {
 	it('Can create', function() {
@@ -365,7 +365,7 @@ describe('Synchronous event', function() {
 		setTimeout(() => event.emit('v2'), 100);
 		setTimeout(() => event.emit('v3'), 150);
 
-		for await (const value of event.iterator({ limit: 1, overflowBehavior: EventIteratorOverflowBehavior.DropNewest })) {
+		for await (const value of event.iterator({ limit: 1, overflowBehavior: OverflowBehavior.DropNewest })) {
 			switch(value[0]) {
 				case 'v1':
 					await new Promise(resolve => setTimeout(resolve, 200));
@@ -421,7 +421,7 @@ describe('Synchronous event', function() {
 		setTimeout(() => event.emit('v2'), 100);
 		setTimeout(() => event.emit('v3'), 150);
 
-		for await (const value of event.iterator({ overflowBehavior: EventIteratorOverflowBehavior.DropNewest })) {
+		for await (const value of event.iterator({ overflowBehavior: OverflowBehavior.DropNewest })) {
 			switch(value[0]) {
 				case 'v1':
 					await new Promise(resolve => setTimeout(resolve, 200));

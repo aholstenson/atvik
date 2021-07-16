@@ -1,4 +1,4 @@
-import { EventIteratorOptions, EventIteratorOverflowBehavior } from './EventIteratorOptions';
+import { EventIteratorOptions, OverflowBehavior } from './EventIteratorOptions';
 import { Listener } from './Listener';
 import { Subscribable } from './Subscribable';
 import { SubscriptionHandle } from './SubscriptionHandle';
@@ -193,8 +193,8 @@ function createAsyncIterator<Args extends any[]>(
 	options?: EventIteratorOptions
 ): AsyncIterableIterator<Args> {
 	const limit = options?.limit ?? 0;
-	const behavior = options?.overflowBehavior ?? EventIteratorOverflowBehavior.DropOldest;
-	if(behavior === EventIteratorOverflowBehavior.Block) {
+	const behavior = options?.overflowBehavior ?? OverflowBehavior.DropOldest;
+	if(behavior === OverflowBehavior.Block) {
 		throw new Error('Blocking is not a supported strategy for non-async events');
 	}
 
@@ -212,9 +212,9 @@ function createAsyncIterator<Args extends any[]>(
 			if(limit > 0) {
 				if(queue.length >= limit) {
 					switch(behavior) {
-						case EventIteratorOverflowBehavior.DropNewest:
+						case OverflowBehavior.DropNewest:
 							return;
-						case EventIteratorOverflowBehavior.DropOldest:
+						case OverflowBehavior.DropOldest:
 							queue.shift();
 							break;
 					}
