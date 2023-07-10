@@ -311,6 +311,93 @@ describe('AsyncEvent', function() {
 		expect(triggered3).toEqual(true);
 	});
 
+	it('Can attach multiple and detach first listener', async function() {
+		const parent = {};
+		const handler = new AsyncEvent(parent);
+
+		let triggered1 = false;
+		let triggered2 = false;
+		let triggered3 = false;
+
+		const handle1 = await handler.subscribe(() => {
+			triggered1 = true;
+		});
+
+		await handler.subscribe(() => {
+			triggered2 = true;
+		});
+
+		await handler.subscribe(() => {
+			triggered3 = true;
+		});
+
+		await handle1.unsubscribe();
+
+		await handler.emit();
+
+		expect(triggered1).toEqual(false);
+		expect(triggered2).toEqual(true);
+		expect(triggered3).toEqual(true);
+	});
+
+	it('Can attach multiple and detach middle listener', async function() {
+		const parent = {};
+		const handler = new AsyncEvent(parent);
+
+		let triggered1 = false;
+		let triggered2 = false;
+		let triggered3 = false;
+
+		await handler.subscribe(() => {
+			triggered1 = true;
+		});
+
+		const handle2 = await handler.subscribe(() => {
+			triggered2 = true;
+		});
+
+		await handler.subscribe(() => {
+			triggered3 = true;
+		});
+
+		await handle2.unsubscribe();
+
+		await handler.emit();
+
+		expect(triggered1).toEqual(true);
+		expect(triggered2).toEqual(false);
+		expect(triggered3).toEqual(true);
+	});
+
+	it('Can attach multiple and detach last listener', async function() {
+		const parent = {};
+		const handler = new AsyncEvent(parent);
+
+		let triggered1 = false;
+		let triggered2 = false;
+		let triggered3 = false;
+
+		await handler.subscribe(() => {
+			triggered1 = true;
+		});
+
+		await handler.subscribe(() => {
+			triggered2 = true;
+		});
+
+		const handle3 = await handler.subscribe(() => {
+			triggered3 = true;
+		});
+
+		await handle3.unsubscribe();
+
+		await handler.emit();
+
+		expect(triggered1).toEqual(true);
+		expect(triggered2).toEqual(true);
+		expect(triggered3).toEqual(false);
+	});
+
 	it('Can attach and trigger multiple listeners with single argument', async function() {
 		const parent = {};
 		const handler = new AsyncEvent<object, [ string ]>(parent);

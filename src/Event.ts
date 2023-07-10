@@ -292,8 +292,8 @@ export class Event<Parent, Args extends any[] = []> implements SubscriptionFunct
 
 			// Copy-on-write for deletions
 			const listeners = [ ...this.registeredListeners ];
-			listeners.splice(idx);
-			this.registeredListeners = listener;
+			listeners.splice(idx, 1);
+			this.registeredListeners = listeners;
 
 			/*
 			 * If the array is empty, remove it. Otherwise at this point the

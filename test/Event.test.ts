@@ -442,6 +442,90 @@ describe('Synchronous event', function() {
 		expect(triggered3).toEqual(true);
 	});
 
+	it('Can attach multiple and detach first listener', function() {
+		const parent = {};
+		const handler = new Event(parent);
+
+		let triggered1 = false;
+		let triggered2 = false;
+		let triggered3 = false;
+
+		const handle1 = handler.subscribe(() => {
+			triggered1 = true;
+		});
+
+		handler.subscribe(() => {
+			triggered2 = true;
+		});
+
+		handler.subscribe(() => {
+			triggered3 = true;
+		});
+
+		handle1.unsubscribe();
+		handler.emit();
+
+		expect(triggered1).toEqual(false);
+		expect(triggered2).toEqual(true);
+		expect(triggered3).toEqual(true);
+	});
+
+	it('Can attach multiple and detach second listener', function() {
+		const parent = {};
+		const handler = new Event(parent);
+
+		let triggered1 = false;
+		let triggered2 = false;
+		let triggered3 = false;
+
+		handler.subscribe(() => {
+			triggered1 = true;
+		});
+
+		const handle2 = handler.subscribe(() => {
+			triggered2 = true;
+		});
+
+		handler.subscribe(() => {
+			triggered3 = true;
+		});
+
+		handle2.unsubscribe();
+		handler.emit();
+
+		expect(triggered1).toEqual(true);
+		expect(triggered2).toEqual(false);
+		expect(triggered3).toEqual(true);
+	});
+
+	it('Can attach multiple and detach last listener', function() {
+		const parent = {};
+		const handler = new Event(parent);
+
+		let triggered1 = false;
+		let triggered2 = false;
+		let triggered3 = false;
+
+		handler.subscribe(() => {
+			triggered1 = true;
+		});
+
+		handler.subscribe(() => {
+			triggered2 = true;
+		});
+
+		const handle3 = handler.subscribe(() => {
+			triggered3 = true;
+		});
+
+		handle3.unsubscribe();
+		handler.emit();
+
+		expect(triggered1).toEqual(true);
+		expect(triggered2).toEqual(true);
+		expect(triggered3).toEqual(false);
+	});
+
 	it('Can attach and trigger multiple listeners with single argument', function() {
 		const parent = {};
 		const handler = new Event<object, [ string ]>(parent);
