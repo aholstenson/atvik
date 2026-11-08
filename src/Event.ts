@@ -269,7 +269,7 @@ export class Event<Parent, Args extends unknown[] = []> implements SubscriptionF
 	 * @returns
 	 *   filtered `Subscription`
 	 */
-	public filter(filter: (...args: Args) => boolean | Promise<boolean>): Subscribable<Parent, Args> {
+	public filter(filter: (this: Parent, ...args: Args) => boolean | Promise<boolean>): Subscribable<Parent, Args> {
 		return this.subscribable.filter(filter);
 	}
 

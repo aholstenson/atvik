@@ -219,7 +219,7 @@ export class AsyncEvent<Parent, Args extends unknown[] = []> implements AsyncSub
 	 * @returns
 	 *   filtered `AsyncSubscribable`
 	 */
-	public filter(filter: (...args: Args) => boolean | Promise<boolean>): AsyncSubscribable<Parent, Args> {
+	public filter(filter: (this: Parent, ...args: Args) => boolean | Promise<boolean>): AsyncSubscribable<Parent, Args> {
 		return this.subscribable.filter(filter);
 	}
 
