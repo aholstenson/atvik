@@ -48,4 +48,11 @@ export interface EventIteratorOptions {
 	 * events.
 	 */
 	overflowBehavior?: OverflowBehavior;
+
+	/**
+	 * Signal that stops the iterator. When the signal is aborted the iterator
+	 * unsubscribes and the iteration ends with `done: true`, so a
+	 * `for await ... of` loop exits without an error.
+	 */
+	signal?: AbortSignal;
 }

@@ -1,6 +1,7 @@
 import type { EventIterator } from './EventIterator.js';
 import type { EventIteratorOptions } from './EventIteratorOptions.js';
 import type { Listener } from './Listener.js';
+import type { OnceOptions, SubscribeOptions } from './SubscribeOptions.js';
 import type { Subscribable } from './Subscribable.js';
 import type { SubscriptionHandle } from './SubscriptionHandle.js';
 
@@ -16,10 +17,12 @@ export interface SubscriptionFunctions<This, Args extends unknown[] = []>
 	 *
 	 * @param listener -
 	 *   listener to subscribe
+	 * @param options -
+	 *   options for the subscription, such as a signal that unsubscribes
 	 * @returns
 	 *   handle to the subscription, can be used to unsubscribe
 	 */
-	subscribe(listener: Listener<This, Args>): SubscriptionHandle;
+	subscribe(listener: Listener<This, Args>, options?: SubscribeOptions): SubscriptionHandle;
 
 	/**
 	 * Unsubscribe a listener from this handler. The specified listener will
@@ -34,10 +37,12 @@ export interface SubscriptionFunctions<This, Args extends unknown[] = []>
 	 * Get a promise that will resolve the first time this event is fired
 	 * after this call.
 	 *
+	 * @param options -
+	 *   options, such as a signal that stops the wait
 	 * @returns
 	 *   promise that resolves the next time the event is fired
 	 */
-	once(): Promise<Args>;
+	once(options?: OnceOptions): Promise<Args>;
 
 	/**
 	 * Create a subscribable that will apply the specified filter to any

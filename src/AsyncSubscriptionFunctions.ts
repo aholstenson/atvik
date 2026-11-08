@@ -3,6 +3,7 @@ import type { AsyncSubscriptionHandle } from './AsyncSubscriptionHandle.js';
 import type { EventIterator } from './EventIterator.js';
 import type { EventIteratorOptions } from './EventIteratorOptions.js';
 import type { Listener } from './Listener.js';
+import type { OnceOptions, SubscribeOptions } from './SubscribeOptions.js';
 
 /**
  * Functions used to asynchronously subscribe and unsubscribe to an event.
@@ -16,11 +17,13 @@ export interface AsyncSubscriptionFunctions<This, Args extends unknown[] = []>
 	 *
 	 * @param listener -
 	 *   listener to subscribe
+	 * @param options -
+	 *   options for the subscription, such as a signal that unsubscribes
 	 * @returns
 	 *   promise with handle to the subscription, can be used to unsubscribe.
 	 *   Resolves when the subscription is fully registered
 	 */
-	subscribe(listener: Listener<This, Args>): Promise<AsyncSubscriptionHandle>;
+	subscribe(listener: Listener<This, Args>, options?: SubscribeOptions): Promise<AsyncSubscriptionHandle>;
 
 	/**
 	 * Unsubscribe a listener from this handler. The specified listener will
@@ -37,10 +40,12 @@ export interface AsyncSubscriptionFunctions<This, Args extends unknown[] = []>
 	 * Get a promise that will resolve the first time this event is fired
 	 * after this call.
 	 *
+	 * @param options -
+	 *   options, such as a signal that stops the wait
 	 * @returns
 	 *   promise that resolves the next time the event is fired
 	 */
-	once(): Promise<Args>;
+	once(options?: OnceOptions): Promise<Args>;
 
 	/**
 	 * Create a subscribable that will apply the specified filter to any

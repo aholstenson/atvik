@@ -3,6 +3,7 @@ export * from './createSubscribable.js';
 export * from './Subscribable.js';
 export * from './SubscriptionFunctions.js';
 export * from './SubscriptionHandle.js';
+export * from './SubscribeOptions.js';
 export * from './Event.js';
 
 export * from './createAsyncSubscribable.js';

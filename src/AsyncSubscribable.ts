@@ -1,6 +1,7 @@
 import type { AsyncSubscriptionFunctions } from './AsyncSubscriptionFunctions.js';
 import type { AsyncSubscriptionHandle } from './AsyncSubscriptionHandle.js';
 import type { Listener } from './Listener.js';
+import type { SubscribeOptions } from './SubscribeOptions.js';
 
 /**
  * Function that can be used to asynchronously subscribe, filter and iterate
@@ -94,9 +95,11 @@ export interface AsyncSubscribable<This, Args extends unknown[] = []> extends As
 	 *
 	 * @param listener -
 	 *   listener to subscribe
+	 * @param options -
+	 *   options for the subscription, such as a signal that unsubscribes
 	 * @returns
 	 *   handle to the subscription, can be used to unsubscribe. Resolves
 	 *   when the subscription is fully registered
 	 */
-	(listener: Listener<This, Args>): Promise<AsyncSubscriptionHandle>;
+	(listener: Listener<This, Args>, options?: SubscribeOptions): Promise<AsyncSubscriptionHandle>;
 }

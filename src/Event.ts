@@ -3,6 +3,7 @@ import { type ErrorStrategy, rethrowErrors } from './ErrorStrategy.js';
 import type { EventIterator } from './EventIterator.js';
 import type { EventIteratorOptions } from './EventIteratorOptions.js';
 import type { Listener } from './Listener.js';
+import type { OnceOptions, SubscribeOptions } from './SubscribeOptions.js';
 import { ListenerRegistry } from './ListenerRegistry.js';
 import type { Subscribable } from './Subscribable.js';
 import type { SubscriptionFunctions } from './SubscriptionFunctions.js';
@@ -225,11 +226,13 @@ export class Event<Parent, Args extends unknown[] = []> implements SubscriptionF
 	 *
 	 * @param listener -
 	 *   listener to subscribe
+	 * @param options -
+	 *   options for the subscription, such as a signal that unsubscribes
 	 * @returns
 	 *   handle to the subscription, can be used to unsubscribe
 	 */
-	public subscribe(listener: Listener<Parent, Args>): SubscriptionHandle {
-		return this.subscribable.subscribe(listener);
+	public subscribe(listener: Listener<Parent, Args>, options?: SubscribeOptions): SubscriptionHandle {
+		return this.subscribable.subscribe(listener, options);
 	}
 
 	/**
@@ -247,11 +250,13 @@ export class Event<Parent, Args extends unknown[] = []> implements SubscriptionF
 	 * Get a promise that will resolve the first time this event is fired
 	 * after this call.
 	 *
+	 * @param options -
+	 *   options, such as a signal that stops the wait
 	 * @returns
 	 *   promise that resolves the next time the event is fired
 	 */
-	public once(): Promise<Args> {
-		return this.subscribable.once();
+	public once(options?: OnceOptions): Promise<Args> {
+		return this.subscribable.once(options);
 	}
 
 	/**

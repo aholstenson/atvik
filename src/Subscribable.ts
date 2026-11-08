@@ -1,4 +1,5 @@
 import type { Listener } from './Listener.js';
+import type { SubscribeOptions } from './SubscribeOptions.js';
 import type { SubscriptionFunctions } from './SubscriptionFunctions.js';
 import type { SubscriptionHandle } from './SubscriptionHandle.js';
 
@@ -95,8 +96,10 @@ export interface Subscribable<This, Args extends unknown[] = []> extends Subscri
 	 *
 	 * @param listener -
 	 *   listener to subscribe
+	 * @param options -
+	 *   options for the subscription, such as a signal that unsubscribes
 	 * @returns
 	 *   handle to the subscription, can be used to unsubscribe
 	 */
-	(listener: Listener<This, Args>): SubscriptionHandle;
+	(listener: Listener<This, Args>, options?: SubscribeOptions): SubscriptionHandle;
 }

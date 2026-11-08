@@ -106,11 +106,11 @@ counter.increment();
 but can also be used for more advanced use cases. The following functions are
 supported:
 
-* `subscribe(listener: Listener): SubscriptionHandle` - Subscribe a listener, 
-  the same as invoking the function directly
+* `subscribe(listener: Listener, options?: { signal })` - Subscribe a
+  listener, the same as invoking the function directly
 * `unsubscribe(listener: Listener): void` - Unsubscribe a listener
-* `once(): Promise` - Create a promise that will resolve once the event is
-  emitted
+* `once(options?: { signal }): Promise` - Create a promise that will resolve
+  once the event is emitted
 * `filter(filter: (...args) => boolean)` - Filter the subscribable, returning
   a new `Subscribable` that only receives the events that match the filter
 * `withThis(newThis)` - Change the this used for listeners
@@ -159,6 +159,27 @@ const args = await event.once();
 
 // Or using the subscribable
 const args = await event.subscribable.once();
+```
+
+## Stopping with an `AbortSignal`
+
+`subscribe`, `once` and `iterator` accept an `AbortSignal`:
+
+```javascript
+const controller = new AbortController();
+
+// The listener is unsubscribed when the signal aborts
+event.subscribe(arg1 => console.log('event', arg1), { signal: controller.signal });
+
+// The promise rejects with the reason of the signal, here a TimeoutError
+const args = await event.once({ signal: AbortSignal.timeout(1000) });
+
+// The loop ends without an error when the signal aborts
+for await (const [ arg1 ] of event.iterator({ signal: controller.signal })) {
+  console.log('event', arg1);
+}
+
+controller.abort();
 ```
 
 ## Filtering events

@@ -5,6 +5,7 @@ import type { EventIteratorOptions } from './EventIteratorOptions.js';
 import type { Listener } from './Listener.js';
 import { ListenerMapping } from './ListenerMapping.js';
 import type { Subscribable } from './Subscribable.js';
+import type { OnceOptions, SubscribeOptions } from './SubscribeOptions.js';
 import type { SubscriptionHandle } from './SubscriptionHandle.js';
 
 /**
@@ -58,32 +59,58 @@ export function createSubscribable<This, Args extends unknown[]>(
 
 	const defaultErrorStrategy = options.defaultErrorStrategy ?? rethrowErrors;
 
-	const subscribable = (listener: Listener<This, Args>): SubscriptionHandle => {
+	const subscribable = (listener: Listener<This, Args>, subscribeOptions?: SubscribeOptions): SubscriptionHandle => {
+		const signal = subscribeOptions?.signal;
+		if(signal?.aborted) {
+			// Same as addEventListener, an aborted signal does not subscribe
+			return createHandle(() => undefined);
+		}
+
 		subscribe(listener);
 
-		// Return a handle that can be used to unsubscribe
-		return {
-			unsubscribe() {
-				unsubscribe(listener);
-			},
+		if(! signal) {
+			return createHandle(() => unsubscribe(listener));
+		}
 
-			[disposeSymbol]() {
+		const onAbort = () => {
+			try {
 				unsubscribe(listener);
+			} catch(err) {
+				defaultErrorStrategy.handle(err);
 			}
 		};
+		signal.addEventListener('abort', onAbort, { once: true });
+
+		return createHandle(() => {
+			signal.removeEventListener('abort', onAbort);
+			unsubscribe(listener);
+		});
 	};
 
 	subscribable.subscribe = subscribable;
 	subscribable.unsubscribe = unsubscribe;
 
-	subscribable.once = () => new Promise<Args>(resolve => {
+	subscribable.once = (onceOptions?: OnceOptions) => new Promise<Args>((resolve, reject) => {
+		const signal = onceOptions?.signal;
+		if(signal?.aborted) {
+			reject(signal.reason);
+			return;
+		}
+
+		const onAbort = () => {
+			unsubscribe(listener);
+			reject(signal?.reason);
+		};
+
 		const listener = (...args: Args) => {
+			signal?.removeEventListener('abort', onAbort);
 			unsubscribe(listener);
 
 			resolve(args);
 		};
 
 		subscribe(listener);
+		signal?.addEventListener('abort', onAbort, { once: true });
 	});
 
 	subscribable.filter = (filter: (this: This, ...args: Args) => boolean) => createFilteredSubscribable(
@@ -101,7 +128,7 @@ export function createSubscribable<This, Args extends unknown[]>(
 	);
 
 	const defaultIteratorOptions = options.defaultIterator;
-	const iteratorSource = { subscribe, unsubscribe, allowBlock: false };
+	const iteratorSource = { subscribe, unsubscribe, allowBlock: false, errorStrategy: defaultErrorStrategy };
 	subscribable.iterator = (itOptions?: EventIteratorOptions) => createEventIterator(iteratorSource, {
 		...defaultIteratorOptions,
 		...itOptions
@@ -109,6 +136,21 @@ export function createSubscribable<This, Args extends unknown[]>(
 	(subscribable as any)[Symbol.asyncIterator] = () => createEventIterator(iteratorSource, defaultIteratorOptions);
 
 	return subscribable as any;
+}
+
+/**
+ * Create a handle that runs the given function to unsubscribe.
+ *
+ * @param remove -
+ *   function that unsubscribes the listener
+ * @returns
+ *   handle
+ */
+function createHandle(remove: () => void): SubscriptionHandle {
+	return {
+		unsubscribe: remove,
+		[disposeSymbol]: remove
+	};
 }
 
 /**

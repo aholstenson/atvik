@@ -5,6 +5,7 @@ import { createEventIterator } from './createEventIterator.js';
 import { asyncDisposeSymbol } from './disposeSymbols.js';
 import type { EventIteratorOptions } from './EventIteratorOptions.js';
 import type { Listener } from './Listener.js';
+import type { OnceOptions, SubscribeOptions } from './SubscribeOptions.js';
 import { ListenerMapping } from './ListenerMapping.js';
 
 /**
@@ -59,34 +60,86 @@ export function createAsyncSubscribable<This, Args extends unknown[]>(
 
 	const defaultErrorStrategy = options.defaultErrorStrategy ?? rethrowErrors;
 
-	const subscribable = async (listener: Listener<This, Args>): Promise<AsyncSubscriptionHandle> => {
+	const subscribable = async (
+		listener: Listener<This, Args>,
+		subscribeOptions?: SubscribeOptions
+	): Promise<AsyncSubscriptionHandle> => {
+		const signal = subscribeOptions?.signal;
+		if(signal?.aborted) {
+			// Same as addEventListener, an aborted signal does not subscribe
+			return createAsyncHandle(async () => undefined);
+		}
+
 		await subscribe(listener);
 
-		// Return a handle that can be used to unsubscribe
-		return {
-			async unsubscribe() {
-				await unsubscribe(listener);
-			},
+		if(! signal) {
+			return createAsyncHandle(() => unsubscribe(listener));
+		}
 
-			async [asyncDisposeSymbol]() {
-				await unsubscribe(listener);
-			}
+		if(signal.aborted) {
+			// The signal was aborted while the listener was subscribed
+			await unsubscribe(listener);
+			return createAsyncHandle(async () => undefined);
+		}
+
+		const onAbort = () => {
+			unsubscribe(listener)
+				.catch(err => defaultErrorStrategy.handle(err));
 		};
+		signal.addEventListener('abort', onAbort, { once: true });
+
+		return createAsyncHandle(() => {
+			signal.removeEventListener('abort', onAbort);
+			return unsubscribe(listener);
+		});
 	};
 
 	subscribable.subscribe = subscribable;
 	subscribable.unsubscribe = unsubscribe;
 
-	subscribable.once = () => new Promise<Args>((resolve, reject) => {
-		const listener = (...args: Args) => {
-			unsubscribe(listener)
-				.catch(err => reject(err));
+	subscribable.once = (onceOptions?: OnceOptions) => new Promise<Args>((resolve, reject) => {
+		const signal = onceOptions?.signal;
+		if(signal?.aborted) {
+			reject(signal.reason);
+			return;
+		}
 
+		let settled = false;
+
+		const finish = () => {
+			settled = true;
+			signal?.removeEventListener('abort', onAbort);
+
+			// Unsubscribe when the subscription is done, errors are ignored
+			subscription
+				.then(() => unsubscribe(listener))
+				.catch(() => undefined);
+		};
+
+		const onAbort = () => {
+			if(settled) return;
+
+			finish();
+			reject(signal?.reason);
+		};
+
+		const listener = (...args: Args) => {
+			if(settled) return;
+
+			finish();
 			resolve(args);
 		};
 
-		subscribe(listener)
-			.catch(err => reject(err));
+		const subscription = subscribe(listener);
+		subscription.catch(err => {
+			if(settled) return;
+
+			settled = true;
+			signal?.removeEventListener('abort', onAbort);
+			reject(err);
+		});
+
+		signal?.addEventListener('abort', onAbort, { once: true });
 	});
 
 	subscribable.filter = (filter: (this: This, ...args: Args) => boolean) => createFilteredAsyncSubscribable(
@@ -104,7 +157,7 @@ export function createAsyncSubscribable<This, Args extends unknown[]>(
 	);
 
 	const defaultIteratorOptions = options.defaultIterator;
-	const iteratorSource = { subscribe, unsubscribe, allowBlock: true };
+	const iteratorSource = { subscribe, unsubscribe, allowBlock: true, errorStrategy: defaultErrorStrategy };
 	subscribable.iterator = (itOptions?: EventIteratorOptions) => createEventIterator(iteratorSource, {
 		...defaultIteratorOptions,
 		...itOptions
@@ -112,6 +165,21 @@ export function createAsyncSubscribable<This, Args extends unknown[]>(
 	(subscribable as any)[Symbol.asyncIterator] = () => createEventIterator(iteratorSource, defaultIteratorOptions);
 
 	return subscribable as any;
+}
+
+/**
+ * Create a handle that runs the given function to unsubscribe.
+ *
+ * @param remove -
+ *   function that unsubscribes the listener
+ * @returns
+ *   handle
+ */
+function createAsyncHandle(remove: () => Promise<void>): AsyncSubscriptionHandle {
+	return {
+		unsubscribe: remove,
+		[asyncDisposeSymbol]: remove
+	};
 }
 
 /**

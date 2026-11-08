@@ -1,4 +1,5 @@
 import { asyncDisposeSymbol } from './disposeSymbols.js';
+import { type ErrorStrategy, rethrowErrors } from './ErrorStrategy.js';
 import type { EventIterator } from './EventIterator.js';
 import { type EventIteratorOptions, OverflowBehavior } from './EventIteratorOptions.js';
 import type { Listener } from './Listener.js';
@@ -24,6 +25,11 @@ export interface EventIteratorSource<Args extends unknown[]> {
 	 * emitter waits for the promise that listeners return.
 	 */
 	allowBlock: boolean;
+
+	/**
+	 * Strategy for errors that occur when an abort signal stops the iterator.
+	 */
+	errorStrategy?: ErrorStrategy;
 }
 
 /**
@@ -36,7 +42,8 @@ export interface EventIteratorSource<Args extends unknown[]> {
  * Calling `return()` unsubscribes the listener, resolves all pending calls to
  * `next()` with `done: true` and releases emitters that are blocked by
  * `OverflowBehavior.Block`. All later calls to `next()` resolve with
- * `done: true`. Disposing the iterator calls `return()`.
+ * `done: true`. Disposing the iterator calls `return()`, and so does an abort
+ * of `options.signal`.
  *
  * @param source -
  *   functions used to subscribe and unsubscribe the listener
@@ -64,7 +71,8 @@ export function createEventIterator<Args extends unknown[]>(
 
 	// Promise for the subscription, set on the first call to next()
 	let subscription: Promise<void> | null = null;
-	let done = false;
+	const signal = options?.signal;
+	let done = signal?.aborted ?? false;
 
 	const listener = async (...args: Args) => {
 		for(;;) {
@@ -132,6 +140,7 @@ export function createEventIterator<Args extends unknown[]>(
 		async return(value?: any) {
 			if(! done) {
 				done = true;
+				signal?.removeEventListener('abort', onAbort);
 
 				queue.length = 0;
 				for(const resolve of waiting.splice(0)) {
@@ -161,6 +170,16 @@ export function createEventIterator<Args extends unknown[]>(
 			await iterator.return();
 		}
 	};
+
+	const errorStrategy = source.errorStrategy ?? rethrowErrors;
+	const onAbort = () => {
+		iterator.return()
+			.catch(err => errorStrategy.handle(err));
+	};
+
+	if(! done) {
+		signal?.addEventListener('abort', onAbort, { once: true });
+	}
 
 	return iterator;
 }
