@@ -149,6 +149,10 @@ export function createAsyncSubscribable<This, Args extends unknown[]>(
 		defaultErrorStrategy
 	);
 
+	subscribable.map = <NewArgs extends [ unknown, ...unknown[] ] | []>(
+		mapper: (this: This, ...args: Args) => NewArgs | Promise<NewArgs>
+	) => createMappedAsyncSubscribable(subscribe, unsubscribe, mapper, defaultErrorStrategy);
+
 	subscribable.withThis = <NewThis>(newThis: NewThis) => createNewThisAsyncSubscribable(
 		subscribe,
 		unsubscribe,
@@ -205,11 +209,41 @@ function createFilteredAsyncSubscribable<This, Args extends unknown[]>(
 	filterToApply: (this: This, ...args: Args) => boolean | Promise<boolean>,
 	errorStrategy: ErrorStrategy
 ): AsyncSubscribable<This, Args> {
-	return createMappedAsyncSubscribable(subscribe, unsubscribe, errorStrategy, listener => async function(this: This, ...args: Args) {
+	return createWrappedAsyncSubscribable(subscribe, unsubscribe, errorStrategy, listener => async function(this: This, ...args: Args) {
 		if(await filterToApply.apply(this, args)) {
 			await listener.apply(this, args);
 		}
 	});
+}
+
+/**
+ * Create a AsyncSubscribable that changes the arguments of events.
+ *
+ * @param subscribe -
+ *   function used to subscribe listeners
+ * @param unsubscribe -
+ *   function used to unsubscribe listeners
+ * @param mapper -
+ *   function that returns the new arguments
+ * @param errorStrategy -
+ *   error strategy of the returned subscribable
+ * @returns
+ *   `AsyncSubscribable`
+ */
+function createMappedAsyncSubscribable<This, Args extends unknown[], NewArgs extends unknown[]>(
+	subscribe: AsyncSubscribeFunction<This, Args>,
+	unsubscribe: AsyncUnsubscribeFunction<This, Args>,
+	mapper: (this: This, ...args: Args) => NewArgs | Promise<NewArgs>,
+	errorStrategy: ErrorStrategy
+): AsyncSubscribable<This, NewArgs> {
+	return createWrappedAsyncSubscribable(
+		subscribe,
+		unsubscribe,
+		errorStrategy,
+		(listener: Listener<This, NewArgs>) => async function(this: This, ...args: Args) {
+			await listener.apply(this, await mapper.apply(this, args));
+		}
+	);
 }
 
 /**
@@ -232,7 +266,7 @@ function createNewThisAsyncSubscribable<CurrentThis, NewThis, Args extends unkno
 	newThis: NewThis,
 	errorStrategy: ErrorStrategy
 ): AsyncSubscribable<NewThis, Args> {
-	return createMappedAsyncSubscribable(
+	return createWrappedAsyncSubscribable(
 		subscribe,
 		unsubscribe,
 		errorStrategy,
@@ -255,7 +289,7 @@ function createNewThisAsyncSubscribable<CurrentThis, NewThis, Args extends unkno
  * @returns
  *   `AsyncSubscribable`
  */
-function createMappedAsyncSubscribable<This, Args extends unknown[], WrappedThis, WrappedArgs extends unknown[]>(
+function createWrappedAsyncSubscribable<This, Args extends unknown[], WrappedThis, WrappedArgs extends unknown[]>(
 	subscribe: AsyncSubscribeFunction<WrappedThis, WrappedArgs>,
 	unsubscribe: AsyncUnsubscribeFunction<WrappedThis, WrappedArgs>,
 	errorStrategy: ErrorStrategy,

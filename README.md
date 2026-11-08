@@ -113,6 +113,9 @@ supported:
   once the event is emitted
 * `filter(filter: (...args) => boolean)` - Filter the subscribable, returning
   a new `Subscribable` that only receives the events that match the filter
+* `map(mapper: (...args) => newArgs)` - Change the arguments of events,
+  returning a new `Subscribable`. The mapper returns the new arguments as an
+  array, for example `subscribable.map(n => [ n * 2 ])`
 * `withThis(newThis)` - Change the this used for listeners
 
 ## Types with TypeScript

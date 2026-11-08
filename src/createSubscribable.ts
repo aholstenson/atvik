@@ -120,6 +120,10 @@ export function createSubscribable<This, Args extends unknown[]>(
 		defaultErrorStrategy
 	);
 
+	subscribable.map = <NewArgs extends [ unknown, ...unknown[] ] | []>(
+		mapper: (this: This, ...args: Args) => NewArgs | Promise<NewArgs>
+	) => createMappedSubscribable(subscribe, unsubscribe, mapper, defaultErrorStrategy);
+
 	subscribable.withThis = <NewThis>(newThis: NewThis) => createNewThisSubscribable(
 		subscribe,
 		unsubscribe,
@@ -176,7 +180,7 @@ function createFilteredSubscribable<This, Args extends unknown[]>(
 	filterToApply: (this: This, ...args: Args) => boolean | Promise<boolean>,
 	errorStrategy: ErrorStrategy
 ): Subscribable<This, Args> {
-	return createMappedSubscribable(subscribe, unsubscribe, errorStrategy, listener => function(this: This, ...args: Args) {
+	return createWrappedSubscribable(subscribe, unsubscribe, errorStrategy, listener => function(this: This, ...args: Args) {
 		const result = filterToApply.apply(this, args);
 		if(typeof result === 'boolean') {
 			return result ? listener.apply(this, args) : undefined;
@@ -184,6 +188,41 @@ function createFilteredSubscribable<This, Args extends unknown[]>(
 
 		return result.then(matches => matches ? listener.apply(this, args) : undefined);
 	});
+}
+
+/**
+ * Create a Subscribable that changes the arguments of events.
+ *
+ * @param subscribe -
+ *   function used to subscribe listeners
+ * @param unsubscribe -
+ *   function used to unsubscribe listeners
+ * @param mapper -
+ *   function that returns the new arguments
+ * @param errorStrategy -
+ *   error strategy of the returned subscribable
+ * @returns
+ *   `Subscribable`
+ */
+function createMappedSubscribable<This, Args extends unknown[], NewArgs extends unknown[]>(
+	subscribe: SubscribeFunction<This, Args>,
+	unsubscribe: UnsubscribeFunction<This, Args>,
+	mapper: (this: This, ...args: Args) => NewArgs | Promise<NewArgs>,
+	errorStrategy: ErrorStrategy
+): Subscribable<This, NewArgs> {
+	return createWrappedSubscribable(
+		subscribe,
+		unsubscribe,
+		errorStrategy,
+		(listener: Listener<This, NewArgs>) => function(this: This, ...args: Args) {
+			const mapped = mapper.apply(this, args);
+			if(Array.isArray(mapped)) {
+				return listener.apply(this, mapped);
+			}
+
+			return mapped.then(newArgs => listener.apply(this, newArgs));
+		}
+	);
 }
 
 /**
@@ -206,7 +245,7 @@ function createNewThisSubscribable<CurrentThis, NewThis, Args extends unknown[]>
 	newThis: NewThis,
 	errorStrategy: ErrorStrategy
 ): Subscribable<NewThis, Args> {
-	return createMappedSubscribable(
+	return createWrappedSubscribable(
 		subscribe,
 		unsubscribe,
 		errorStrategy,
@@ -228,7 +267,7 @@ function createNewThisSubscribable<CurrentThis, NewThis, Args extends unknown[]>
  * @returns
  *   `Subscribable`
  */
-function createMappedSubscribable<This, Args extends unknown[], WrappedThis, WrappedArgs extends unknown[]>(
+function createWrappedSubscribable<This, Args extends unknown[], WrappedThis, WrappedArgs extends unknown[]>(
 	subscribe: SubscribeFunction<WrappedThis, WrappedArgs>,
 	unsubscribe: UnsubscribeFunction<WrappedThis, WrappedArgs>,
 	errorStrategy: ErrorStrategy,

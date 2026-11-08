@@ -56,6 +56,24 @@ export interface SubscriptionFunctions<This, Args extends unknown[] = []>
 	filter(filter: (this: This, ...args: Args) => boolean | Promise<boolean>): Subscribable<This, Args>;
 
 	/**
+	 * Create a subscribable that changes the arguments of events before
+	 * listeners receive them. The mapper returns the new arguments as an
+	 * array, or a promise of the array:
+	 *
+	 * ```javascript
+	 * const doubled = subscribable.map(n => [ n * 2 ]);
+	 * ```
+	 *
+	 * @param mapper -
+	 *   function that returns the new arguments
+	 * @returns
+	 *   mapped `Subscribable`
+	 */
+	map<NewArgs extends [ unknown, ...unknown[] ] | []>(
+		mapper: (this: This, ...args: Args) => NewArgs | Promise<NewArgs>
+	): Subscribable<This, NewArgs>;
+
+	/**
 	 * Create a Subscribable that changes the this argument used for listeners.
 	 *
 	 * @param newThis -
