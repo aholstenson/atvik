@@ -1,7 +1,7 @@
-import { AsyncSubscribable } from './AsyncSubscribable';
-import { AsyncSubscriptionHandle } from './AsyncSubscriptionHandle';
-import { EventIteratorOptions } from './EventIteratorOptions';
-import { Listener } from './Listener';
+import type { AsyncSubscribable } from './AsyncSubscribable.js';
+import type { AsyncSubscriptionHandle } from './AsyncSubscriptionHandle.js';
+import type { EventIteratorOptions } from './EventIteratorOptions.js';
+import type { Listener } from './Listener.js';
 
 /**
  * Functions used to asynchronously subscribe and unsubscribe to an event.

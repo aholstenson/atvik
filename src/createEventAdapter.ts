@@ -1,7 +1,7 @@
-import { createSubscribable } from './createSubscribable';
-import { EventIteratorOptions } from './EventIteratorOptions';
-import { Listener } from './Listener';
-import { Subscribable } from './Subscribable';
+import { createSubscribable } from './createSubscribable.js';
+import type { EventIteratorOptions } from './EventIteratorOptions.js';
+import type { Listener } from './Listener.js';
+import type { Subscribable } from './Subscribable.js';
 
 /**
  * Event emitter that uses `addEventListener` and `removeEventListener`

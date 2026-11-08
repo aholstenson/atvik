@@ -1,7 +1,7 @@
-import { EventIteratorOptions } from './EventIteratorOptions';
-import { Listener } from './Listener';
-import { Subscribable } from './Subscribable';
-import { SubscriptionHandle } from './SubscriptionHandle';
+import type { EventIteratorOptions } from './EventIteratorOptions.js';
+import type { Listener } from './Listener.js';
+import type { Subscribable } from './Subscribable.js';
+import type { SubscriptionHandle } from './SubscriptionHandle.js';
 
 /**
  * Functions used to subscribe and unsubscribe to an event.

@@ -4,23 +4,34 @@
   "description": "Event handling using individual emitters and signals",
   "license": "MIT",
   "repository": "aholstenson/atvik",
+  "type": "module",
   "scripts": {
     "test": "vitest run",
-    "apidocs": "typedoc",
-    "ci": "npm run coverage && npm run lint",
+    "test:watch": "vitest",
+    "ci": "npm run typecheck && npm run lint && npm run coverage",
     "coverage": "vitest run --coverage",
     "lint": "eslint src test",
-    "build": "tsc --module commonjs --outDir dist/cjs && tsc --module es6 --outDir dist/esm",
+    "typecheck": "tsc --noEmit",
+    "build": "tsc -p tsconfig.build.json",
     "prebuild": "rimraf dist",
     "prepublishOnly": "npm run build",
-    "test:watch": "vitest"
+    "apidocs": "typedoc"
   },
-  "main": "./dist/cjs/index.js",
-  "module": "./dist/esm/index.js",
-  "types": "./dist/types/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
   "sideEffects": false,
   "engines": {
-    "node": ">=12.0.0"
+    "node": ">=22.0.0"
   },
   "keywords": [
     "event",

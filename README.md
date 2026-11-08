@@ -9,6 +9,9 @@ Atvik is an event emitter for JavaScript and TypeScript. This library
 provides emitters for individual events that work well with types and
 inheritance.
 
+Atvik is an ES module and needs Node.js 22 or later. CommonJS code can load
+it with `require('atvik')`.
+
 ```javascript
 import { Event } from 'atvik';
 

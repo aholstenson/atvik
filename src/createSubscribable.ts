@@ -1,8 +1,8 @@
-import { ErrorStrategy, rethrowErrors } from './ErrorStrategy';
-import { EventIteratorOptions, OverflowBehavior } from './EventIteratorOptions';
-import { Listener } from './Listener';
-import { Subscribable } from './Subscribable';
-import { SubscriptionHandle } from './SubscriptionHandle';
+import { type ErrorStrategy, rethrowErrors } from './ErrorStrategy.js';
+import { type EventIteratorOptions, OverflowBehavior } from './EventIteratorOptions.js';
+import type { Listener } from './Listener.js';
+import type { Subscribable } from './Subscribable.js';
+import type { SubscriptionHandle } from './SubscriptionHandle.js';
 
 /**
  * Function used to subscribe a listener.

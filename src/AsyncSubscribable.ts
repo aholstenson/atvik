@@ -1,6 +1,6 @@
-import { AsyncSubscriptionFunctions } from './AsyncSubscriptionFunctions';
-import { AsyncSubscriptionHandle } from './AsyncSubscriptionHandle';
-import { Listener } from './Listener';
+import type { AsyncSubscriptionFunctions } from './AsyncSubscriptionFunctions.js';
+import type { AsyncSubscriptionHandle } from './AsyncSubscriptionHandle.js';
+import type { Listener } from './Listener.js';
 
 /**
  * Function that can be used to asynchronously subscribe, filter and iterate

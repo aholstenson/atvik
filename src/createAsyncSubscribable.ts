@@ -1,8 +1,8 @@
-import { AsyncSubscribable } from './AsyncSubscribable';
-import { AsyncSubscriptionHandle } from './AsyncSubscriptionHandle';
-import { ErrorStrategy, rethrowErrors } from './ErrorStrategy';
-import { EventIteratorOptions, OverflowBehavior } from './EventIteratorOptions';
-import { Listener } from './Listener';
+import type { AsyncSubscribable } from './AsyncSubscribable.js';
+import type { AsyncSubscriptionHandle } from './AsyncSubscriptionHandle.js';
+import { type ErrorStrategy, rethrowErrors } from './ErrorStrategy.js';
+import { type EventIteratorOptions, OverflowBehavior } from './EventIteratorOptions.js';
+import type { Listener } from './Listener.js';
 
 /**
  * Function used to subscribe a listener.

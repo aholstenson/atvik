@@ -20,7 +20,9 @@ export default tseslint.config(
 			'@typescript-eslint/no-explicit-any': 'off',
 
 			'@typescript-eslint/consistent-type-definitions': 'error',
+			'@typescript-eslint/consistent-type-imports': [ 'error', { fixStyle: 'inline-type-imports' } ],
 			'@typescript-eslint/explicit-member-accessibility': 'error',
+			'@typescript-eslint/no-import-type-side-effects': 'error',
 			'@typescript-eslint/no-non-null-assertion': 'error',
 
 			'tsdoc/syntax': 'warn',

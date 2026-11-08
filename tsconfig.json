@@ -1,26 +1,25 @@
 {
 	"compilerOptions": {
-		"moduleResolution": "node",
-		"target": "ES2019",
-		"module": "CommonJS",
-		"lib": [ "ES2019" ],
+		"module": "nodenext",
+		"moduleResolution": "nodenext",
+		"target": "es2022",
+		"lib": [ "es2022" ],
+
+		"strict": true,
+		"verbatimModuleSyntax": true,
+		"skipLibCheck": true,
 
 		"sourceMap": true,
 		"declaration": true,
 		"declarationMap": true,
 
-		"strict": true,
-		"allowSyntheticDefaultImports": true,
-		"downlevelIteration": true,
+		"noEmit": true,
 
-		"declarationDir": "dist/types",
-		"outDir": "dist/lib",
-		"typeRoots": [
-			"node_modules/@types"
-		]
+		"types": [ "node", "vitest/globals" ]
 	},
 	"include": [
-		"src"
+		"src",
+		"test"
 	],
 	"typedocOptions": {
 		"entryPoints": [ "src/index.ts" ],

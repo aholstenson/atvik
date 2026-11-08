@@ -1,10 +1,10 @@
-import { AsyncSubscribable } from './AsyncSubscribable';
-import { AsyncSubscriptionFunctions } from './AsyncSubscriptionFunctions';
-import { AsyncSubscriptionHandle } from './AsyncSubscriptionHandle';
-import { createAsyncSubscribable } from './createAsyncSubscribable';
-import { ErrorStrategy, rethrowErrors } from './ErrorStrategy';
-import { EventIteratorOptions } from './EventIteratorOptions';
-import { Listener } from './Listener';
+import type { AsyncSubscribable } from './AsyncSubscribable.js';
+import type { AsyncSubscriptionFunctions } from './AsyncSubscriptionFunctions.js';
+import type { AsyncSubscriptionHandle } from './AsyncSubscriptionHandle.js';
+import { createAsyncSubscribable } from './createAsyncSubscribable.js';
+import { type ErrorStrategy, rethrowErrors } from './ErrorStrategy.js';
+import type { EventIteratorOptions } from './EventIteratorOptions.js';
+import type { Listener } from './Listener.js';
 
 /**
  * Options that can be passed when creating an instance of {@link AsyncEvent}.

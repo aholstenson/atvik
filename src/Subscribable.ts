@@ -1,6 +1,6 @@
-import { Listener } from './Listener';
-import { SubscriptionFunctions } from './SubscriptionFunctions';
-import { SubscriptionHandle } from './SubscriptionHandle';
+import type { Listener } from './Listener.js';
+import type { SubscriptionFunctions } from './SubscriptionFunctions.js';
+import type { SubscriptionHandle } from './SubscriptionHandle.js';
 
 /**
  * Function that can be used to subscribe, filter and iterate over events.

@@ -1,5 +1,5 @@
-import { AsyncEvent } from '../src/AsyncEvent';
-import { OverflowBehavior } from '../src/EventIteratorOptions';
+import { AsyncEvent } from '../src/AsyncEvent.js';
+import { OverflowBehavior } from '../src/EventIteratorOptions.js';
 
 describe('AsyncEvent', function() {
 	it('Can create', function() {
@@ -482,7 +482,7 @@ describe('AsyncEvent', function() {
 					// Test is done when v2 is received
 					return;
 				default:
-					fail();
+					expect.fail();
 			}
 		}
 	});
@@ -501,12 +501,12 @@ describe('AsyncEvent', function() {
 					await new Promise(resolve => setTimeout(resolve, 200));
 					break;
 				case 'v2':
-					fail('Received v2, but should have been dropped');
+					expect.fail('Received v2, but should have been dropped');
 					break;
 				case 'v3':
 					return;
 				default:
-					fail();
+					expect.fail();
 			}
 		}
 	});
@@ -527,10 +527,10 @@ describe('AsyncEvent', function() {
 				case 'v2':
 					return;
 				case 'v3':
-					fail('Received v3, but should have been dropped');
+					expect.fail('Received v3, but should have been dropped');
 					break;
 				default:
-					fail();
+					expect.fail();
 			}
 		}
 	});
@@ -554,12 +554,12 @@ describe('AsyncEvent', function() {
 					await new Promise(resolve => setTimeout(resolve, 200));
 					break;
 				case 'v2':
-					fail('Received v2, but should have been dropped');
+					expect.fail('Received v2, but should have been dropped');
 					break;
 				case 'v3':
 					return;
 				default:
-					fail();
+					expect.fail();
 			}
 		}
 	});
@@ -584,10 +584,10 @@ describe('AsyncEvent', function() {
 				case 'v2':
 					return;
 				case 'v3':
-					fail('Received v3, but should have been dropped');
+					expect.fail('Received v3, but should have been dropped');
 					break;
 				default:
-					fail();
+					expect.fail();
 			}
 		}
 	});

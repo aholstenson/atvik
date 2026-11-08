@@ -1,10 +1,10 @@
-import { createSubscribable } from './createSubscribable';
-import { ErrorStrategy, rethrowErrors } from './ErrorStrategy';
-import { EventIteratorOptions } from './EventIteratorOptions';
-import { Listener } from './Listener';
-import { Subscribable } from './Subscribable';
-import { SubscriptionFunctions } from './SubscriptionFunctions';
-import { SubscriptionHandle } from './SubscriptionHandle';
+import { createSubscribable } from './createSubscribable.js';
+import { type ErrorStrategy, rethrowErrors } from './ErrorStrategy.js';
+import type { EventIteratorOptions } from './EventIteratorOptions.js';
+import type { Listener } from './Listener.js';
+import type { Subscribable } from './Subscribable.js';
+import type { SubscriptionFunctions } from './SubscriptionFunctions.js';
+import type { SubscriptionHandle } from './SubscriptionHandle.js';
 
 /**
  * Options that can be passed when creating an instance of {@link Event}.

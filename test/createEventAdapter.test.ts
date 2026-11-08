@@ -1,6 +1,6 @@
 import { EventEmitter } from 'events';
 
-import { createEventAdapter } from '../src/createEventAdapter';
+import { createEventAdapter } from '../src/createEventAdapter.js';
 
 describe('createEventAdapter', function() {
 	it('Can trigger single listener for Add/RemoveListener', function() {
