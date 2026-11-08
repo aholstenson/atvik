@@ -12,8 +12,7 @@ import type { SubscriptionHandle } from './SubscriptionHandle.js';
 export type SubscribeFunction<This, Args extends any[]> = (listener: Listener<This, Args>) => void;
 
 /**
- * Function used to unsubscribe a listener, should return if the listener was
- * subscribed or not.
+ * Function used to unsubscribe a listener.
  */
 export type UnsubscribeFunction<This, Args extends any[]> = (listener: Listener<This, Args>) => void;
 

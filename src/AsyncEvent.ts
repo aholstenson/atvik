@@ -55,7 +55,7 @@ export interface AsyncEventOptions {
  *
  * ```javascript
  * // Use handle for easier unsubscription
- * const handle = await event.addListener(() => ...);
+ * const handle = await event.subscribe(() => ...);
  * await handle.unsubscribe();
  *
  * // Unsubscribe the actual listener
@@ -133,7 +133,7 @@ export class AsyncEvent<Parent, Args extends any[] = []> implements AsyncSubscri
 
 	/**
 	 * Emit this event in parallel. This will invoke all of the listeners
-	 * with the passed arguments. Triggering of the listeners will done in
+	 * with the passed arguments. Triggering of the listeners will be done in
 	 * parallel.
 	 *
 	 * This method will not use the current {@link ErrorStrategy}. All listeners

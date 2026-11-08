@@ -57,7 +57,7 @@ export interface EventOptions {
  *
  * ```javascript
  * // Use handle for easier unsubscription
- * const handle = event.addListener(() => ...);
+ * const handle = event.subscribe(() => ...);
  * handle.unsubscribe();
  *
  * // Unsubscribe the actual listener
@@ -151,7 +151,7 @@ export class Event<Parent, Args extends any[] = []> implements SubscriptionFunct
 
 	/**
 	 * Emit this event. This will invoke all of the listeners with the passed
-	 * arguments. If a listener is asynchronous this will method will use the
+	 * arguments. If a listener is asynchronous this method will use the
 	 * current {@link ErrorStrategy} to handle errors, and will continue to
 	 * trigger listeners while the listener is handling the event.
 	 *
@@ -214,7 +214,7 @@ export class Event<Parent, Args extends any[] = []> implements SubscriptionFunct
 
 	/**
 	 * Emit this event in parallel. This will invoke all of the listeners
-	 * with the passed arguments. Triggering of the listeners will done in
+	 * with the passed arguments. Triggering of the listeners will be done in
 	 * parallel.
 	 *
 	 * This method will not use the current {@link ErrorStrategy}. All listeners

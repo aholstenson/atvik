@@ -86,7 +86,7 @@ supported:
 * `once(): Promise` - Create a promise that will resolve once the event is
   emitted
 * `filter(filter: (...args) => boolean)` - Filter the subscribable, returning
-  an up
+  a new `Subscribable` that only receives the events that match the filter
 * `withThis(newThis)` - Change the this used for listeners
 
 ## Types with TypeScript
@@ -220,7 +220,7 @@ removed via `removeMonitor()`.
 
 ## Asynchronous subscription and unsubscription
 
-`AsyncSubscribable` is a variant of `Subscribable`where listeners are 
+`AsyncSubscribable` is a variant of `Subscribable` where listeners are 
 subscribed in an asynchronous way. It is intended for use when listeners need
 some asynchronous action before they are available, such as a remote RPC
 scenario. The API of `AsyncSubscribable` matches `Subscribable` but returns 
@@ -248,7 +248,6 @@ const asyncSubscribable = createAsyncSubscribable({
   },
   unsubscribe: async (listener) => {
     // Unsubscribe listener here
-    return listenerWasSubscribed;
   }
 });
 ```

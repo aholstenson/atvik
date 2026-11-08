@@ -12,8 +12,7 @@ import { ListenerMapping } from './ListenerMapping.js';
 export type AsyncSubscribeFunction<This, Args extends any[]> = (listener: Listener<This, Args>) => Promise<void>;
 
 /**
- * Function used to unsubscribe a listener, should return if the listener was
- * subscribed or not.
+ * Function used to unsubscribe a listener.
  */
 export type AsyncUnsubscribeFunction<This, Args extends any[]> = (listener: Listener<This, Args>) => Promise<void>;
 

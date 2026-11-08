@@ -25,8 +25,8 @@ import type { Listener } from './Listener.js';
  *
  * ```javascript
  * const listener = arg1 => console.log('event', arg1);
- * await subscribable.asyncSubscribable(listener);
- * await subscribable.asyncSubscribable(listener);
+ * await asyncSubscribable.subscribe(listener);
+ * await asyncSubscribable.unsubscribe(listener);
  * ```
  *
  * ## Filtering

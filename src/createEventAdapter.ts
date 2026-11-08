@@ -13,7 +13,7 @@ export interface AddRemoveEventListenerEventEmitter<Event extends string | symbo
 }
 
 /**
- * Event emitter that uses `addListener` and `removeEventListener` methods.
+ * Event emitter that uses `addListener` and `removeListener` methods.
  */
 export interface AddRemoveListenerEventEmitter<Event extends string | symbol, Args extends any[]> {
 	addListener(event: Event, listener: Listener<this, Args>): void;
@@ -75,7 +75,7 @@ export interface EventAdapterOptions {
  * const onEcho = createEventAdapter(events, 'echo');
  * onEcho.subscribe(value => console.log('echo', value));
  *
- * events.emit('echo, 'argument');
+ * events.emit('echo', 'argument');
  * ```
  *
  * ## DOM events
