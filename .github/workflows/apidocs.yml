@@ -1,24 +1,54 @@
-name: Generate API docs
+name: API docs
+
+# Builds the API docs with TypeDoc and deploys them to GitHub Pages.
+#
+# The repository must use "GitHub Actions" as the Pages source
+# (Settings → Pages → Build and deployment → Source).
 
 on:
   push:
-    branches:
-      - master
+    branches: [ master ]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
 
 jobs:
-  build-and-deploy:
+  build:
     runs-on: ubuntu-latest
+
     steps:
-      - name: Checkout
-        uses: actions/checkout@v2.3.1
+      - uses: actions/checkout@v7
 
-      - name: Generate docs
-        run: |
-          npm install
-          npm run apidocs
-
-      - name: Deploy
-        uses: JamesIves/github-pages-deploy-action@4.1.1
+      - uses: actions/setup-node@v7
         with:
-          branch: gh-pages
-          folder: apidocs
+          node-version: 24.x
+          cache: npm
+
+      - run: npm ci
+
+      - run: npm run apidocs
+
+      - uses: actions/upload-pages-artifact@v5
+        with:
+          path: apidocs
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+
+    permissions:
+      pages: write
+      id-token: write
+
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    steps:
+      - uses: actions/deploy-pages@v5
+        id: deployment
