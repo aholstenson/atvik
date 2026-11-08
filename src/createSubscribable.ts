@@ -1,5 +1,6 @@
 import { type ErrorStrategy, rethrowErrors } from './ErrorStrategy.js';
-import { type EventIteratorOptions, OverflowBehavior } from './EventIteratorOptions.js';
+import { createEventIterator } from './createEventIterator.js';
+import type { EventIteratorOptions } from './EventIteratorOptions.js';
 import type { Listener } from './Listener.js';
 import type { Subscribable } from './Subscribable.js';
 import type { SubscriptionHandle } from './SubscriptionHandle.js';
@@ -90,11 +91,12 @@ export function createSubscribable<This, Args extends any[]>(
 	subscribable.withThis = <NewThis>(newThis: NewThis) => createNewThisSubscribable(subscribe, unsubscribe, newThis);
 
 	const defaultIteratorOptions = options.defaultIterator;
-	subscribable.iterator = (itOptions?: EventIteratorOptions) => createAsyncIterator(subscribe, unsubscribe, {
+	const iteratorSource = { subscribe, unsubscribe, allowBlock: false };
+	subscribable.iterator = (itOptions?: EventIteratorOptions) => createEventIterator(iteratorSource, {
 		...defaultIteratorOptions,
 		...itOptions
 	});
-	(subscribable as any)[Symbol.asyncIterator] = () => createAsyncIterator(subscribe, unsubscribe, defaultIteratorOptions);
+	(subscribable as any)[Symbol.asyncIterator] = () => createEventIterator(iteratorSource, defaultIteratorOptions);
 
 	return subscribable as any;
 }
@@ -189,92 +191,4 @@ function createNewThisSubscribable<CurrentThis, NewThis, Args extends any[]>(
 			}
 		}
 	});
-}
-
-/**
- * Create an async iterator that will register a listener and emit events as
- * they are received.
- *
- * @param subscribe -
- *   function used to subscribe listeners
- * @param unsubscribe -
- *   function used to unsubscribe listeners
- * @param options -
- *   options to apply to this iterator
- * @returns
- *   async iterator
- */
-function createAsyncIterator<Args extends any[]>(
-	subscribe: SubscribeFunction<unknown, Args>,
-	unsubscribe: UnsubscribeFunction<unknown, Args>,
-	options?: EventIteratorOptions
-): AsyncIterableIterator<Args> {
-	const limit = options?.limit ?? 0;
-	const behavior = options?.overflowBehavior ?? OverflowBehavior.DropOldest;
-	if(behavior === OverflowBehavior.Block) {
-		throw new Error('Blocking is not a supported strategy for non-async events');
-	}
-
-	const queue: Args[] = [];
-	let current: ((v: IteratorResult<Args>) => void) | null = null;
-
-	const listener = (...args: Args) => {
-		if(current) {
-			current({
-				value: args,
-				done: false
-			});
-			current = null;
-		} else {
-			if(limit > 0) {
-				if(queue.length >= limit) {
-					switch(behavior) {
-						case OverflowBehavior.DropNewest:
-							return;
-						case OverflowBehavior.DropOldest:
-							queue.shift();
-							break;
-					}
-				}
-			}
-
-			queue.push(args);
-		}
-	};
-
-	subscribe(listener);
-
-	return {
-		next() {
-			if(queue.length > 0) {
-				// There is data in the queue, pull it
-				const result = queue.shift();
-				if(! result) {
-					return Promise.reject('Unexpected error, event queue is empty');
-				}
-
-				return Promise.resolve({
-					value: result,
-					done: false
-				});
-			} else {
-				// Nothing in the queue, register the promise
-				return new Promise<IteratorResult<Args>>(resolve => {
-					current = resolve;
-				});
-			}
-		},
-
-		async return(value?: any) {
-			unsubscribe(listener);
-			return {
-				value: value,
-				done: true
-			};
-		},
-
-		[Symbol.asyncIterator]() {
-			return this;
-		}
-	};
 }

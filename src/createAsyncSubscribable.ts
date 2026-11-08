@@ -1,7 +1,8 @@
 import type { AsyncSubscribable } from './AsyncSubscribable.js';
 import type { AsyncSubscriptionHandle } from './AsyncSubscriptionHandle.js';
 import { type ErrorStrategy, rethrowErrors } from './ErrorStrategy.js';
-import { type EventIteratorOptions, OverflowBehavior } from './EventIteratorOptions.js';
+import { createEventIterator } from './createEventIterator.js';
+import type { EventIteratorOptions } from './EventIteratorOptions.js';
 import type { Listener } from './Listener.js';
 
 /**
@@ -93,11 +94,12 @@ export function createAsyncSubscribable<This, Args extends any[]>(
 	subscribable.withThis = <NewThis>(newThis: NewThis) => createNewThisAsyncSubscribable(subscribe, unsubscribe, newThis);
 
 	const defaultIteratorOptions = options.defaultIterator;
-	subscribable.iterator = (itOptions?: EventIteratorOptions) => createAsyncIterator(subscribe, unsubscribe, {
+	const iteratorSource = { subscribe, unsubscribe, allowBlock: true };
+	subscribable.iterator = (itOptions?: EventIteratorOptions) => createEventIterator(iteratorSource, {
 		...defaultIteratorOptions,
 		...itOptions
 	});
-	(subscribable as any)[Symbol.asyncIterator] = () => createAsyncIterator(subscribe, unsubscribe, defaultIteratorOptions);
+	(subscribable as any)[Symbol.asyncIterator] = () => createEventIterator(iteratorSource, defaultIteratorOptions);
 
 	return subscribable as any;
 }
@@ -189,105 +191,4 @@ function createNewThisAsyncSubscribable<CurrentThis, NewThis, Args extends any[]
 			}
 		}
 	});
-}
-
-/**
- * Create an async iterator that will register a listener and emit events as
- * they are received.
- *
- * @param subscribe -
- *   function used to subscribe listeners
- * @param unsubscribe -
- *   function used to unsubscribe listeners
- * @param options -
- *   options to apply to this iterator
- * @returns
- *   async iterator
- */
-function createAsyncIterator<Args extends any[]>(
-	subscribe: AsyncSubscribeFunction<unknown, Args>,
-	unsubscribe: AsyncUnsubscribeFunction<unknown, Args>,
-	options?: EventIteratorOptions
-): AsyncIterableIterator<Args> {
-	const limit = options?.limit ?? 0;
-	const behavior = options?.overflowBehavior ?? OverflowBehavior.DropOldest;
-
-	const queue: Args[] = [];
-	let current: ((v: IteratorResult<Args>) => void) | null = null;
-	let hasRegistered = false;
-	let block: (() => void) | null = null;
-
-	const listener = async (...args: Args) => {
-		if(current) {
-			current({
-				value: args,
-				done: false
-			});
-			current = null;
-		} else {
-			if(limit > 0) {
-				if(queue.length >= limit) {
-					switch(behavior) {
-						case OverflowBehavior.DropNewest:
-							return;
-						case OverflowBehavior.DropOldest:
-							queue.shift();
-							break;
-						case OverflowBehavior.Block:
-							await new Promise<void>(resolve => {
-								block = resolve;
-							});
-							break;
-					}
-				}
-			}
-
-			queue.push(args);
-		}
-	};
-
-	return {
-		async next() {
-			if(! hasRegistered) {
-				await subscribe(listener);
-				hasRegistered = true;
-			}
-
-			if(block) {
-				// If there's a block, resolve and clear it
-				block();
-				block = null;
-			}
-
-			if(queue.length > 0) {
-				// There is data in the queue, pull it
-				const result = queue.shift();
-				if(! result) {
-					throw new Error('Unexpected error, event queue is empty');
-				}
-
-				return {
-					value: result,
-					done: false
-				};
-			} else {
-				// Nothing in the queue, register the promise
-				return await new Promise<IteratorResult<Args>>(resolve => {
-					current = resolve;
-				});
-			}
-		},
-
-		async return(value?: any) {
-			await unsubscribe(listener);
-			return {
-				value: value,
-				done: true
-			};
-		},
-
-		[Symbol.asyncIterator]() {
-			return this;
-		}
-	};
 }
