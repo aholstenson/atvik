@@ -41,6 +41,32 @@ for await (const [ arg1 ] of subscribable) {
 }
 ```
 
+## Unsubscribing with `using`
+
+Subscription handles are `Disposable`, so a listener can be unsubscribed at
+the end of a block with `using`:
+
+```javascript
+{
+  using handle = event.subscribe(arg1 => console.log('event', arg1));
+
+  // The listener receives events in this block
+}
+
+// The listener is unsubscribed here
+```
+
+Handles from `AsyncEvent` and `AsyncSubscribable` are `AsyncDisposable` and
+work with `await using`. Iterators are also `AsyncDisposable`.
+
+Runtimes without `Symbol.dispose`, such as older browsers, use
+`Symbol.for('Symbol.dispose')` as the key. This is the same key that core-js
+and Babel use.
+
+TypeScript projects must include `esnext.disposable` (or `esnext`) in `lib`,
+or set `skipLibCheck`, because the types of Atvik use `Disposable` and
+`AsyncDisposable`.
+
 ## Use with classes
 
 Events come with a public API called `Subscribable` for use with classes so

@@ -1,3 +1,4 @@
+import type { EventIterator } from './EventIterator.js';
 import type { EventIteratorOptions } from './EventIteratorOptions.js';
 import type { Listener } from './Listener.js';
 import type { Subscribable } from './Subscribable.js';
@@ -67,5 +68,13 @@ export interface SubscriptionFunctions<This, Args extends unknown[] = []>
 	 * @returns
 	 *   iterable/iterator
 	 */
-	iterator(options?: EventIteratorOptions): AsyncIterableIterator<Args>;
+	iterator(options?: EventIteratorOptions): EventIterator<Args>;
+
+	/**
+	 * Create an iterator with the default options of this subscribable.
+	 *
+	 * @returns
+	 *   iterable/iterator
+	 */
+	[Symbol.asyncIterator](): EventIterator<Args>;
 }

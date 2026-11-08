@@ -1,5 +1,6 @@
 import { createSubscribable } from './createSubscribable.js';
 import { type ErrorStrategy, rethrowErrors } from './ErrorStrategy.js';
+import type { EventIterator } from './EventIterator.js';
 import type { EventIteratorOptions } from './EventIteratorOptions.js';
 import type { Listener } from './Listener.js';
 import { ListenerRegistry } from './ListenerRegistry.js';
@@ -284,7 +285,7 @@ export class Event<Parent, Args extends unknown[] = []> implements SubscriptionF
 	 * @returns
 	 *   async iterator for this event
 	 */
-	public [Symbol.asyncIterator]() {
+	public [Symbol.asyncIterator](): EventIterator<Args> {
 		return this.subscribable[Symbol.asyncIterator]();
 	}
 
@@ -296,7 +297,7 @@ export class Event<Parent, Args extends unknown[] = []> implements SubscriptionF
 	 * @returns
 	 *   iterable/iterator
 	 */
-	public iterator(options?: EventIteratorOptions) {
+	public iterator(options?: EventIteratorOptions): EventIterator<Args> {
 		return this.subscribable.iterator(options);
 	}
 

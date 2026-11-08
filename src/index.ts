@@ -11,6 +11,7 @@ export * from './AsyncSubscriptionFunctions.js';
 export * from './AsyncSubscriptionHandle.js';
 export * from './AsyncEvent.js';
 
+export * from './EventIterator.js';
 export * from './EventIteratorOptions.js';
 export * from './ErrorStrategy.js';
 

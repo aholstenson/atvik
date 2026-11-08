@@ -1,3 +1,5 @@
+import { asyncDisposeSymbol } from './disposeSymbols.js';
+import type { EventIterator } from './EventIterator.js';
 import { type EventIteratorOptions, OverflowBehavior } from './EventIteratorOptions.js';
 import type { Listener } from './Listener.js';
 
@@ -34,7 +36,7 @@ export interface EventIteratorSource<Args extends unknown[]> {
  * Calling `return()` unsubscribes the listener, resolves all pending calls to
  * `next()` with `done: true` and releases emitters that are blocked by
  * `OverflowBehavior.Block`. All later calls to `next()` resolve with
- * `done: true`.
+ * `done: true`. Disposing the iterator calls `return()`.
  *
  * @param source -
  *   functions used to subscribe and unsubscribe the listener
@@ -46,7 +48,7 @@ export interface EventIteratorSource<Args extends unknown[]> {
 export function createEventIterator<Args extends unknown[]>(
 	source: EventIteratorSource<Args>,
 	options?: EventIteratorOptions
-): AsyncIterableIterator<Args> {
+): EventIterator<Args> {
 	const limit = options?.limit ?? 0;
 	const behavior = options?.overflowBehavior ?? OverflowBehavior.DropOldest;
 	if(behavior === OverflowBehavior.Block && ! source.allowBlock) {
@@ -108,7 +110,7 @@ export function createEventIterator<Args extends unknown[]>(
 
 	const finish = (): IteratorResult<Args> => ({ value: undefined, done: true });
 
-	const iterator: AsyncIterableIterator<Args> = {
+	const iterator: EventIterator<Args> = {
 		async next() {
 			if(done) return finish();
 
@@ -153,6 +155,10 @@ export function createEventIterator<Args extends unknown[]>(
 
 		[Symbol.asyncIterator]() {
 			return this;
+		},
+
+		async [asyncDisposeSymbol]() {
+			await iterator.return();
 		}
 	};
 

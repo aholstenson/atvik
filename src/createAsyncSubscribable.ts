@@ -2,6 +2,7 @@ import type { AsyncSubscribable } from './AsyncSubscribable.js';
 import type { AsyncSubscriptionHandle } from './AsyncSubscriptionHandle.js';
 import { type ErrorStrategy, rethrowErrors } from './ErrorStrategy.js';
 import { createEventIterator } from './createEventIterator.js';
+import { asyncDisposeSymbol } from './disposeSymbols.js';
 import type { EventIteratorOptions } from './EventIteratorOptions.js';
 import type { Listener } from './Listener.js';
 import { ListenerMapping } from './ListenerMapping.js';
@@ -64,6 +65,10 @@ export function createAsyncSubscribable<This, Args extends unknown[]>(
 		// Return a handle that can be used to unsubscribe
 		return {
 			async unsubscribe() {
+				await unsubscribe(listener);
+			},
+
+			async [asyncDisposeSymbol]() {
 				await unsubscribe(listener);
 			}
 		};

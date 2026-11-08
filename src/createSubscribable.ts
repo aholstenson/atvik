@@ -1,5 +1,6 @@
 import { type ErrorStrategy, rethrowErrors } from './ErrorStrategy.js';
 import { createEventIterator } from './createEventIterator.js';
+import { disposeSymbol } from './disposeSymbols.js';
 import type { EventIteratorOptions } from './EventIteratorOptions.js';
 import type { Listener } from './Listener.js';
 import { ListenerMapping } from './ListenerMapping.js';
@@ -63,6 +64,10 @@ export function createSubscribable<This, Args extends unknown[]>(
 		// Return a handle that can be used to unsubscribe
 		return {
 			unsubscribe() {
+				unsubscribe(listener);
+			},
+
+			[disposeSymbol]() {
 				unsubscribe(listener);
 			}
 		};
