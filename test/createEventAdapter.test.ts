@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-empty-function */
 import { EventEmitter } from 'events';
 
 import { createEventAdapter } from '../src/createEventAdapter';

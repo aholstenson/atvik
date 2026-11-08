@@ -9,7 +9,7 @@
     "apidocs": "typedoc",
     "ci": "npm run coverage && npm run lint",
     "coverage": "vitest run --coverage",
-    "lint": "eslint --ext .ts,.tsx .",
+    "lint": "eslint src test",
     "build": "tsc --module commonjs --outDir dist/cjs && tsc --module es6 --outDir dist/esm",
     "prebuild": "rimraf dist",
     "prepublishOnly": "npm run build",
@@ -33,18 +33,16 @@
     "event-emitter"
   ],
   "devDependencies": {
+    "@eslint/js": "^9.39.5",
     "@types/node": "^24.19.2",
-    "@typescript-eslint/eslint-plugin": "^5.61.0",
-    "@typescript-eslint/parser": "^5.61.0",
     "@vitest/coverage-v8": "^3.2.7",
     "coveralls": "^3.1.1",
-    "eslint": "^7.32.0",
-    "eslint-plugin-import": "^2.27.5",
-    "eslint-plugin-jsdoc": "^35.5.1",
-    "eslint-plugin-tsdoc": "^0.2.17",
+    "eslint": "^9.39.5",
+    "eslint-plugin-tsdoc": "^0.5.4",
     "rimraf": "^5.0.1",
     "typedoc": "^0.24.8",
     "typescript": "^5.1.6",
+    "typescript-eslint": "^8.72.1",
     "vitest": "^3.2.7"
   }
 }

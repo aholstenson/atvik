@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-empty-function */
 import { AsyncEvent } from '../src/AsyncEvent';
 import { OverflowBehavior } from '../src/EventIteratorOptions';
 
