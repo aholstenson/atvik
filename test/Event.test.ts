@@ -1,7 +1,5 @@
-/* eslint-disable @typescript-eslint/no-empty-function */
-import exp from 'constants';
-import { Event } from '../src/Event';
-import { OverflowBehavior } from '../src/EventIteratorOptions';
+import { Event } from '../src/Event.js';
+import { OverflowBehavior } from '../src/EventIteratorOptions.js';
 
 describe('Synchronous event', function() {
 	it('Can create', function() {
@@ -470,7 +468,7 @@ describe('Synchronous event', function() {
 		expect(triggered3).toEqual(true);
 	});
 
-	it('Can attach multiple and detach second listener', function() {
+	it('Can attach multiple and detach middle listener', function() {
 		const parent = {};
 		const handler = new Event(parent);
 
@@ -611,7 +609,7 @@ describe('Synchronous event', function() {
 					// Test is done when v2 is received
 					return;
 				default:
-					fail();
+					expect.fail();
 			}
 		}
 	});
@@ -630,12 +628,12 @@ describe('Synchronous event', function() {
 					await new Promise(resolve => setTimeout(resolve, 200));
 					break;
 				case 'v2':
-					fail('Received v2, but should have been dropped');
+					expect.fail('Received v2, but should have been dropped');
 					break;
 				case 'v3':
 					return;
 				default:
-					fail();
+					expect.fail();
 			}
 		}
 	});
@@ -656,10 +654,10 @@ describe('Synchronous event', function() {
 				case 'v2':
 					return;
 				case 'v3':
-					fail('Received v3, but should have been dropped');
+					expect.fail('Received v3, but should have been dropped');
 					break;
 				default:
-					fail();
+					expect.fail();
 			}
 		}
 	});
@@ -682,12 +680,12 @@ describe('Synchronous event', function() {
 					await new Promise(resolve => setTimeout(resolve, 200));
 					break;
 				case 'v2':
-					fail('Received v2, but should have been dropped');
+					expect.fail('Received v2, but should have been dropped');
 					break;
 				case 'v3':
 					return;
 				default:
-					fail();
+					expect.fail();
 			}
 		}
 	});
@@ -712,10 +710,10 @@ describe('Synchronous event', function() {
 				case 'v2':
 					return;
 				case 'v3':
-					fail('Received v3, but should have been dropped');
+					expect.fail('Received v3, but should have been dropped');
 					break;
 				default:
-					fail();
+					expect.fail();
 			}
 		}
 	});
@@ -1024,15 +1022,21 @@ describe('Synchronous event', function() {
 		expect(triggerCount).toEqual(0);
 	});
 
-	it('Multiple monitors fail', function() {
+	it('Multiple monitors are notified', async function() {
 		const parent = {};
 		const handler = new Event(parent);
+		let first = 0;
+		let second = 0;
 
-		handler.monitorListeners(() => {});
+		handler.monitorListeners(() => first++);
+		const handle = handler.monitorListeners(() => second++);
 
-		expect(() => {
-			handler.monitorListeners(() => {});
-		}).toThrow();
+		await handler.subscribe(() => undefined);
+		expect([ first, second ]).toEqual([ 1, 1 ]);
+
+		handle.unsubscribe();
+		handler.clear();
+		expect([ first, second ]).toEqual([ 2, 1 ]);
 	});
 
 	it('listeners returns empty when no listener', function() {
