@@ -165,7 +165,7 @@ for await (const [ arg1 ] of event) {
 ```
 
 Sometimes events are emitted faster than they can be consumed, limiting and
-controlling overflow of events can be done via {@link iterator}.
+controlling overflow of events can be done via `iterator()`.
 
 As an example this will limit to 10 queued events and then start dropping
 the earliest ones:
@@ -177,7 +177,7 @@ for await (const [ arg1 ] of subscribable.iterator({ limit: 10 })) {
 ```
 
 The behavior to use when the queue is full can be controlled by setting the
-[OverflowBehavior](https://aholstenson.github.io/atvik/enums/OverflowBehavior.html):
+[OverflowBehavior](https://aholstenson.github.io/atvik/variables/OverflowBehavior.html):
 
 ```javascript
 const iteratorOptions = {
