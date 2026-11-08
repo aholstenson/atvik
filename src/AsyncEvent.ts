@@ -3,10 +3,12 @@ import type { AsyncSubscriptionFunctions } from './AsyncSubscriptionFunctions.js
 import type { AsyncSubscriptionHandle } from './AsyncSubscriptionHandle.js';
 import { createAsyncSubscribable } from './createAsyncSubscribable.js';
 import { type ErrorStrategy, rethrowErrors } from './ErrorStrategy.js';
+import { disposeSymbol } from './disposeSymbols.js';
 import type { EventIterator } from './EventIterator.js';
 import type { EventIteratorOptions } from './EventIteratorOptions.js';
 import type { Listener } from './Listener.js';
 import type { OnceOptions, SubscribeOptions } from './SubscribeOptions.js';
+import type { SubscriptionHandle } from './SubscriptionHandle.js';
 import { ListenerRegistry } from './ListenerRegistry.js';
 
 /**
@@ -286,6 +288,16 @@ export class AsyncEvent<Parent, Args extends unknown[] = []> implements AsyncSub
 	}
 
 	/**
+	 * Get the number of listeners.
+	 *
+	 * @returns
+	 *   number of listeners
+	 */
+	public get listenerCount(): number {
+		return this.#registry.size;
+	}
+
+	/**
 	 * Get a copy of the listeners as an array.
 	 *
 	 * @returns
@@ -303,26 +315,37 @@ export class AsyncEvent<Parent, Args extends unknown[] = []> implements AsyncSub
 	}
 
 	/**
-	 * Monitor for changes to listeners. Only a single monitor is supported at
-	 * a single time. This is intended to be used to react to if listeners are
-	 * currently registered. This can be used for things such as only listening
-	 * to events from other objects when this event is active.
+	 * Monitor for changes to listeners. The monitor is called after every
+	 * subscribe, unsubscribe and clear. This is intended to be used to react
+	 * to if listeners are currently registered. This can be used for things
+	 * such as only listening to events from other objects when this event is
+	 * active.
+	 *
+	 * More than one monitor can be added. The same monitor is only added one
+	 * time.
 	 *
 	 * @param monitor -
 	 *   function used to monitor for changes to listeners
+	 * @returns
+	 *   handle that removes the monitor, also with `using`
 	 */
-	public monitorListeners(monitor: (event: this) => void): void {
-		if(this.#registry.hasMonitors) {
-			throw new Error('A monitor is already registered, call removeMonitor before registering a new monitor');
-		}
-
+	public monitorListeners(monitor: (event: this) => void): SubscriptionHandle {
 		this.#registry.addMonitor(monitor);
+
+		const remove = () => this.#registry.removeMonitor(monitor);
+		return {
+			unsubscribe: remove,
+			[disposeSymbol]: remove
+		};
 	}
 
 	/**
 	 * Stop monitoring for listener changes.
+	 *
+	 * @param monitor -
+	 *   monitor to remove. If not given, all monitors are removed
 	 */
-	public removeMonitor(): void {
-		this.#registry.removeMonitor();
+	public removeMonitor(monitor?: (event: this) => void): void {
+		this.#registry.removeMonitor(monitor);
 	}
 }

@@ -265,8 +265,11 @@ event.monitorListeners(theEvent => {
 });
 ```
 
-Only a single monitor may be active at a time and the active monitor can be
-removed via `removeMonitor()`.
+More than one monitor can be active. `monitorListeners` returns a handle that
+removes the monitor, also with `using`. `removeMonitor(monitor)` removes one
+monitor and `removeMonitor()` removes all monitors.
+
+The number of listeners is available as `listenerCount`.
 
 ## Asynchronous subscription and unsubscription
 

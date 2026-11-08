@@ -879,15 +879,21 @@ describe('AsyncEvent', function() {
 		expect(triggerCount).toEqual(0);
 	});
 
-	it('Multiple monitors fail', function() {
+	it('Multiple monitors are notified', async function() {
 		const parent = {};
 		const handler = new AsyncEvent(parent);
+		let first = 0;
+		let second = 0;
 
-		handler.monitorListeners(() => {});
+		handler.monitorListeners(() => first++);
+		const handle = handler.monitorListeners(() => second++);
 
-		expect(() => {
-			handler.monitorListeners(() => {});
-		}).toThrow();
+		await handler.subscribe(() => undefined);
+		expect([ first, second ]).toEqual([ 1, 1 ]);
+
+		handle.unsubscribe();
+		handler.clear();
+		expect([ first, second ]).toEqual([ 2, 1 ]);
 	});
 
 	it('listeners returns empty when no listener', function() {
