@@ -5,5 +5,3 @@ coverage
 npm-debug.log
 .vscode/
 .history/
-/package-lock.json
-/yarn.lock
