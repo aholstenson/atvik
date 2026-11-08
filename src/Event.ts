@@ -1,6 +1,7 @@
 import { createSubscribable } from './createSubscribable.js';
 import { type ErrorStrategy, rethrowErrors } from './ErrorStrategy.js';
 import type { EventIteratorOptions } from './EventIteratorOptions.js';
+import { invokeInParallel } from './invokeInParallel.js';
 import type { Listener } from './Listener.js';
 import type { Subscribable } from './Subscribable.js';
 import type { SubscriptionFunctions } from './SubscriptionFunctions.js';
@@ -216,8 +217,10 @@ export class Event<Parent, Args extends any[] = []> implements SubscriptionFunct
 	 * with the passed arguments. Triggering of the listeners will done in
 	 * parallel.
 	 *
-	 * This method will not use the current {@link ErrorStrategy} and will
-	 * instead reject if an error occurs.
+	 * This method will not use the current {@link ErrorStrategy}. All listeners
+	 * are invoked, also if one of them fails. If one listener fails the promise
+	 * rejects with its error. If more than one listener fails the promise
+	 * rejects with an `AggregateError` that holds all of the errors.
 	 *
 	 * @param args -
 	 *   arguments that the listeners will receive
@@ -229,7 +232,7 @@ export class Event<Parent, Args extends any[] = []> implements SubscriptionFunct
 			/*
 			 * Array is present, invoke listeners in parallel.
 			 */
-			await Promise.all(this.registeredListeners.map(l => l.apply(this.parent, args)));
+			await invokeInParallel(this.registeredListeners, this.parent, args);
 		} else if(this.registeredListeners) {
 			/*
 			 * Single listener is present, simply invoke the listener.
