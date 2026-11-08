@@ -5,14 +5,15 @@
   "license": "MIT",
   "repository": "aholstenson/atvik",
   "scripts": {
-    "test": "jest",
+    "test": "vitest run",
     "apidocs": "typedoc",
     "ci": "npm run coverage && npm run lint",
-    "coverage": "jest --coverage",
+    "coverage": "vitest run --coverage",
     "lint": "eslint --ext .ts,.tsx .",
     "build": "tsc --module commonjs --outDir dist/cjs && tsc --module es6 --outDir dist/esm",
     "prebuild": "rimraf dist",
-    "prepublishOnly": "npm run build"
+    "prepublishOnly": "npm run build",
+    "test:watch": "vitest"
   },
   "main": "./dist/cjs/index.js",
   "module": "./dist/esm/index.js",
@@ -32,20 +33,18 @@
     "event-emitter"
   ],
   "devDependencies": {
-    "@types/jest": "^29.5.2",
-    "@types/node": "^15.12.2",
+    "@types/node": "^24.19.2",
     "@typescript-eslint/eslint-plugin": "^5.61.0",
     "@typescript-eslint/parser": "^5.61.0",
+    "@vitest/coverage-v8": "^3.2.7",
     "coveralls": "^3.1.1",
     "eslint": "^7.32.0",
     "eslint-plugin-import": "^2.27.5",
     "eslint-plugin-jsdoc": "^35.5.1",
     "eslint-plugin-tsdoc": "^0.2.17",
-    "jest": "^29.6.1",
-    "jest-config": "^29.6.1",
     "rimraf": "^5.0.1",
-    "ts-jest": "^29.1.1",
     "typedoc": "^0.24.8",
-    "typescript": "^5.1.6"
+    "typescript": "^5.1.6",
+    "vitest": "^3.2.7"
   }
 }
