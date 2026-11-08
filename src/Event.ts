@@ -167,7 +167,7 @@ export class Event<Parent, Args extends any[] = []> implements SubscriptionFunct
 			for(const listener of this.registeredListeners) {
 				const result = listener.apply(this.parent, args);
 				if(result?.catch) {
-					result.catch(this.errorStrategy.handle);
+					result.catch(err => this.errorStrategy.handle(err));
 				}
 			}
 		} else if(this.registeredListeners) {
@@ -176,7 +176,7 @@ export class Event<Parent, Args extends any[] = []> implements SubscriptionFunct
 			 */
 			const result = this.registeredListeners.apply(this.parent, args);
 			if(result?.catch) {
-				result.catch(this.errorStrategy.handle);
+				result.catch(err => this.errorStrategy.handle(err));
 			}
 		}
 	}

@@ -4,6 +4,7 @@ import { type ErrorStrategy, rethrowErrors } from './ErrorStrategy.js';
 import { createEventIterator } from './createEventIterator.js';
 import type { EventIteratorOptions } from './EventIteratorOptions.js';
 import type { Listener } from './Listener.js';
+import { ListenerMapping } from './ListenerMapping.js';
 
 /**
  * Function used to subscribe a listener.
@@ -91,7 +92,12 @@ export function createAsyncSubscribable<This, Args extends any[]>(
 		defaultErrorStrategy
 	);
 
-	subscribable.withThis = <NewThis>(newThis: NewThis) => createNewThisAsyncSubscribable(subscribe, unsubscribe, newThis);
+	subscribable.withThis = <NewThis>(newThis: NewThis) => createNewThisAsyncSubscribable(
+		subscribe,
+		unsubscribe,
+		newThis,
+		defaultErrorStrategy
+	);
 
 	const defaultIteratorOptions = options.defaultIterator;
 	const iteratorSource = { subscribe, unsubscribe, allowBlock: true };
@@ -107,6 +113,9 @@ export function createAsyncSubscribable<This, Args extends any[]>(
 /**
  * Create a AsyncSubscribable that is filtered via the specified function.
  *
+ * The wrapped listener returns the result of the filter and the listener, so
+ * that emitters can wait for them and handle their errors.
+ *
  * @param subscribe -
  *   function used to subscribe listeners
  * @param unsubscribe -
@@ -114,7 +123,7 @@ export function createAsyncSubscribable<This, Args extends any[]>(
  * @param filterToApply -
  *   the function used to filter events
  * @param errorStrategy -
- *   error strategy to use when filter or listener triggering fails
+ *   error strategy of the returned subscribable
  * @returns
  *   `AsyncSubscribable`
  */
@@ -124,32 +133,9 @@ function createFilteredAsyncSubscribable<This, Args extends any[]>(
 	filterToApply: (this: This, ...args: Args) => boolean | Promise<boolean>,
 	errorStrategy: ErrorStrategy
 ): AsyncSubscribable<This, Args> {
-	// Map used to keep track of the filtered listener of an added listener
-	const listenerMapping = new Map<Listener<This, Args>, Listener<This, Args>>();
-
-	return createAsyncSubscribable({
-		subscribe: listener => {
-			const actualListener = async function(this: This, ...args: Args) {
-				try {
-					if(await filterToApply.apply(this, args)) {
-						listener.call(this, ...args);
-					}
-				} catch(ex) {
-					errorStrategy.handle(ex);
-				}
-			};
-
-			listenerMapping.set(listener, actualListener);
-			return subscribe(actualListener);
-		},
-		unsubscribe: listener => {
-			const actual = listenerMapping.get(listener);
-			if(actual) {
-				listenerMapping.delete(listener);
-				return unsubscribe(actual);
-			} else {
-				return Promise.resolve(undefined);
-			}
+	return createMappedAsyncSubscribable(subscribe, unsubscribe, errorStrategy, listener => async function(this: This, ...args: Args) {
+		if(await filterToApply.apply(this, args)) {
+			await listener.apply(this, args);
 		}
 	});
 }
@@ -163,32 +149,67 @@ function createFilteredAsyncSubscribable<This, Args extends any[]>(
  *   function used to unsubscribe listeners
  * @param newThis -
  *   object to use as the new this
+ * @param errorStrategy -
+ *   error strategy of the returned subscribable
  * @returns
  *   `AsyncSubscribable`
  */
 function createNewThisAsyncSubscribable<CurrentThis, NewThis, Args extends any[]>(
 	subscribe: AsyncSubscribeFunction<CurrentThis, Args>,
 	unsubscribe: AsyncUnsubscribeFunction<CurrentThis, Args>,
-	newThis: NewThis
+	newThis: NewThis,
+	errorStrategy: ErrorStrategy
 ): AsyncSubscribable<NewThis, Args> {
-	// Map used to keep track of the modified listeners
-	const listenerMapping = new Map<Listener<NewThis, Args>, Listener<CurrentThis, Args>>();
+	return createMappedAsyncSubscribable(
+		subscribe,
+		unsubscribe,
+		errorStrategy,
+		(listener: Listener<NewThis, Args>) => (...args: Args) => listener.apply(newThis, args)
+	);
+}
+
+/**
+ * Create a AsyncSubscribable that wraps every listener before it is
+ * subscribed.
+ *
+ * @param subscribe -
+ *   function used to subscribe wrapped listeners
+ * @param unsubscribe -
+ *   function used to unsubscribe wrapped listeners
+ * @param errorStrategy -
+ *   error strategy of the returned subscribable
+ * @param wrap -
+ *   function that creates the wrapped listener
+ * @returns
+ *   `AsyncSubscribable`
+ */
+function createMappedAsyncSubscribable<This, Args extends any[], WrappedThis, WrappedArgs extends any[]>(
+	subscribe: AsyncSubscribeFunction<WrappedThis, WrappedArgs>,
+	unsubscribe: AsyncUnsubscribeFunction<WrappedThis, WrappedArgs>,
+	errorStrategy: ErrorStrategy,
+	wrap: (listener: Listener<This, Args>) => Listener<WrappedThis, WrappedArgs>
+): AsyncSubscribable<This, Args> {
+	const mapping = new ListenerMapping(wrap);
 
 	return createAsyncSubscribable({
 		subscribe: async listener => {
-			const actualListener = function(this: CurrentThis, ...args: Args) {
-				listener.call(newThis, ...args);
-			};
+			const wrapped = mapping.add(listener);
+			if(! wrapped) return;
 
-			listenerMapping.set(listener, actualListener);
-			return await subscribe(actualListener);
+			try {
+				await subscribe(wrapped);
+			} catch(err) {
+				// The subscription failed, forget the listener so it can be added again
+				mapping.remove(listener);
+				throw err;
+			}
 		},
 		unsubscribe: async listener => {
-			const actual = listenerMapping.get(listener);
-			if(actual) {
-				listenerMapping.delete(listener);
-				return await unsubscribe(actual);
+			const wrapped = mapping.remove(listener);
+			if(wrapped) {
+				await unsubscribe(wrapped);
 			}
-		}
+		},
+		defaultErrorStrategy: errorStrategy
 	});
 }
