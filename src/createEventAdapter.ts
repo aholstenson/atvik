@@ -7,7 +7,7 @@ import type { Subscribable } from './Subscribable.js';
  * Event emitter that uses `addEventListener` and `removeEventListener`
  * methods.
  */
-export interface AddRemoveEventListenerEventEmitter<Event extends string | symbol, Args extends any[]> {
+export interface AddRemoveEventListenerEventEmitter<Event extends string | symbol, Args extends unknown[]> {
 	addEventListener(event: Event, listener: Listener<this, Args>): void;
 	removeEventListener(event: Event, listener: Listener<this, Args>): void;
 }
@@ -15,7 +15,7 @@ export interface AddRemoveEventListenerEventEmitter<Event extends string | symbo
 /**
  * Event emitter that uses `addListener` and `removeListener` methods.
  */
-export interface AddRemoveListenerEventEmitter<Event extends string | symbol, Args extends any[]> {
+export interface AddRemoveListenerEventEmitter<Event extends string | symbol, Args extends unknown[]> {
 	addListener(event: Event, listener: Listener<this, Args>): void;
 	removeListener(event: Event, listener: Listener<this, Args>): void;
 }
@@ -23,7 +23,7 @@ export interface AddRemoveListenerEventEmitter<Event extends string | symbol, Ar
 /**
  * Event emitter that uses `on` and `off` methods.
  */
-export interface OnOffEventEmitter<Event extends string | symbol, Args extends any[]> {
+export interface OnOffEventEmitter<Event extends string | symbol, Args extends unknown[]> {
 	on(event: Event, listener: Listener<this, Args>): void;
 	off(event: Event, listener: Listener<this, Args>): void;
 }
@@ -31,7 +31,7 @@ export interface OnOffEventEmitter<Event extends string | symbol, Args extends a
 /**
  * Supported types of event emitters.
  */
-export type AdaptableEventEmitter<Event extends string | symbol, Args extends any[]>
+export type AdaptableEventEmitter<Event extends string | symbol, Args extends unknown[]>
 	= AddRemoveEventListenerEventEmitter<Event, Args>
 	| AddRemoveListenerEventEmitter<Event, Args>
 	| OnOffEventEmitter<Event, Args>;
@@ -101,7 +101,7 @@ export interface EventAdapterOptions {
  */
 export function createEventAdapter<
 	Event extends string | symbol,
-	Args extends any[],
+	Args extends unknown[],
 	Emitter extends AdaptableEventEmitter<Event, Args>
 >(
 	emitter: Emitter,
@@ -192,7 +192,7 @@ function isOnOff(a: any): a is OnOffEventEmitter<any, any> {
  */
 function createTrackingSubscribable<
 	Event extends string | symbol,
-	Args extends any[],
+	Args extends unknown[],
 	Emitter extends AdaptableEventEmitter<Event, Args>
 >(emitter: Emitter,
 	event: Event,

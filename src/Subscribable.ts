@@ -62,7 +62,7 @@ import type { SubscriptionHandle } from './SubscriptionHandle.js';
  * ```
  *
  * Sometimes events are emitted faster than they can be consumed, limiting and
- * controlling overflow of events can be done via {@link iterator}.
+ * controlling overflow of events can be done via `iterator()`.
  *
  * As an example this will limit to 10 queued events and then start dropping
  * the earliest ones:
@@ -74,7 +74,7 @@ import type { SubscriptionHandle } from './SubscriptionHandle.js';
  * ```
  *
  * The behavior to use when the queue is full can be controlled by setting the
- * overflow behavior to either {@link DropNewest} or {@link DropOldest}.
+ * overflow behavior to either `OverflowBehavior.DropNewest` or `OverflowBehavior.DropOldest`.
  *
  * ```javascript
  * const iteratorOptions = {
@@ -87,7 +87,7 @@ import type { SubscriptionHandle } from './SubscriptionHandle.js';
  * }
  * ```
  */
-export interface Subscribable<This, Args extends any[] = []> extends SubscriptionFunctions<This, Args> {
+export interface Subscribable<This, Args extends unknown[] = []> extends SubscriptionFunctions<This, Args> {
 	/**
 	 * Subscribe to this event using the given listener. The listener will
 	 * be invoked any time the event is emitted. The returned handle can be

@@ -9,7 +9,7 @@ import type { Listener } from './Listener.js';
  * subscribed is not subscribed again, which is the same behavior as for
  * listeners subscribed directly on an event.
  */
-export class ListenerMapping<This, Args extends any[], WrappedThis, WrappedArgs extends any[]> {
+export class ListenerMapping<This, Args extends unknown[], WrappedThis, WrappedArgs extends unknown[]> {
 	readonly #wrap: (listener: Listener<This, Args>) => Listener<WrappedThis, WrappedArgs>;
 	readonly #mapping = new Map<Listener<This, Args>, Listener<WrappedThis, WrappedArgs>>();
 

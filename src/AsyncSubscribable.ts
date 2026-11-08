@@ -61,7 +61,7 @@ import type { Listener } from './Listener.js';
  * ```
  *
  * Sometimes events are emitted faster than they can be consumed, limiting and
- * controlling overflow of events can be done via {@link iterator}.
+ * controlling overflow of events can be done via `iterator()`.
  *
  * As an example this will limit to 10 queued events and then start dropping
  * the earliest ones:
@@ -86,7 +86,7 @@ import type { Listener } from './Listener.js';
  * }
  * ```
  */
-export interface AsyncSubscribable<This, Args extends any[] = []> extends AsyncSubscriptionFunctions<This, Args> {
+export interface AsyncSubscribable<This, Args extends unknown[] = []> extends AsyncSubscriptionFunctions<This, Args> {
 	/**
 	 * Subscribe to this event using the given listener. The listener will
 	 * be invoked any time the event is emitted. The returned handle can be

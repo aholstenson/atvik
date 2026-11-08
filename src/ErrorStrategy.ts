@@ -3,7 +3,7 @@
  * operations.
  */
 export interface ErrorStrategy {
-	handle(err: any): void;
+	handle(err: unknown): void;
 }
 
 /**
@@ -13,7 +13,7 @@ export interface ErrorStrategy {
  * warning.
  */
 export const rethrowErrors: ErrorStrategy = {
-	handle(err: any) {
+	handle(err: unknown) {
 		throw err;
 	}
 };

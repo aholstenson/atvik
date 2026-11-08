@@ -6,7 +6,7 @@ import type { SubscriptionHandle } from './SubscriptionHandle.js';
 /**
  * Functions used to subscribe and unsubscribe to an event.
  */
-export interface SubscriptionFunctions<This, Args extends any[] = []>
+export interface SubscriptionFunctions<This, Args extends unknown[] = []>
 	extends AsyncIterable<Args> {
 	/**
 	 * Subscribe to this event using the given listener. The listener will

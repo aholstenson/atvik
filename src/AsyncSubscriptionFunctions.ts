@@ -6,7 +6,7 @@ import type { Listener } from './Listener.js';
 /**
  * Functions used to asynchronously subscribe and unsubscribe to an event.
  */
-export interface AsyncSubscriptionFunctions<This, Args extends any[] = []>
+export interface AsyncSubscriptionFunctions<This, Args extends unknown[] = []>
 	extends AsyncIterable<Args> {
 	/**
 	 * Subscribe to this event using the given listener. The listener will

@@ -9,17 +9,17 @@ import type { SubscriptionHandle } from './SubscriptionHandle.js';
 /**
  * Function used to subscribe a listener.
  */
-export type SubscribeFunction<This, Args extends any[]> = (listener: Listener<This, Args>) => void;
+export type SubscribeFunction<This, Args extends unknown[]> = (listener: Listener<This, Args>) => void;
 
 /**
  * Function used to unsubscribe a listener.
  */
-export type UnsubscribeFunction<This, Args extends any[]> = (listener: Listener<This, Args>) => void;
+export type UnsubscribeFunction<This, Args extends unknown[]> = (listener: Listener<This, Args>) => void;
 
 /**
  * Options for `createSubscribable`.
  */
-export interface SubscribableOptions<This, Args extends any[]> {
+export interface SubscribableOptions<This, Args extends unknown[]> {
 	/**
 	 * Function used to subscribe a listener.
 	 */
@@ -49,7 +49,7 @@ export interface SubscribableOptions<This, Args extends any[]> {
  * @returns
  *   instance of `Subscribable`
  */
-export function createSubscribable<This, Args extends any[]>(
+export function createSubscribable<This, Args extends unknown[]>(
 	options: SubscribableOptions<This, Args>
 ): Subscribable<This, Args> {
 	const subscribe = options.subscribe;
@@ -123,7 +123,7 @@ export function createSubscribable<This, Args extends any[]>(
  * @returns
  *   `Subscribable`
  */
-function createFilteredSubscribable<This, Args extends any[]>(
+function createFilteredSubscribable<This, Args extends unknown[]>(
 	subscribe: SubscribeFunction<This, Args>,
 	unsubscribe: UnsubscribeFunction<This, Args>,
 	filterToApply: (this: This, ...args: Args) => boolean | Promise<boolean>,
@@ -153,7 +153,7 @@ function createFilteredSubscribable<This, Args extends any[]>(
  * @returns
  *   `Subscribable`
  */
-function createNewThisSubscribable<CurrentThis, NewThis, Args extends any[]>(
+function createNewThisSubscribable<CurrentThis, NewThis, Args extends unknown[]>(
 	subscribe: SubscribeFunction<CurrentThis, Args>,
 	unsubscribe: UnsubscribeFunction<CurrentThis, Args>,
 	newThis: NewThis,
@@ -181,7 +181,7 @@ function createNewThisSubscribable<CurrentThis, NewThis, Args extends any[]>(
  * @returns
  *   `Subscribable`
  */
-function createMappedSubscribable<This, Args extends any[], WrappedThis, WrappedArgs extends any[]>(
+function createMappedSubscribable<This, Args extends unknown[], WrappedThis, WrappedArgs extends unknown[]>(
 	subscribe: SubscribeFunction<WrappedThis, WrappedArgs>,
 	unsubscribe: UnsubscribeFunction<WrappedThis, WrappedArgs>,
 	errorStrategy: ErrorStrategy,

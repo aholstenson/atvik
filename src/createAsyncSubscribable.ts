@@ -9,17 +9,17 @@ import { ListenerMapping } from './ListenerMapping.js';
 /**
  * Function used to subscribe a listener.
  */
-export type AsyncSubscribeFunction<This, Args extends any[]> = (listener: Listener<This, Args>) => Promise<void>;
+export type AsyncSubscribeFunction<This, Args extends unknown[]> = (listener: Listener<This, Args>) => Promise<void>;
 
 /**
  * Function used to unsubscribe a listener.
  */
-export type AsyncUnsubscribeFunction<This, Args extends any[]> = (listener: Listener<This, Args>) => Promise<void>;
+export type AsyncUnsubscribeFunction<This, Args extends unknown[]> = (listener: Listener<This, Args>) => Promise<void>;
 
 /**
  * Options for `createAsyncSubscribable`.
  */
-export interface AsyncSubscribableOptions<This, Args extends any[]> {
+export interface AsyncSubscribableOptions<This, Args extends unknown[]> {
 	/**
 	 * Function used to subscribe a listener.
 	 */
@@ -50,7 +50,7 @@ export interface AsyncSubscribableOptions<This, Args extends any[]> {
  * @returns
  *   instance of `AsyncSubscribable`
  */
-export function createAsyncSubscribable<This, Args extends any[]>(
+export function createAsyncSubscribable<This, Args extends unknown[]>(
 	options: AsyncSubscribableOptions<This, Args>
 ): AsyncSubscribable<This, Args> {
 	const subscribe = options.subscribe;
@@ -126,7 +126,7 @@ export function createAsyncSubscribable<This, Args extends any[]>(
  * @returns
  *   `AsyncSubscribable`
  */
-function createFilteredAsyncSubscribable<This, Args extends any[]>(
+function createFilteredAsyncSubscribable<This, Args extends unknown[]>(
 	subscribe: AsyncSubscribeFunction<This, Args>,
 	unsubscribe: AsyncUnsubscribeFunction<This, Args>,
 	filterToApply: (this: This, ...args: Args) => boolean | Promise<boolean>,
@@ -153,7 +153,7 @@ function createFilteredAsyncSubscribable<This, Args extends any[]>(
  * @returns
  *   `AsyncSubscribable`
  */
-function createNewThisAsyncSubscribable<CurrentThis, NewThis, Args extends any[]>(
+function createNewThisAsyncSubscribable<CurrentThis, NewThis, Args extends unknown[]>(
 	subscribe: AsyncSubscribeFunction<CurrentThis, Args>,
 	unsubscribe: AsyncUnsubscribeFunction<CurrentThis, Args>,
 	newThis: NewThis,
@@ -182,7 +182,7 @@ function createNewThisAsyncSubscribable<CurrentThis, NewThis, Args extends any[]
  * @returns
  *   `AsyncSubscribable`
  */
-function createMappedAsyncSubscribable<This, Args extends any[], WrappedThis, WrappedArgs extends any[]>(
+function createMappedAsyncSubscribable<This, Args extends unknown[], WrappedThis, WrappedArgs extends unknown[]>(
 	subscribe: AsyncSubscribeFunction<WrappedThis, WrappedArgs>,
 	unsubscribe: AsyncUnsubscribeFunction<WrappedThis, WrappedArgs>,
 	errorStrategy: ErrorStrategy,

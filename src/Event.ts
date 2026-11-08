@@ -1,8 +1,8 @@
 import { createSubscribable } from './createSubscribable.js';
 import { type ErrorStrategy, rethrowErrors } from './ErrorStrategy.js';
 import type { EventIteratorOptions } from './EventIteratorOptions.js';
-import { invokeInParallel } from './invokeInParallel.js';
 import type { Listener } from './Listener.js';
+import { ListenerRegistry } from './ListenerRegistry.js';
 import type { Subscribable } from './Subscribable.js';
 import type { SubscriptionFunctions } from './SubscriptionFunctions.js';
 import type { SubscriptionHandle } from './SubscriptionHandle.js';
@@ -101,7 +101,7 @@ export interface EventOptions {
  * counter.increment();
  * ```
  */
-export class Event<Parent, Args extends any[] = []> implements SubscriptionFunctions<Parent, Args> {
+export class Event<Parent, Args extends unknown[] = []> implements SubscriptionFunctions<Parent, Args> {
 	/**
 	 * Public Subscribable that can safely be shared with consumers that should
 	 * be able to listen for events.
@@ -111,20 +111,15 @@ export class Event<Parent, Args extends any[] = []> implements SubscriptionFunct
 	/**
 	 * Parent of this handler, used to apply the correct this to event listeners.
 	 */
-	private readonly parent: Parent;
+	readonly #parent: Parent;
 	/**
 	 * Error strategy for asynchronous operations.
 	 */
-	private readonly errorStrategy: ErrorStrategy;
+	readonly #errorStrategy: ErrorStrategy;
 	/**
-	 * Listener(s) that have been attached to this event handler.
+	 * Listeners and monitors of this event.
 	 */
-	private registeredListeners?: Listener<Parent, Args> | Listener<Parent, Args>[];
-
-	/**
-	 * Monitor that will be notified on any listener change.
-	 */
-	private monitor?: (event: this) => void;
+	readonly #registry: ListenerRegistry<Parent, Args, this>;
 
 	/**
 	 * Create a new event.
@@ -138,14 +133,15 @@ export class Event<Parent, Args extends any[] = []> implements SubscriptionFunct
 		parent: Parent,
 		options?: EventOptions
 	) {
-		this.parent = parent;
+		this.#parent = parent;
+		this.#registry = new ListenerRegistry(this);
 
-		this.errorStrategy = options?.defaultErrorStrategy ?? rethrowErrors;
+		this.#errorStrategy = options?.defaultErrorStrategy ?? rethrowErrors;
 		this.subscribable = createSubscribable({
 			subscribe: this.subscribe0.bind(this),
 			unsubscribe: this.unsubscribe0.bind(this),
 			defaultIterator: options?.defaultIterator,
-			defaultErrorStrategy: this.errorStrategy
+			defaultErrorStrategy: this.#errorStrategy
 		});
 	}
 
@@ -159,26 +155,7 @@ export class Event<Parent, Args extends any[] = []> implements SubscriptionFunct
 	 *   arguments that the listeners will receive
 	 */
 	public emit(...args: Args): void {
-		if(Array.isArray(this.registeredListeners)) {
-			/*
-			 * Array is present, iterate over array and invoke all of the
-			 * listeners.
-			 */
-			for(const listener of this.registeredListeners) {
-				const result = listener.apply(this.parent, args);
-				if(result?.catch) {
-					result.catch(err => this.errorStrategy.handle(err));
-				}
-			}
-		} else if(this.registeredListeners) {
-			/*
-			 * Single listener is present, simply invoke the listener.
-			 */
-			const result = this.registeredListeners.apply(this.parent, args);
-			if(result?.catch) {
-				result.catch(err => this.errorStrategy.handle(err));
-			}
-		}
+		this.#registry.invoke(this.#parent, args, err => this.#errorStrategy.handle(err));
 	}
 
 	/**
@@ -195,21 +172,8 @@ export class Event<Parent, Args extends any[] = []> implements SubscriptionFunct
 	 * @returns -
 	 *   promise that resolves when all listeners have handled the event
 	 */
-	public async asyncEmit(...args: Args): Promise<void> {
-		if(Array.isArray(this.registeredListeners)) {
-			/*
-			 * Array is present, iterate over array and invoke all of the
-			 * listeners.
-			 */
-			for(const listener of this.registeredListeners) {
-				await listener.apply(this.parent, args);
-			}
-		} else if(this.registeredListeners) {
-			/*
-			 * Single listener is present, simply invoke the listener.
-			 */
-			await this.registeredListeners.apply(this.parent, args);
-		}
+	public asyncEmit(...args: Args): Promise<void> {
+		return this.#registry.invokeSerial(this.#parent, args);
 	}
 
 	/**
@@ -227,18 +191,8 @@ export class Event<Parent, Args extends any[] = []> implements SubscriptionFunct
 	 * @returns -
 	 *   promise that resolves when all listeners have handled the event
 	 */
-	public async parallelEmit(...args: Args): Promise<void> {
-		if(Array.isArray(this.registeredListeners)) {
-			/*
-			 * Array is present, invoke listeners in parallel.
-			 */
-			await invokeInParallel(this.registeredListeners, this.parent, args);
-		} else if(this.registeredListeners) {
-			/*
-			 * Single listener is present, simply invoke the listener.
-			 */
-			await this.registeredListeners.apply(this.parent, args);
-		}
+	public parallelEmit(...args: Args): Promise<void> {
+		return this.#registry.invokeParallel(this.#parent, args);
 	}
 
 	/**
@@ -248,33 +202,8 @@ export class Event<Parent, Args extends any[] = []> implements SubscriptionFunct
 	 * @param listener -
 	 *   listener to subscribe
 	 */
-	protected subscribe0(listener: Listener<Parent, Args>) {
-		if(Array.isArray(this.registeredListeners)) {
-			// Listeners is already an array, create a copy with the new listener appended
-			const idx = this.registeredListeners.indexOf(listener);
-			if(idx >= 0) {
-				// If the listener is already in the array, skip registering
-				return;
-			}
-
-			this.registeredListeners = [ ...this.registeredListeners, listener ];
-		} else if(this.registeredListeners) {
-			if(this.registeredListeners === listener) {
-				// This is the active listener, skip registering
-				return;
-			}
-
-			this.registeredListeners = [ this.registeredListeners, listener ];
-		} else {
-			this.registeredListeners = listener;
-		}
-
-		if(this.monitor) {
-			// Trigger the monitor if available
-			this.monitor(this);
-		}
-
-		return;
+	protected subscribe0(listener: Listener<Parent, Args>): void {
+		this.#registry.add(listener);
 	}
 
 	/**
@@ -285,44 +214,7 @@ export class Event<Parent, Args extends any[] = []> implements SubscriptionFunct
 	 *   listener to unsubscribe
 	 */
 	protected unsubscribe0(listener: Listener<Parent, Args>): void {
-		if(Array.isArray(this.registeredListeners)) {
-			/*
-			 * Array has been allocated, find the index of the listener and
-			 * then remove it from the array.
-			 */
-			const idx = this.registeredListeners.indexOf(listener);
-			if(idx < 0) return;
-
-			// Copy-on-write for deletions
-			const listeners = [ ...this.registeredListeners ];
-			listeners.splice(idx, 1);
-			this.registeredListeners = listeners;
-
-			/*
-			 * If the array is empty, remove it. Otherwise at this point the
-			 * array has already been allocated so keep the array in case a
-			 * subscription happens again.
-			 */
-			if(this.registeredListeners.length === 0) {
-				this.registeredListeners = undefined;
-			}
-
-			if(this.monitor) {
-				// Trigger the monitor if available
-				this.monitor(this);
-			}
-		} else if(this.registeredListeners === listener) {
-			/*
-			 * Single listener is present and its the current match. Reset
-			 * listeners property.
-			 */
-			this.registeredListeners = undefined;
-
-			if(this.monitor) {
-				// Trigger the monitor if available
-				this.monitor(this);
-			}
-		}
+		this.#registry.remove(listener);
 	}
 
 	/**
@@ -414,8 +306,8 @@ export class Event<Parent, Args extends any[] = []> implements SubscriptionFunct
 	 * @returns
 	 *   `true` if listeners are present
 	 */
-	public get hasListeners() {
-		return this.registeredListeners !== undefined;
+	public get hasListeners(): boolean {
+		return this.#registry.hasListeners;
 	}
 
 	/**
@@ -424,26 +316,15 @@ export class Event<Parent, Args extends any[] = []> implements SubscriptionFunct
 	 * @returns
 	 *   listeners as array
 	 */
-	public get listeners() {
-		if(Array.isArray(this.registeredListeners)) {
-			return this.registeredListeners.slice(0);
-		} else if(this.registeredListeners) {
-			return [ this.registeredListeners ];
-		} else {
-			return [];
-		}
+	public get listeners(): Listener<Parent, Args>[] {
+		return this.#registry.toArray();
 	}
 
 	/**
 	 * Clear all listeners for this event.
 	 */
-	public clear() {
-		this.registeredListeners = undefined;
-
-		if(this.monitor) {
-			// Trigger the monitor if available
-			this.monitor(this);
-		}
+	public clear(): void {
+		this.#registry.clear();
 	}
 
 	/**
@@ -456,17 +337,17 @@ export class Event<Parent, Args extends any[] = []> implements SubscriptionFunct
 	 *   function used to monitor for changes to listeners
 	 */
 	public monitorListeners(monitor: (event: this) => void): void {
-		if(this.monitor) {
+		if(this.#registry.hasMonitors) {
 			throw new Error('A monitor is already registered, call removeMonitor before registering a new monitor');
 		}
 
-		this.monitor = monitor;
+		this.#registry.addMonitor(monitor);
 	}
 
 	/**
 	 * Stop monitoring for listener changes.
 	 */
-	public removeMonitor() {
-		this.monitor = undefined;
+	public removeMonitor(): void {
+		this.#registry.removeMonitor();
 	}
 }

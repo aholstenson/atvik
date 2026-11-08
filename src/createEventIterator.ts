@@ -4,7 +4,7 @@ import type { Listener } from './Listener.js';
 /**
  * Source of events for {@link createEventIterator}.
  */
-export interface EventIteratorSource<Args extends any[]> {
+export interface EventIteratorSource<Args extends unknown[]> {
 	/**
 	 * Function used to subscribe the listener of the iterator. It can return
 	 * a promise if the subscription is asynchronous.
@@ -43,7 +43,7 @@ export interface EventIteratorSource<Args extends any[]> {
  * @returns
  *   async iterator
  */
-export function createEventIterator<Args extends any[]>(
+export function createEventIterator<Args extends unknown[]>(
 	source: EventIteratorSource<Args>,
 	options?: EventIteratorOptions
 ): AsyncIterableIterator<Args> {
